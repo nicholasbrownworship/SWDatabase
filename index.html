@@ -42,15 +42,15 @@ body {
   cursor: none;
 }
 
-/* Layer for images under overlay */
-#imageLayer {
+/* Entry content + images */
+#entryContainer {
   position:absolute;
   inset:0;
-  padding:20px;
   overflow-y:auto;
+  padding:20px;
   z-index:1;
 }
-#imageLayer img {
+#entryContainer img {
   display:block;
   margin:10px auto;
   max-width:300px;
@@ -60,7 +60,7 @@ body {
   box-shadow:0 0 15px rgba(0,255,255,0.3);
 }
 
-/* Overlay container: blue tint, distortion, flicker */
+/* Overlay effects */
 #overlayEffects {
   position:absolute;
   inset:0;
@@ -83,7 +83,7 @@ body {
   opacity:0;
 }
 
-/* UI / content above overlay */
+/* Sidebar and UI */
 #content { display:flex; height:100%; position:relative; z-index:3; }
 #sidebar {
   width:200px; background:rgba(5,15,20,0.8); border-right:1px solid #033;
@@ -99,7 +99,7 @@ body {
 .category-btn.active { border-left-color:#00ffff; background:#0e2a34; }
 #search { margin-top:auto; padding:6px; background:#0b1c23; border:1px solid #33cfff; color:#a0d8ff; }
 
-/* Main content */
+/* Main content text */
 #main { flex:1; padding:20px; overflow-y:auto; }
 #breadcrumbs { margin-bottom:10px; font-size:14px; color:#33cfff; }
 #breadcrumbs span { cursor: default; }
@@ -139,8 +139,13 @@ body {
   <div class="indicator"></div>
 
   <div id="screen">
-    <!-- Layer for images -->
-    <div id="imageLayer"></div>
+    <!-- Entry images + text -->
+    <div id="entryContainer">
+      <div id="entryContent">
+        <h1>Rebel Alliance Field Codex</h1>
+        <p>Loading encrypted entries... Select a category on the left to access the database.</p>
+      </div>
+    </div>
 
     <!-- Overlay effects -->
     <div id="overlayEffects">
@@ -149,7 +154,7 @@ body {
       <div id="flicker"></div>
     </div>
 
-    <!-- Sidebar and content -->
+    <!-- Sidebar and UI -->
     <div id="content">
       <div id="sidebar">
         <h2>Codex</h2>
@@ -162,10 +167,6 @@ body {
       </div>
       <div id="main">
         <div id="breadcrumbs"></div>
-        <div id="entryContent">
-          <h1>Rebel Alliance Field Codex</h1>
-          <p>Loading encrypted entries... Select a category on the left to access the database.</p>
-        </div>
       </div>
     </div>
     <div id="cursor-dot"></div>
@@ -193,6 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ]
   };
 
+  const entryContainer = document.getElementById('entryContainer');
   const entryContent = document.getElementById('entryContent');
   const breadcrumbs = document.getElementById('breadcrumbs');
   const categoryBtns = document.querySelectorAll('.category-btn');
@@ -202,7 +204,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const distortion = document.getElementById('distortion');
   const screen = document.getElementById('screen');
   const cursorDot = document.getElementById('cursor-dot');
-  const imageLayer = document.getElementById('imageLayer');
 
   let activeCategory = null;
   let activeSubFile = null;
@@ -218,12 +219,10 @@ document.addEventListener('DOMContentLoaded', () => {
         renderSubFiles(activeCategory);
       });
       breadcrumbs.appendChild(catSpan);
-
       if(activeSubFile) {
         const sep = document.createElement('span');
         sep.textContent = ' > ';
         breadcrumbs.appendChild(sep);
-
         const subSpan = document.createElement('span');
         subSpan.textContent = activeSubFile.name;
         breadcrumbs.appendChild(subSpan);
@@ -234,7 +233,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderSubFiles(category) {
     updateBreadcrumbs();
     entryContent.innerHTML = '';
-    imageLayer.innerHTML = '';
     codexData[category].forEach(entry => {
       const btn = document.createElement('button');
       btn.textContent = entry.name;
@@ -245,19 +243,12 @@ document.addEventListener('DOMContentLoaded', () => {
         renderEntryDetail(entry);
       });
       entryContent.appendChild(btn);
-
-      // Preload images in imageLayer (hidden until selected)
-      const img = document.createElement('img');
-      img.src = entry.image;
-      img.alt = entry.name;
-      imageLayer.appendChild(img);
     });
   }
 
   function renderEntryDetail(entry) {
     updateBreadcrumbs();
-    entryContent.innerHTML = `<h1>${entry.name}</h1><p>${entry.description}</p>`;
-    imageLayer.innerHTML = `<img src="${entry.image}" alt="${entry.name}">`;
+    entryContent.innerHTML = `<h1>${entry.name}</h1><img src="${entry.image}" alt="${entry.name}"><p>${entry.description}</p>`;
     const backBtn = document.createElement('button');
     backBtn.textContent = 'Back';
     backBtn.classList.add('category-btn');
@@ -306,7 +297,6 @@ document.addEventListener('DOMContentLoaded', () => {
     breadcrumbs.innerHTML = '';
     entryContent.innerHTML = `<h1>Rebel Alliance Field Codex</h1>
                               <p>Loading encrypted entries... Select a category on the left to access the database.</p>`;
-    imageLayer.innerHTML = '';
     categoryBtns.forEach(b => b.classList.remove('active'));
   });
 
@@ -328,7 +318,6 @@ document.addEventListener('DOMContentLoaded', () => {
     distortion.style.setProperty('--y', y + '%');
   });
 
-  // Random small pulses for distortion
   function randomDistortionPulse() {
     const scale = 1 + Math.random()*0.02;
     distortion.style.transform = `scale(${scale})`;
