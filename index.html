@@ -141,16 +141,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const codexData = {
     planets: [
-      { name:"Yavin 4", image:"images/yavin-4.jpeg", description:"A jungle-covered moon used by the Rebel Alliance as a hidden base during the Galactic Civil War. Site of the first major victory against the Empire." }
+      { name:"Yavin 4", image:"images/yavin-4.jpeg", description:"A jungle-covered moon used by the Rebel Alliance as a hidden base during the Galactic Civil War. Site of the first major victory against the Empire." },
+      { name:"Hoth", image:"images/hoth.jpg", description:"An icy planet that served as a Rebel base during the Galactic Civil War." }
     ],
     factions: [
-      { name:"Rebel Alliance", image:"images/rebel.jpeg", description:"An alliance of freedom fighters opposing the tyranny of the Galactic Empire. Resourceful, scattered, and fiercely devoted to liberty." }
+      { name:"Rebel Alliance", image:"images/rebel.jpeg", description:"An alliance of freedom fighters opposing the tyranny of the Galactic Empire." },
+      { name:"Galactic Empire", image:"images/empire.jpeg", description:"The authoritarian regime controlling the galaxy with fear and military might." }
     ],
     technology: [
-      { name:"X-wing Starfighter", image:"images/x-wing.jpeg", description:"The Incom T-65 X-wing starfighter—fast, reliable, and deadly in skilled hands. Its balance of firepower and maneuverability made it a staple of the Rebellion." }
+      { name:"X-wing Starfighter", image:"images/x-wing.jpeg", description:"Fast, reliable, deadly starfighter." },
+      { name:"TIE Fighter", image:"images/tie.jpg", description:"The Imperial starfighter: fast, cheap, and overwhelming in numbers." }
     ],
     characters: [
-      { name:"Mon Mothma", image:"images/mothma.jpeg", description:"Founder and leader of the Alliance to Restore the Republic. A former senator who united disparate rebel cells under a single cause." }
+      { name:"Mon Mothma", image:"images/mothma.jpeg", description:"Founder and leader of the Alliance." },
+      { name:"Luke Skywalker", image:"images/luke.jpg", description:"The farm boy who became a Jedi Knight and hero of the Rebellion." }
     ]
   };
 
@@ -158,36 +162,66 @@ document.addEventListener('DOMContentLoaded', () => {
   const categoryBtns = document.querySelectorAll('.category-btn');
   const searchInput = document.getElementById('search');
 
-  function renderEntries(category, filter="") {
+  let activeCategory = null;
+  let activeSubFile = null;
+
+  // Render the list of sub-files under a category
+  function renderSubFiles(category) {
     main.innerHTML = "";
-    const entries = codexData[category].filter(e => e.name.toLowerCase().includes(filter.toLowerCase()));
-    if(entries.length === 0) {
-      main.innerHTML = `<h1>No entries found.</h1>`;
-      return;
-    }
-    entries.forEach(entry => {
-      const container = document.createElement('div');
-      container.innerHTML = `<h1>${entry.name}</h1>
-                             <img src="${entry.image}" alt="${entry.name}">
-                             <p>${entry.description}</p>`;
-      main.appendChild(container);
+    codexData[category].forEach(entry => {
+      const btn = document.createElement('button');
+      btn.textContent = entry.name;
+      btn.classList.add('category-btn');
+      btn.style.margin = '6px 0';
+      btn.addEventListener('click', () => {
+        activeSubFile = entry;
+        renderEntryDetail(entry);
+      });
+      main.appendChild(btn);
     });
   }
 
-  let activeCategory = null;
+  // Render a single entry detail
+  function renderEntryDetail(entry) {
+    main.innerHTML = `<h1>${entry.name}</h1>
+                      <img src="${entry.image}" alt="${entry.name}">
+                      <p>${entry.description}</p>
+                      <button id="backBtn" class="category-btn" style="margin-top:20px;">Back</button>`;
+    document.getElementById('backBtn').addEventListener('click', () => {
+      activeSubFile = null;
+      renderSubFiles(activeCategory);
+    });
+  }
 
+  // Sidebar buttons
   categoryBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       categoryBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       activeCategory = btn.dataset.category;
-      renderEntries(activeCategory, searchInput.value);
+      activeSubFile = null;
+      renderSubFiles(activeCategory);
     });
   });
 
+  // Search filter at the sub-file level
   searchInput.addEventListener('input', () => {
-    if(activeCategory) {
-      renderEntries(activeCategory, searchInput.value);
+    if(activeCategory && !activeSubFile) {
+      const filter = searchInput.value.toLowerCase();
+      main.innerHTML = '';
+      codexData[activeCategory]
+        .filter(entry => entry.name.toLowerCase().includes(filter))
+        .forEach(entry => {
+          const btn = document.createElement('button');
+          btn.textContent = entry.name;
+          btn.classList.add('category-btn');
+          btn.style.margin = '6px 0';
+          btn.addEventListener('click', () => {
+            activeSubFile = entry;
+            renderEntryDetail(entry);
+          });
+          main.appendChild(btn);
+        });
     }
   });
 
