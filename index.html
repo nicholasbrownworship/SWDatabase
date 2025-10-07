@@ -54,7 +54,7 @@
     position:absolute; inset:0;
     background: repeating-linear-gradient(0deg, rgba(0,255,255,0.15) 0px, rgba(0,255,255,0.15) 1px, transparent 2px, transparent 3px);
     pointer-events:none;
-    z-index:4;
+    z-index:1;
     opacity:0;
   }
   #screen::before {
@@ -81,7 +81,7 @@
     inset:0;
     background: radial-gradiant(circle at var(--x) var(--y), rgba(0,255,255,0.2) 0%, transport 40%)
     pointer-events:none;
-    z-index:4;
+    z-index:2;
   }
 
  /* 🔹 Constant cyan-blue wash across the whole datapad */
@@ -90,12 +90,12 @@
   inset: 0;
   background-color: rgba(0, 255, 255, .35); /* Adjust opacity for intensity */
   pointer-events: none;
-  z-index: 4; /* Below flicker and distortion, above background */
+  z-index: 3; /* Below flicker and distortion, above background */
   mix-blend-mode: screen; /* Creates that soft glowing effect */
 }
 
 
-  #content { display:flex; height:100%; position:relative; z-index:2; }
+  #content { display:flex; height:100%; position:relative; z-index:4; }
   #sidebar {
     width:200px; background:rgba(5,15,20,0.8); border-right:1px solid #033;
     display:flex; flex-direction:column; padding:15px;
