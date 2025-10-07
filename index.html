@@ -5,148 +5,124 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rebel Datapad Codex</title>
 <style>
-  * { box-sizing:border-box; margin:0; padding:0; font-family:'OCR A Std','Courier New', monospace; }
-  body {
-    background: radial-gradient(ellipse at center, #050505 0%, #000 100%);
-    color:#a0d8ff;
-    height:100vh; display:flex; justify-content:center; align-items:center;
-    overflow:hidden;
-  }
-  #datapad {
-    width:900px; height:600px;
-    background: url('images/metal_texture.jpg') center/cover no-repeat;
-    border:6px solid #333;
-    border-radius:25px;
-    position:relative;
-    box-shadow: 0 0 60px rgba(0,255,255,0.05), inset 0 0 20px #000;
-    overflow:hidden;
-  }
-  #datapad::before {
-    content:"";
-    position:absolute; inset:0;
-    border-radius:25px;
-    background: url('images/metal_noise.png') repeat;
-    opacity:0.2;
-    z-index:0;
-  }
-  #screen {
-    position:absolute;
-    top:40px; left:40px;
-    width:820px; height:520px;
-    background:radial-gradient(circle at 50% 50%, rgba(10,20,25,0.95) 0%, rgba(5,10,12,0.9) 100%);
-    border-radius:15px;
-    overflow:hidden;
-    box-shadow: inset 0 0 20px rgba(0,255,255,0.2);
-    z-index:1;
-    animation: glowPulse 3s infinite alternate;
-    cursor: none;
-  }
-  #screen * { cursor:none; }
+* { box-sizing:border-box; margin:0; padding:0; font-family:'OCR A Std','Courier New', monospace; }
+body {
+  background: radial-gradient(ellipse at center, #050505 0%, #000 100%);
+  color:#a0d8ff;
+  height:100vh; display:flex; justify-content:center; align-items:center;
+  overflow:hidden;
+}
+#datapad {
+  width:900px; height:600px;
+  background: url('images/metal_texture.jpg') center/cover no-repeat;
+  border:6px solid #333;
+  border-radius:25px;
+  position:relative;
+  box-shadow: 0 0 60px rgba(0,255,255,0.05), inset 0 0 20px #000;
+  overflow:hidden;
+}
+#datapad::before {
+  content:"";
+  position:absolute; inset:0;
+  border-radius:25px;
+  background: url('images/metal_noise.png') repeat;
+  opacity:0.2;
+  z-index:0;
+}
 
-  @keyframes glowPulse {
-    0% { box-shadow: inset 0 0 20px rgba(0,255,255,0.15); }
-    50% { box-shadow: inset 0 0 35px rgba(0,255,255,0.3); }
-    100% { box-shadow: inset 0 0 25px rgba(0,255,255,0.2); }
-  }
+/* Screen container */
+#screen {
+  position:absolute;
+  top:40px; left:40px;
+  width:820px; height:520px;
+  background:radial-gradient(circle at 50% 50%, rgba(10,20,25,0.95) 0%, rgba(5,10,12,0.9) 100%);
+  border-radius:15px;
+  overflow:hidden;
+  box-shadow: inset 0 0 20px rgba(0,255,255,0.2);
+  cursor: none;
+}
 
-  #flicker {
-    position:absolute; inset:0;
-    background: repeating-linear-gradient(0deg, rgba(0,255,255,0.15) 0px, rgba(0,255,255,0.15) 1px, transparent 2px, transparent 3px);
-    pointer-events:none;
-    z-index:3;
-    opacity:0;
-  }
+/* Screen effects (on top of images) */
+#blueBase,
+#flicker,
+#distortion {
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:1; /* above images but below UI */
+}
 
-  #screen::before {
-    content:"";
-    position:absolute;
-    inset:0;
-    pointer-events:none;
-    background: repeating-linear-gradient(
-      to bottom,
-      rgba(0,255,255,0.03) 0px,
-      rgba(0,255,255,0.03) 1px,
-      transparent 2px,
-      transparent 3px
-    );
-    animation: scanlines 1s linear infinite;
-    z-index:2;
-  }
+#blueBase {
+  background-color: rgba(0, 255, 255, .25);
+  mix-blend-mode: screen;
+}
 
-  @keyframes scanlines {
-    0% { background-position: 0 0; }
-    100% { background-position: 0 4px; }
-  }
+#distortion {
+  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(0,255,255,0.25) 0%, rgba(0,255,255,0.1) 10%, transparent 50%);
+  transition: background 0.08s ease;
+}
 
-  /* 🔹 Fixed distortion effect */
-  #distortion {
-    position:absolute;
-    inset:0;
-    background: radial-gradient(circle at var(--x, 50%) var(--y, 50%),
-      rgba(0,255,255,0.25) 0%,
-      rgba(0,255,255,0.1) 10%,
-      transparent 50%);
-    pointer-events:none;
-    z-index:2;
-    transition: background 0.08s ease;
-  }
+#flicker {
+  background: repeating-linear-gradient(0deg, rgba(0,255,255,0.15) 0px, rgba(0,255,255,0.15) 1px, transparent 2px, transparent 3px);
+  opacity:0;
+}
 
-  /* 🔹 Constant cyan-blue wash across the whole datapad */
-  #blueBase {
-    position: absolute;
-    inset: 0;
-    background-color: rgba(0, 255, 255, .25);
-    pointer-events: none;
-    z-index: 1; /* Below flicker and distortion, above screen background */
-    mix-blend-mode: screen;
-  }
+/* Content / UI above all */
+#content { display:flex; height:100%; position:relative; z-index:2; }
 
-  #content { display:flex; height:100%; position:relative; z-index:4; }
-  #sidebar {
-    width:200px; background:rgba(5,15,20,0.8); border-right:1px solid #033;
-    display:flex; flex-direction:column; padding:15px;
-  }
-  #sidebar h2 { color:#33cfff; text-align:center; margin-bottom:10px; }
-  .category-btn {
-    background:#0a1f26; border:none; margin:4px 0; padding:8px; color:#33cfff;
-    cursor:pointer; text-align:left; border-left:4px solid #0a5266;
-    transition: all 0.2s;
-  }
-  .category-btn:hover { background:#0e2a34; border-left-color:#66f0ff; }
-  .category-btn.active { border-left-color:#00ffff; background:#0e2a34; }
-  #search { margin-top:auto; padding:6px; background:#0b1c23; border:1px solid #33cfff; color:#a0d8ff; }
-  #main { flex:1; padding:20px; overflow-y:auto; }
-  #breadcrumbs { margin-bottom:10px; font-size:14px; color:#33cfff; }
-  #breadcrumbs span { cursor: default; }
-  #breadcrumbs span:hover { text-decoration: underline; }
-  #entryContent h1 { font-size:22px; margin-bottom:10px; color:#66f0ff; }
-  #entryContent img {
-    display:block; margin:10px auto; max-width:300px; height:auto;
-    border:2px solid #33cfff; border-radius:4px;
-    box-shadow:0 0 15px rgba(0,255,255,0.3);
-  }
-  #entryContent p { font-size:15px; line-height:1.5em; }
+/* Sidebar */
+#sidebar {
+  width:200px; background:rgba(5,15,20,0.8); border-right:1px solid #033;
+  display:flex; flex-direction:column; padding:15px;
+}
+#sidebar h2 { color:#33cfff; text-align:center; margin-bottom:10px; }
+.category-btn {
+  background:#0a1f26; border:none; margin:4px 0; padding:8px; color:#33cfff;
+  cursor:pointer; text-align:left; border-left:4px solid #0a5266;
+  transition: all 0.2s;
+}
+.category-btn:hover { background:#0e2a34; border-left-color:#66f0ff; }
+.category-btn.active { border-left-color:#00ffff; background:#0e2a34; }
+#search { margin-top:auto; padding:6px; background:#0b1c23; border:1px solid #33cfff; color:#a0d8ff; }
 
-  .indicator {
-    position:absolute; width:12px; height:12px; border-radius:50%;
-    background:#0f0; box-shadow:0 0 8px #0f0;
-  }
-  .indicator.red { background:#f00; box-shadow:0 0 8px #f00; }
-  .indicator:nth-child(1){ top:10px; left:10px; }
-  .indicator:nth-child(2){ top:10px; right:10px; }
-  .indicator:nth-child(3){ bottom:10px; left:10px; }
-  .indicator:nth-child(4){ bottom:10px; right:10px; }
+/* Main content */
+#main { flex:1; padding:20px; overflow-y:auto; }
+#breadcrumbs { margin-bottom:10px; font-size:14px; color:#33cfff; }
+#breadcrumbs span { cursor: default; }
+#breadcrumbs span:hover { text-decoration: underline; }
+#entryContent h1 { font-size:22px; margin-bottom:10px; color:#66f0ff; }
 
-  #cursor-dot {
-    position:absolute;
-    width:14px; height:14px;
-    border-radius:50%;
-    background: rgba(0,255,255,0.8);
-    box-shadow:0 0 8px rgba(0,255,255,0.8), 0 0 15px rgba(0,255,255,0.5);
-    pointer-events:none;
-    transform: translate(-50%, -50%);
-    z-index:10;
-  }
+/* Images are under the effects */
+#entryContent img {
+  display:block; margin:10px auto; max-width:300px; height:auto;
+  border:2px solid #33cfff; border-radius:4px;
+  box-shadow:0 0 15px rgba(0,255,255,0.3);
+  position: relative;
+  z-index:0; /* below blueBase & distortion */
+}
+
+#entryContent p { font-size:15px; line-height:1.5em; }
+
+/* Indicators and cursor */
+.indicator {
+  position:absolute; width:12px; height:12px; border-radius:50%;
+  background:#0f0; box-shadow:0 0 8px #0f0;
+}
+.indicator.red { background:#f00; box-shadow:0 0 8px #f00; }
+.indicator:nth-child(1){ top:10px; left:10px; }
+.indicator:nth-child(2){ top:10px; right:10px; }
+.indicator:nth-child(3){ bottom:10px; left:10px; }
+.indicator:nth-child(4){ bottom:10px; right:10px; }
+#cursor-dot {
+  position:absolute;
+  width:12px; height:12px;
+  border-radius:50%;
+  background: rgba(0,255,255,0.8);
+  box-shadow:0 0 8px rgba(0,255,255,0.8), 0 0 15px rgba(0,255,255,0.5);
+  pointer-events:none;
+  transform: translate(-50%, -50%);
+  z-index:3;
+}
 </style>
 </head>
 <body>
@@ -157,9 +133,12 @@
   <div class="indicator"></div>
 
   <div id="screen">
+    <!-- Effects above images -->
     <div id="blueBase"></div>
     <div id="distortion"></div>
     <div id="flicker"></div>
+
+    <!-- Main content & sidebar -->
     <div id="content">
       <div id="sidebar">
         <h2>Codex</h2>
@@ -178,6 +157,7 @@
         </div>
       </div>
     </div>
+
     <div id="cursor-dot"></div>
   </div>
 </div>
@@ -321,7 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   setInterval(randomFlicker, 80);
 
-  // Distortion jitter
+  // Distortion
   function randomDistortion() {
     if(Math.random() < 0.03) {
       const xShift = (Math.random() * 4 - 2).toFixed(1);
@@ -337,12 +317,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const rect = screen.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    cursorDot.style.left = `${x}px`;
-    cursorDot.style.top = `${y}px`;
-    distortion.style.setProperty('--x', `${x}px`);
-    distortion.style.setProperty('--y', `${y}px`);
+    cursorDot.style.left = x + 'px';
+    cursorDot.style.top = y + 'px';
   });
-
 });
 </script>
 </body>
