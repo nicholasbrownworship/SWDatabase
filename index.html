@@ -54,7 +54,7 @@
     position:absolute; inset:0;
     background: repeating-linear-gradient(0deg, rgba(0,255,255,0.15) 0px, rgba(0,255,255,0.15) 1px, transparent 2px, transparent 3px);
     pointer-events:none;
-    z-index:5;
+    z-index:4;
     opacity:0;
   }
   #screen::before {
@@ -70,7 +70,7 @@
       transparent 3px
     );
     animation: scanlines 1s linear infinite;
-    z-index:2;
+    z-index:3;
   }
   @keyframes scanlines {
     0% { background-position: 0 0; }
@@ -81,7 +81,7 @@
     inset:0;
     background: radial-gradiant(circle at var(--x) var(--y), rgba(0,255,255,0.2) 0%, transport 40%)
     pointer-events:none;
-    z-index:6;
+    z-index:4;
   }
 
  /* 🔹 Constant cyan-blue wash across the whole datapad */
