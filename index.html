@@ -334,12 +334,6 @@ document.addEventListener('DOMContentLoaded', () => {
     cursorDot.style.top = y + 'px';
   });
 
-    document.addEventListener('mousemove', (e) => {
-    cursorDot.style.left = e.clientX + 'px';
-    cursorDot.style.top = e.clientY + 'px';
-    distortion.style.background = `radial-gradient(circle at ${e.clientX}px ${e.clientY}px, rgba(0,255,255,0.15) 0%, transparent 60%)`;
-  });
-
 });
 </script>
 </body>
