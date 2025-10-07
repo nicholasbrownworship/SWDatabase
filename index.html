@@ -5,59 +5,98 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rebel Datapad Codex</title>
 <style>
-  /* --- Reset & Base --- */
-  * { box-sizing: border-box; margin:0; padding:0; font-family:'Courier New', monospace; }
-  body { background:#0b0b0b; color:#a0d8ff; overflow:hidden; }
-
-  /* --- Container --- */
-  #datapad {
-    display:flex;
-    width:100vw; height:100vh;
-    background: #111 url('https://i.imgur.com/pfGdH2Y.jpg') no-repeat center center; 
-    background-size: cover;
-    position: relative;
-    filter: contrast(1.1) brightness(0.95);
+  * { box-sizing:border-box; margin:0; padding:0; font-family:'OCR A Std','Courier New', monospace; }
+  body {
+    background: radial-gradient(ellipse at center, #050505 0%, #000 100%);
+    color:#a0d8ff;
+    height:100vh; display:flex; justify-content:center; align-items:center;
+    overflow:hidden;
   }
 
-  /* --- Sidebar --- */
+  /* --- Datapad Frame --- */
+  #datapad {
+    width:900px; height:600px;
+    background: url('images/metal_texture.jpg') center/cover no-repeat;
+    border:6px solid #333;
+    border-radius:25px;
+    position:relative;
+    box-shadow: 0 0 60px rgba(0,255,255,0.05), inset 0 0 20px #000;
+    overflow:hidden;
+  }
+
+  /* metallic overlay for scratches/grunge */
+  #datapad::before {
+    content:"";
+    position:absolute; inset:0;
+    border-radius:25px;
+    background: url('images/metal_noise.png') repeat;
+    opacity:0.2;
+    z-index:0;
+  }
+
+  /* --- Screen Area --- */
+  #screen {
+    position:absolute;
+    top:40px; left:40px;
+    width:820px; height:520px;
+    background:radial-gradient(circle at 50% 50%, rgba(10,20,25,0.95) 0%, rgba(5,10,12,0.9) 100%);
+    border-radius:15px;
+    overflow:hidden;
+    box-shadow: inset 0 0 20px rgba(0,255,255,0.2);
+    z-index:1;
+    animation: glowPulse 3s infinite alternate;
+  }
+
+  /* --- Glow Pulse Animation --- */
+  @keyframes glowPulse {
+    0% { box-shadow: inset 0 0 20px rgba(0,255,255,0.15); }
+    50% { box-shadow: inset 0 0 35px rgba(0,255,255,0.3); }
+    100% { box-shadow: inset 0 0 25px rgba(0,255,255,0.2); }
+  }
+
+  /* --- Flicker Overlay --- */
+  #screen::after {
+    content:"";
+    position:absolute; inset:0;
+    background: repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 2px, transparent 3px);
+    animation: flicker 0.15s infinite;
+    pointer-events:none;
+  }
+  @keyframes flicker { 0%,100%{opacity:0.03;} 50%{opacity:0.07;} }
+
+  /* --- Layout --- */
+  #content { display:flex; height:100%; position:relative; z-index:2; }
   #sidebar {
-    width:220px; background:#141414; border-right:2px solid #0a5266;
+    width:200px; background:rgba(5,15,20,0.8); border-right:1px solid #033;
     display:flex; flex-direction:column; padding:15px;
   }
-  #sidebar h2 { margin-bottom:10px; color:#33cfff; text-align:center; font-size:18px; text-shadow:0 0 6px #000; }
+  #sidebar h2 { color:#33cfff; text-align:center; margin-bottom:10px; }
   .category-btn {
-    background:#0a1f26; border:none; margin:5px 0; padding:10px; color:#33cfff;
+    background:#0a1f26; border:none; margin:4px 0; padding:8px; color:#33cfff;
     cursor:pointer; text-align:left; border-left:4px solid #0a5266;
     transition: all 0.2s;
   }
   .category-btn:hover { background:#0e2a34; border-left-color:#66f0ff; }
 
-  /* --- Main Display --- */
+  #search { margin-top:auto; padding:6px; background:#0b1c23; border:1px solid #33cfff; color:#a0d8ff; }
+
   #main {
-    flex:1; padding:20px; position:relative;
-    background: rgba(10,10,10,0.85); overflow-y:auto;
+    flex:1; padding:20px; overflow-y:auto;
   }
-  #main h1 { font-size:24px; margin-bottom:10px; color:#66f0ff; }
-  #main img { max-width:100%; margin-bottom:15px; border:2px solid #33cfff; }
-  #main p { font-size:16px; line-height:1.5em; text-shadow:0 0 4px #000; }
+  #main h1 { font-size:22px; margin-bottom:10px; color:#66f0ff; }
+  #main img { width:100%; border:2px solid #33cfff; border-radius:4px; margin-bottom:10px; }
+  #main p { font-size:15px; line-height:1.5em; }
 
-  /* --- Search Bar --- */
-  #search-container { margin-bottom:15px; }
-  #search {
-    width:100%; padding:8px; background:#0b1c23; border:1px solid #33cfff;
-    color:#a0d8ff; outline:none; font-size:14px;
+  /* --- Decorative Lights --- */
+  .indicator {
+    position:absolute; width:12px; height:12px; border-radius:50%;
+    background:#0f0; box-shadow:0 0 8px #0f0;
   }
-
-  /* --- Flicker Overlay --- */
-  #flicker {
-    position:absolute; top:0; left:0; width:100%; height:100%;
-    pointer-events:none; background:rgba(255,255,255,0.02);
-    animation:flicker 0.15s infinite;
-  }
-  @keyframes flicker {
-    0%, 100% { opacity:0.02; }
-    50% { opacity:0.05; }
-  }
+  .indicator.red { background:#f00; box-shadow:0 0 8px #f00; }
+  .indicator:nth-child(1){ top:10px; left:10px; }
+  .indicator:nth-child(2){ top:10px; right:10px; }
+  .indicator:nth-child(3){ bottom:10px; left:10px; }
+  .indicator:nth-child(4){ bottom:10px; right:10px; }
 </style>
 </head>
 <body>
