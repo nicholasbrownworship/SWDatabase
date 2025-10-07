@@ -121,55 +121,62 @@
   <div id="flicker"></div>
 </div>
 
-<script>
-const codexData = {
-  planets: [
-    { name:"Yavin 4", image:"https://i.imgur.com/VbV1X3R.jpg", description:"A jungle-covered moon and base for the Rebel Alliance during the Galactic Civil War. Famous for the Battle of Yavin." }
-  ],
-  factions: [
-    { name:"Rebel Alliance", image:"https://i.imgur.com/j7F0z2U.png", description:"A coalition of resistance cells fighting against the Galactic Empire. Known for daring missions and resourcefulness." }
-  ],
-  technology: [
-    { name:"X-wing Starfighter", image:"https://i.imgur.com/WgRnrXL.jpg", description:"The backbone of the Rebel fleet. Highly versatile starfighter capable of dogfighting and long-range attacks." }
-  ],
-  characters: [
-    { name:"Mon Mothma", image:"https://i.imgur.com/x2G2m03.jpg", description:"A prominent leader of the Rebel Alliance, known for her political acumen and dedication to freedom across the galaxy." }
-  ]
-};
+  </div> <!-- end of #datapad -->
+  
+  <!-- --- JavaScript: Place here, just before </body> --- -->
+  <script>
+  const codexData = {
+    planets: [
+      { name:"Yavin 4", image:"images/yavin4.jpg", description:"A jungle-covered moon used by the Rebel Alliance as a hidden base during the Galactic Civil War. Site of the first major victory against the Empire." }
+    ],
+    factions: [
+      { name:"Rebel Alliance", image:"images/rebel_alliance.png", description:"An alliance of freedom fighters opposing the tyranny of the Galactic Empire. Resourceful, scattered, and fiercely devoted to liberty." }
+    ],
+    technology: [
+      { name:"X-wing Starfighter", image:"images/xwing.jpg", description:"The Incom T-65 X-wing starfighter—fast, reliable, and deadly in skilled hands. Its balance of firepower and maneuverability made it a staple of the Rebellion." }
+    ],
+    characters: [
+      { name:"Mon Mothma", image:"images/mon_mothma.jpg", description:"Founder and leader of the Alliance to Restore the Republic. A former senator who united disparate rebel cells under a single cause." }
+    ]
+  };
 
-const main = document.getElementById('main');
-const categoryBtns = document.querySelectorAll('.category-btn');
-const searchInput = document.getElementById('search');
+  const main = document.getElementById('main');
+  const categoryBtns = document.querySelectorAll('.category-btn');
+  const searchInput = document.getElementById('search');
 
-function renderEntries(category, filter="") {
-  main.innerHTML = "";
-  const entries = codexData[category].filter(e => e.name.toLowerCase().includes(filter.toLowerCase()));
-  if(entries.length === 0) {
-    main.innerHTML = `<h1>No entries found.</h1>`;
-    return;
+  function renderEntries(category, filter="") {
+    main.innerHTML = "";
+    const entries = codexData[category].filter(e => e.name.toLowerCase().includes(filter.toLowerCase()));
+    if(entries.length === 0) {
+      main.innerHTML = `<h1>No entries found.</h1>`;
+      return;
+    }
+    entries.forEach(entry => {
+      const container = document.createElement('div');
+      container.innerHTML = `<h1>${entry.name}</h1>
+                             <img src="${entry.image}" alt="${entry.name}">
+                             <p>${entry.description}</p>`;
+      main.appendChild(container);
+    });
   }
-  entries.forEach(entry => {
-    const container = document.createElement('div');
-    container.innerHTML = `<h1>${entry.name}</h1>
-                           <img src="${entry.image}" alt="${entry.name}">
-                           <p>${entry.description}</p>`;
-    main.appendChild(container);
-  });
-}
 
-categoryBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    renderEntries(btn.dataset.category, searchInput.value);
-  });
-});
+  let activeCategory = null;
 
-searchInput.addEventListener('input', () => {
-  const activeCategoryBtn = Array.from(categoryBtns).find(b => b.classList.contains('active'));
-  if(activeCategoryBtn) {
-    renderEntries(activeCategoryBtn.dataset.category, searchInput.value);
-  }
-});
-</script>
+  categoryBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      categoryBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeCategory = btn.dataset.category;
+      renderEntries(activeCategory, searchInput.value);
+    });
+  });
+
+  searchInput.addEventListener('input', () => {
+    if(activeCategory) {
+      renderEntries(activeCategory, searchInput.value);
+    }
+  });
+  </script>
 
 </body>
 </html>
