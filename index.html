@@ -77,7 +77,6 @@
     transition: all 0.2s;
   }
   .category-btn:hover { background:#0e2a34; border-left-color:#66f0ff; }
-
   .category-btn.active { border-left-color:#00ffff; background:#0e2a34; }
 
   #search { margin-top:auto; padding:6px; background:#0b1c23; border:1px solid #33cfff; color:#a0d8ff; }
@@ -86,7 +85,18 @@
     flex:1; padding:20px; overflow-y:auto;
   }
   #main h1 { font-size:22px; margin-bottom:10px; color:#66f0ff; }
-  #main img { width:100%; border:2px solid #33cfff; border-radius:4px; margin-bottom:10px; }
+
+  /* --- Scaled-down images --- */
+  #main img {
+    display: block;
+    margin: 10px auto;
+    max-width: 300px;  /* scaled down to prevent pixelation */
+    height: auto;       /* maintain aspect ratio */
+    border: 2px solid #33cfff;
+    border-radius: 4px;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+  }
+
   #main p { font-size:15px; line-height:1.5em; }
 
   /* --- Decorative Lights --- */
@@ -137,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
       { name:"Rebel Alliance", image:"images/rebel.jpeg", description:"An alliance of freedom fighters opposing the tyranny of the Galactic Empire. Resourceful, scattered, and fiercely devoted to liberty." }
     ],
     technology: [
-      { name:"X-wing Starfighter", image:"images/x-wing.jpeg", description:"The Incom T-65 X-wing starfighter—fast, reliable, and deadly in skilled hands. Its balance of firepower and maneuverability made it a staple of the Rebellion." }
+      { name:"X-wing Starfighter", image:"images/x-wing.jpg", description:"The Incom T-65 X-wing starfighter—fast, reliable, and deadly in skilled hands. Its balance of firepower and maneuverability made it a staple of the Rebellion." }
     ],
     characters: [
       { name:"Mon Mothma", image:"images/mothma.jpeg", description:"Founder and leader of the Alliance to Restore the Republic. A former senator who united disparate rebel cells under a single cause." }
