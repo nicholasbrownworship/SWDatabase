@@ -54,7 +54,7 @@
     position:absolute; inset:0;
     background: repeating-linear-gradient(0deg, rgba(0,255,255,0.15) 0px, rgba(0,255,255,0.15) 1px, transparent 2px, transparent 3px);
     pointer-events:none;
-    z-index:3;
+    z-index:2;
     opacity:0;
   }
   #screen::before {
@@ -87,9 +87,9 @@
 #blueBase {
   position: absolute;
   inset: 0;
-  background-color: rgba(0, 255, 255, 1); /* Adjust opacity for intensity */
+  background-color: rgba(0, 255, 255, .35); /* Adjust opacity for intensity */
   pointer-events: none;
-  z-index: 1; /* Below flicker and distortion, above background */
+  z-index: 3; /* Below flicker and distortion, above background */
   mix-blend-mode: screen; /* Creates that soft glowing effect */
 }
 
