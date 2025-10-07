@@ -6,6 +6,7 @@
 <title>Rebel Datapad Codex</title>
 <style>
   * { box-sizing:border-box; margin:0; padding:0; font-family:'OCR A Std','Courier New', monospace; }
+
   body {
     background: radial-gradient(ellipse at center, #050505 0%, #000 100%);
     color:#a0d8ff;
@@ -47,7 +48,6 @@
     animation: glowPulse 3s infinite alternate;
   }
 
-  /* --- Glow Pulse Animation --- */
   @keyframes glowPulse {
     0% { box-shadow: inset 0 0 20px rgba(0,255,255,0.15); }
     50% { box-shadow: inset 0 0 35px rgba(0,255,255,0.3); }
@@ -78,6 +78,8 @@
   }
   .category-btn:hover { background:#0e2a34; border-left-color:#66f0ff; }
 
+  .category-btn.active { border-left-color:#00ffff; background:#0e2a34; }
+
   #search { margin-top:auto; padding:6px; background:#0b1c23; border:1px solid #33cfff; color:#a0d8ff; }
 
   #main {
@@ -100,31 +102,33 @@
 </style>
 </head>
 <body>
-
 <div id="datapad">
-  <div id="sidebar">
-    <h2>Datapad Codex</h2>
-    <button class="category-btn" data-category="planets">Planets</button>
-    <button class="category-btn" data-category="factions">Factions</button>
-    <button class="category-btn" data-category="technology">Technology</button>
-    <button class="category-btn" data-category="characters">Characters</button>
-    <div id="search-container">
-      <input type="text" id="search" placeholder="Search...">
+  <div class="indicator"></div>
+  <div class="indicator red"></div>
+  <div class="indicator red"></div>
+  <div class="indicator"></div>
+
+  <div id="screen">
+    <div id="content">
+      <div id="sidebar">
+        <h2>Codex</h2>
+        <button class="category-btn" data-category="planets">Planets</button>
+        <button class="category-btn" data-category="factions">Factions</button>
+        <button class="category-btn" data-category="technology">Technology</button>
+        <button class="category-btn" data-category="characters">Characters</button>
+        <input type="text" id="search" placeholder="Search...">
+      </div>
+      <div id="main">
+        <h1>Rebel Alliance Field Codex</h1>
+        <p>Loading encrypted entries... Select a category on the left to access the database.</p>
+      </div>
     </div>
   </div>
-
-  <div id="main">
-    <h1>Welcome</h1>
-    <p>Select a category from the sidebar to explore the Rebel Alliance Codex.</p>
-  </div>
-
-  <div id="flicker"></div>
 </div>
 
-  </div> <!-- end of #datapad -->
-  
-  <!-- --- JavaScript: Place here, just before </body> --- -->
-  <script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
   const codexData = {
     planets: [
       { name:"Yavin 4", image:"images/yavin4.jpg", description:"A jungle-covered moon used by the Rebel Alliance as a hidden base during the Galactic Civil War. Site of the first major victory against the Empire." }
@@ -176,7 +180,8 @@
       renderEntries(activeCategory, searchInput.value);
     }
   });
-  </script>
 
+});
+</script>
 </body>
 </html>
