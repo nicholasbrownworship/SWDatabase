@@ -83,22 +83,16 @@
     z-index:4;
   }
 
- /* 🔹 Cyan blue overlay for full-screen datapad effect */
-#blueOverlay {
+ /* 🔹 Constant cyan-blue wash across the whole datapad */
+#blueBase {
   position: absolute;
   inset: 0;
-  background-color: rgba(0, 255, 255, 0.5); /* Adjust opacity for stronger effect */
+  background-color: rgba(0, 255, 255, 0.15); /* Adjust opacity for intensity */
   pointer-events: none;
-  z-index: 1; /* Below flicker, above background */
-  mix-blend-mode: screen; /* Gives it that holographic look */
-  animation: bluePulse 4s infinite alternate;
+  z-index: 1; /* Below flicker and distortion, above background */
+  mix-blend-mode: screen; /* Creates that soft glowing effect */
 }
 
-@keyframes bluePulse {
-  0% { background-color: rgba(0,255,255,0.06); }
-  50% { background-color: rgba(0,255,255,0.1); }
-  100% { background-color: rgba(0,255,255,0.08); }
-}
 
   #content { display:flex; height:100%; position:relative; z-index:2; }
   #sidebar {
@@ -154,7 +148,7 @@
   <div class="indicator"></div>
 
   <div id="screen">
-    <div id="blueOverlay"></div>
+    <div id="blueBase"></div>
     <div id="flicker"></div>
     <div id="distortion"></div>
     <div id="content">
