@@ -52,7 +52,7 @@
   }
   #flicker {
     position:absolute; inset:0;
-    background: repeating-linear-gradient(0deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1px, transparent 2px, transparent 3px);
+    background: repeating-linear-gradient(0deg, rgba(255,255,255,0.15) 0px, rgba(255,255,255,0.15) 1px, transparent 2px, transparent 3px);
     pointer-events:none;
     z-index:3;
     opacity:0;
@@ -293,11 +293,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Flicker
   function randomFlicker() {
     if(Math.random() < 0.3){
-      flicker.style.opacity = (0.05 + Math.random() * 0.15).toFixed(2);
-      setTimeout(() => { flicker.style.opacity = 0; }, 50 + Math.random() * 100);
+      flicker.style.opacity = (0.1 + Math.random() * 0.3).toFixed(2);
+      setTimeout(() => { flicker.style.opacity = 0; }, 50 + Math.random() * 150);
     }
   }
-  setInterval(randomFlicker, 100);
+  setInterval(randomFlicker, 80);
 
   // Distortion
   function randomDistortion() {
