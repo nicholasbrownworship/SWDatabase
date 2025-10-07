@@ -302,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const rect = screen.getBoundingClientRect();
     mouseX = e.clientX - rect.left;
     mouseY = e.clientY - rect.top;
-    cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+    cursorDot.style.transform = `translate(${mouseX-6}px, ${mouseY-6}px)`;
   });
 
   const mouse = {x:0,y:0};
