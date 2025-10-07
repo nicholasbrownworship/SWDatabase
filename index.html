@@ -30,7 +30,7 @@ body {
   z-index:0;
 }
 
-/* Screen container */
+/* Screen */
 #screen {
   position:absolute;
   top:40px; left:40px;
@@ -42,35 +42,31 @@ body {
   cursor: none;
 }
 
-/* Screen effects (on top of images) */
-#blueBase,
-#flicker,
-#distortion {
+/* Overlay container: blue tint, distortion, flicker */
+#overlayEffects {
   position:absolute;
   inset:0;
   pointer-events:none;
-  z-index:1; /* above images but below UI */
+  z-index:3;
 }
-
 #blueBase {
-  background-color: rgba(0, 255, 255, .25);
+  position:absolute; inset:0;
+  background-color: rgba(0,255,255,0.25);
   mix-blend-mode: screen;
 }
-
 #distortion {
-  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(0,255,255,0.25) 0%, rgba(0,255,255,0.1) 10%, transparent 50%);
+  position:absolute; inset:0;
+  background: radial-gradient(circle at var(--x,50%) var(--y,50%), rgba(0,255,255,0.25) 0%, rgba(0,255,255,0.1) 10%, transparent 50%);
   transition: background 0.08s ease;
 }
-
 #flicker {
-  background: repeating-linear-gradient(0deg, rgba(0,255,255,0.15) 0px, rgba(0,255,255,0.15) 1px, transparent 2px, transparent 3px);
+  position:absolute; inset:0;
+  background: repeating-linear-gradient(0deg, rgba(0,255,255,0.2) 0px, rgba(0,255,255,0.2) 1px, transparent 2px, transparent 3px);
   opacity:0;
 }
 
-/* Content / UI above all */
-#content { display:flex; height:100%; position:relative; z-index:2; }
-
-/* Sidebar */
+/* UI / content */
+#content { display:flex; height:100%; position:relative; z-index:4; }
 #sidebar {
   width:200px; background:rgba(5,15,20,0.8); border-right:1px solid #033;
   display:flex; flex-direction:column; padding:15px;
@@ -92,18 +88,17 @@ body {
 #breadcrumbs span:hover { text-decoration: underline; }
 #entryContent h1 { font-size:22px; margin-bottom:10px; color:#66f0ff; }
 
-/* Images are under the effects */
+/* Images under overlay */
 #entryContent img {
   display:block; margin:10px auto; max-width:300px; height:auto;
   border:2px solid #33cfff; border-radius:4px;
   box-shadow:0 0 15px rgba(0,255,255,0.3);
-  position: relative;
-  z-index:0; /* below blueBase & distortion */
+  position: relative; z-index:0;
 }
 
 #entryContent p { font-size:15px; line-height:1.5em; }
 
-/* Indicators and cursor */
+/* Indicators */
 .indicator {
   position:absolute; width:12px; height:12px; border-radius:50%;
   background:#0f0; box-shadow:0 0 8px #0f0;
@@ -113,16 +108,18 @@ body {
 .indicator:nth-child(2){ top:10px; right:10px; }
 .indicator:nth-child(3){ bottom:10px; left:10px; }
 .indicator:nth-child(4){ bottom:10px; right:10px; }
+
+/* Cursor dot */
 #cursor-dot {
-  position:absolute;
-  width:12px; height:12px;
-  border-radius:50%;
+  position:absolute; width:12px; height:12px; border-radius:50%;
   background: rgba(0,255,255,0.8);
   box-shadow:0 0 8px rgba(0,255,255,0.8), 0 0 15px rgba(0,255,255,0.5);
-  pointer-events:none;
-  transform: translate(-50%, -50%);
-  z-index:3;
+  pointer-events:none; transform: translate(-50%, -50%);
+  z-index:5;
 }
+
+/* Hide cursor over screen */
+#screen, #screen * { cursor:none; }
 </style>
 </head>
 <body>
@@ -133,12 +130,14 @@ body {
   <div class="indicator"></div>
 
   <div id="screen">
-    <!-- Effects above images -->
-    <div id="blueBase"></div>
-    <div id="distortion"></div>
-    <div id="flicker"></div>
+    <!-- Overlay effects above images -->
+    <div id="overlayEffects">
+      <div id="blueBase"></div>
+      <div id="distortion"></div>
+      <div id="flicker"></div>
+    </div>
 
-    <!-- Main content & sidebar -->
+    <!-- Main content -->
     <div id="content">
       <div id="sidebar">
         <h2>Codex</h2>
@@ -157,7 +156,6 @@ body {
         </div>
       </div>
     </div>
-
     <div id="cursor-dot"></div>
   </div>
 </div>
@@ -292,27 +290,33 @@ document.addEventListener('DOMContentLoaded', () => {
     categoryBtns.forEach(b => b.classList.remove('active'));
   });
 
-  // Flicker
+  // Flicker: stronger and more frequent
   function randomFlicker() {
-    if(Math.random() < 0.3){
-      flicker.style.opacity = (0.1 + Math.random() * 0.3).toFixed(2);
-      setTimeout(() => { flicker.style.opacity = 0; }, 50 + Math.random() * 150);
+    if(Math.random() < 0.5){
+      flicker.style.opacity = (0.15 + Math.random() * 0.5).toFixed(2);
+      setTimeout(() => { flicker.style.opacity = 0; }, 30 + Math.random() * 100);
     }
   }
-  setInterval(randomFlicker, 80);
+  setInterval(randomFlicker, 60);
 
-  // Distortion
-  function randomDistortion() {
-    if(Math.random() < 0.03) {
-      const xShift = (Math.random() * 4 - 2).toFixed(1);
-      const yShift = (Math.random() * 4 - 2).toFixed(1);
-      distortion.style.transform = `translate(${xShift}px, ${yShift}px)`;
-      setTimeout(() => { distortion.style.transform = 'translate(0,0)'; }, 50 + Math.random() * 50);
-    }
+  // Distortion follows cursor
+  screen.addEventListener('mousemove', e => {
+    const rect = screen.getBoundingClientRect();
+    const x = ((e.clientX - rect.left)/rect.width)*100;
+    const y = ((e.clientY - rect.top)/rect.height)*100;
+    distortion.style.setProperty('--x', x + '%');
+    distortion.style.setProperty('--y', y + '%');
+  });
+
+  // Small random pulses for distortion
+  function randomDistortionPulse() {
+    const scale = 1 + Math.random()*0.02;
+    distortion.style.transform = `scale(${scale})`;
+    setTimeout(() => { distortion.style.transform = 'scale(1)'; }, 50 + Math.random()*50);
   }
-  setInterval(randomDistortion, 100);
+  setInterval(randomDistortionPulse, 100);
 
-  // Cursor tracking inside screen
+  // Cursor dot tracking
   screen.addEventListener('mousemove', e => {
     const rect = screen.getBoundingClientRect();
     const x = e.clientX - rect.left;
