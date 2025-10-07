@@ -11,9 +11,7 @@
     color:#a0d8ff;
     height:100vh; display:flex; justify-content:center; align-items:center;
     overflow:hidden;
-    cursor: none;
   }
-
   #datapad {
     width:900px; height:600px;
     background: url('images/metal_texture.jpg') center/cover no-repeat;
@@ -23,7 +21,6 @@
     box-shadow: 0 0 60px rgba(0,255,255,0.05), inset 0 0 20px #000;
     overflow:hidden;
   }
-
   #datapad::before {
     content:"";
     position:absolute; inset:0;
@@ -32,7 +29,6 @@
     opacity:0.2;
     z-index:0;
   }
-
   #screen {
     position:absolute;
     top:40px; left:40px;
@@ -44,14 +40,11 @@
     z-index:1;
     animation: glowPulse 3s infinite alternate;
   }
-
   @keyframes glowPulse {
     0% { box-shadow: inset 0 0 20px rgba(0,255,255,0.15); }
     50% { box-shadow: inset 0 0 35px rgba(0,255,255,0.3); }
     100% { box-shadow: inset 0 0 25px rgba(0,255,255,0.2); }
   }
-
-  /* Flicker overlay */
   #flicker {
     position:absolute; inset:0;
     background: repeating-linear-gradient(0deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1px, transparent 2px, transparent 3px);
@@ -59,8 +52,6 @@
     z-index:3;
     opacity:0;
   }
-
-  /* Scanlines */
   #screen::before {
     content:"";
     position:absolute;
@@ -76,20 +67,16 @@
     animation: scanlines 1s linear infinite;
     z-index:2;
   }
-
   @keyframes scanlines {
     0% { background-position: 0 0; }
     100% { background-position: 0 4px; }
   }
-
-  /* Distortion overlay */
   #distortion {
     position:absolute;
     inset:0;
     pointer-events:none;
     z-index:4;
   }
-
   #content { display:flex; height:100%; position:relative; z-index:2; }
   #sidebar {
     width:200px; background:rgba(5,15,20,0.8); border-right:1px solid #033;
@@ -103,23 +90,18 @@
   }
   .category-btn:hover { background:#0e2a34; border-left-color:#66f0ff; }
   .category-btn.active { border-left-color:#00ffff; background:#0e2a34; }
-
   #search { margin-top:auto; padding:6px; background:#0b1c23; border:1px solid #33cfff; color:#a0d8ff; }
-
   #main { flex:1; padding:20px; overflow-y:auto; }
   #breadcrumbs { margin-bottom:10px; font-size:14px; color:#33cfff; }
   #breadcrumbs span { cursor: default; }
   #breadcrumbs span:hover { text-decoration: underline; }
   #entryContent h1 { font-size:22px; margin-bottom:10px; color:#66f0ff; }
-
   #entryContent img {
     display:block; margin:10px auto; max-width:300px; height:auto;
     border:2px solid #33cfff; border-radius:4px;
     box-shadow:0 0 15px rgba(0,255,255,0.3);
   }
   #entryContent p { font-size:15px; line-height:1.5em; }
-
-  /* Indicators */
   .indicator {
     position:absolute; width:12px; height:12px; border-radius:50%;
     background:#0f0; box-shadow:0 0 8px #0f0;
@@ -129,6 +111,19 @@
   .indicator:nth-child(2){ top:10px; right:10px; }
   .indicator:nth-child(3){ bottom:10px; left:10px; }
   .indicator:nth-child(4){ bottom:10px; right:10px; }
+
+  /* Glowing cursor dot */
+  #cursor-dot {
+    position:absolute;
+    width:12px; height:12px;
+    border-radius:50%;
+    background: rgba(0,255,255,0.8);
+    box-shadow:0 0 8px rgba(0,255,255,0.8), 0 0 15px rgba(0,255,255,0.5);
+    pointer-events:none;
+    transform: translate(-50%, -50%);
+    transition: transform 0.05s linear;
+    z-index:10;
+  }
 </style>
 </head>
 <body>
@@ -160,6 +155,7 @@
       </div>
     </div>
   </div>
+  <div id="cursor-dot"></div>
 </div>
 
 <script>
@@ -174,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
       { name:"Galactic Empire", image:"images/empire.jpeg", description:"The authoritarian regime controlling the galaxy with fear and military might." }
     ],
     technology: [
-      { name:"X-wing Starfighter", image:"images/x-wing.jpeg", description:"Fast, reliable, deadly starfighter." },
+      { name:"X-wing Starfighter", image:"images/x-wing.jpeg", description:"Fast, reliable, and deadly starfighter used by the Rebel Alliance." },
       { name:"TIE Fighter", image:"images/tie.jpg", description:"The Imperial starfighter: fast, cheap, and overwhelming in numbers." }
     ],
     characters: [
@@ -191,6 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const flicker = document.getElementById('flicker');
   const distortion = document.getElementById('distortion');
   const screen = document.getElementById('screen');
+  const cursorDot = document.getElementById('cursor-dot');
 
   let activeCategory = null;
   let activeSubFile = null;
@@ -291,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
     categoryBtns.forEach(b => b.classList.remove('active'));
   });
 
-  // --- Punchier random flicker ---
+  // Flicker
   function randomFlicker() {
     if(Math.random() < 0.3){
       flicker.style.opacity = (0.05 + Math.random() * 0.1).toFixed(2);
@@ -300,14 +297,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   setInterval(randomFlicker, 100);
 
-  // --- Random distortion around cursor ---
-  const mouse = {x:0,y:0};
-  screen.addEventListener('mousemove', (e) => {
+  // Distortion
+  screen.addEventListener('mousemove', e => {
     const rect = screen.getBoundingClientRect();
-    mouse.x = e.clientX - rect.left;
-    mouse.y = e.clientY - rect.top;
+    mouseX = e.clientX - rect.left;
+    mouseY = e.clientY - rect.top;
+    cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
   });
 
+  const mouse = {x:0,y:0};
   function randomDistortion() {
     if(Math.random() < 0.03) {
       const xShift = (Math.random() * 4 - 2).toFixed(1);
