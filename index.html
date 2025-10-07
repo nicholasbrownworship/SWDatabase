@@ -84,10 +84,15 @@
   #main {
     flex:1; padding:20px; overflow-y:auto;
   }
-  #main h1 { font-size:22px; margin-bottom:10px; color:#66f0ff; }
+  #breadcrumbs {
+    margin-bottom:10px; font-size:14px; color:#33cfff;
+  }
+  #breadcrumbs span { cursor: default; }
+  #breadcrumbs span:hover { text-decoration: underline; }
+  #entryContent h1 { font-size:22px; margin-bottom:10px; color:#66f0ff; }
 
   /* --- Scaled-down images --- */
-  #main img {
+  #entryContent img {
     display: block;
     margin: 10px auto;
     max-width: 300px;  /* scaled down to prevent pixelation */
@@ -97,7 +102,7 @@
     box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
   }
 
-  #main p { font-size:15px; line-height:1.5em; }
+  #entryContent p { font-size:15px; line-height:1.5em; }
 
   /* --- Decorative Lights --- */
   .indicator {
@@ -129,8 +134,11 @@
         <input type="text" id="search" placeholder="Search...">
       </div>
       <div id="main">
-        <h1>Rebel Alliance Field Codex</h1>
-        <p>Loading encrypted entries... Select a category on the left to access the database.</p>
+        <div id="breadcrumbs"></div>
+        <div id="entryContent">
+          <h1>Rebel Alliance Field Codex</h1>
+          <p>Loading encrypted entries... Select a category on the left to access the database.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -159,15 +167,43 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const main = document.getElementById('main');
+  const entryContent = document.getElementById('entryContent');
+  const breadcrumbs = document.getElementById('breadcrumbs');
   const categoryBtns = document.querySelectorAll('.category-btn');
   const searchInput = document.getElementById('search');
 
   let activeCategory = null;
   let activeSubFile = null;
 
-  // Render the list of sub-files under a category
+  // Update breadcrumb trail
+  function updateBreadcrumbs() {
+    breadcrumbs.innerHTML = '';
+    if(activeCategory) {
+      const catSpan = document.createElement('span');
+      catSpan.textContent = activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1);
+      catSpan.style.cursor = 'pointer';
+      catSpan.addEventListener('click', () => {
+        activeSubFile = null;
+        renderSubFiles(activeCategory);
+      });
+      breadcrumbs.appendChild(catSpan);
+
+      if(activeSubFile) {
+        const sep = document.createElement('span');
+        sep.textContent = ' > ';
+        breadcrumbs.appendChild(sep);
+
+        const subSpan = document.createElement('span');
+        subSpan.textContent = activeSubFile.name;
+        breadcrumbs.appendChild(subSpan);
+      }
+    }
+  }
+
+  // Render sub-file list
   function renderSubFiles(category) {
-    main.innerHTML = "";
+    updateBreadcrumbs();
+    entryContent.innerHTML = '';
     codexData[category].forEach(entry => {
       const btn = document.createElement('button');
       btn.textContent = entry.name;
@@ -177,20 +213,25 @@ document.addEventListener('DOMContentLoaded', () => {
         activeSubFile = entry;
         renderEntryDetail(entry);
       });
-      main.appendChild(btn);
+      entryContent.appendChild(btn);
     });
   }
 
-  // Render a single entry detail
+  // Render entry detail
   function renderEntryDetail(entry) {
-    main.innerHTML = `<h1>${entry.name}</h1>
-                      <img src="${entry.image}" alt="${entry.name}">
-                      <p>${entry.description}</p>
-                      <button id="backBtn" class="category-btn" style="margin-top:20px;">Back</button>`;
-    document.getElementById('backBtn').addEventListener('click', () => {
+    updateBreadcrumbs();
+    entryContent.innerHTML = `<h1>${entry.name}</h1>
+                              <img src="${entry.image}" alt="${entry.name}">
+                              <p>${entry.description}</p>`;
+    const backBtn = document.createElement('button');
+    backBtn.textContent = 'Back';
+    backBtn.classList.add('category-btn');
+    backBtn.style.marginTop = '20px';
+    backBtn.addEventListener('click', () => {
       activeSubFile = null;
       renderSubFiles(activeCategory);
     });
+    entryContent.appendChild(backBtn);
   }
 
   // Sidebar buttons
@@ -204,11 +245,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Search filter at the sub-file level
+  // Search filter at sub-file level
   searchInput.addEventListener('input', () => {
     if(activeCategory && !activeSubFile) {
       const filter = searchInput.value.toLowerCase();
-      main.innerHTML = '';
+      entryContent.innerHTML = '';
       codexData[activeCategory]
         .filter(entry => entry.name.toLowerCase().includes(filter))
         .forEach(entry => {
@@ -220,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
             activeSubFile = entry;
             renderEntryDetail(entry);
           });
-          main.appendChild(btn);
+          entryContent.appendChild(btn);
         });
     }
   });
