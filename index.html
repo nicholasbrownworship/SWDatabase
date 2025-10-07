@@ -41,22 +41,22 @@
     animation: glowPulse 3s infinite alternate;
     cursor: none;
   }
-  #screen * {
-   cursor:none;
-  }
- 
+  #screen * { cursor:none; }
+
   @keyframes glowPulse {
     0% { box-shadow: inset 0 0 20px rgba(0,255,255,0.15); }
     50% { box-shadow: inset 0 0 35px rgba(0,255,255,0.3); }
     100% { box-shadow: inset 0 0 25px rgba(0,255,255,0.2); }
   }
+
   #flicker {
     position:absolute; inset:0;
     background: repeating-linear-gradient(0deg, rgba(0,255,255,0.15) 0px, rgba(0,255,255,0.15) 1px, transparent 2px, transparent 3px);
     pointer-events:none;
-    z-index:1;
+    z-index:3;
     opacity:0;
   }
+
   #screen::before {
     content:"";
     position:absolute;
@@ -70,30 +70,36 @@
       transparent 3px
     );
     animation: scanlines 1s linear infinite;
-    z-index:3;
+    z-index:2;
   }
+
   @keyframes scanlines {
     0% { background-position: 0 0; }
     100% { background-position: 0 4px; }
   }
+
+  /* 🔹 Fixed distortion effect */
   #distortion {
     position:absolute;
     inset:0;
-    background: radial-gradiant(circle at var(--x) var(--y), rgba(0,255,255,0.2) 0%, transport 40%)
+    background: radial-gradient(circle at var(--x, 50%) var(--y, 50%),
+      rgba(0,255,255,0.25) 0%,
+      rgba(0,255,255,0.1) 10%,
+      transparent 50%);
     pointer-events:none;
     z-index:2;
+    transition: background 0.08s ease;
   }
 
- /* 🔹 Constant cyan-blue wash across the whole datapad */
-#blueBase {
-  position: absolute;
-  inset: 0;
-  background-color: rgba(0, 255, 255, .35); /* Adjust opacity for intensity */
-  pointer-events: none;
-  z-index: 3; /* Below flicker and distortion, above background */
-  mix-blend-mode: screen; /* Creates that soft glowing effect */
-}
-
+  /* 🔹 Constant cyan-blue wash across the whole datapad */
+  #blueBase {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 255, 255, .25);
+    pointer-events: none;
+    z-index: 1; /* Below flicker and distortion, above screen background */
+    mix-blend-mode: screen;
+  }
 
   #content { display:flex; height:100%; position:relative; z-index:4; }
   #sidebar {
@@ -120,6 +126,7 @@
     box-shadow:0 0 15px rgba(0,255,255,0.3);
   }
   #entryContent p { font-size:15px; line-height:1.5em; }
+
   .indicator {
     position:absolute; width:12px; height:12px; border-radius:50%;
     background:#0f0; box-shadow:0 0 8px #0f0;
@@ -129,9 +136,10 @@
   .indicator:nth-child(2){ top:10px; right:10px; }
   .indicator:nth-child(3){ bottom:10px; left:10px; }
   .indicator:nth-child(4){ bottom:10px; right:10px; }
+
   #cursor-dot {
     position:absolute;
-    width:12px; height:12px;
+    width:14px; height:14px;
     border-radius:50%;
     background: rgba(0,255,255,0.8);
     box-shadow:0 0 8px rgba(0,255,255,0.8), 0 0 15px rgba(0,255,255,0.5);
@@ -150,8 +158,8 @@
 
   <div id="screen">
     <div id="blueBase"></div>
-    <div id="flicker"></div>
     <div id="distortion"></div>
+    <div id="flicker"></div>
     <div id="content">
       <div id="sidebar">
         <h2>Codex</h2>
@@ -313,8 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   setInterval(randomFlicker, 80);
 
-
-  // Distortion
+  // Distortion jitter
   function randomDistortion() {
     if(Math.random() < 0.03) {
       const xShift = (Math.random() * 4 - 2).toFixed(1);
@@ -330,8 +337,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const rect = screen.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    cursorDot.style.left = x + 'px';
-    cursorDot.style.top = y + 'px';
+    cursorDot.style.left = `${x}px`;
+    cursorDot.style.top = `${y}px`;
+    distortion.style.setProperty('--x', `${x}px`);
+    distortion.style.setProperty('--y', `${y}px`);
   });
 
 });
