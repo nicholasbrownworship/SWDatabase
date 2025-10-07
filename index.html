@@ -111,8 +111,6 @@
   .indicator:nth-child(2){ top:10px; right:10px; }
   .indicator:nth-child(3){ bottom:10px; left:10px; }
   .indicator:nth-child(4){ bottom:10px; right:10px; }
-
-  /* Glowing cursor dot */
   #cursor-dot {
     position:absolute;
     width:12px; height:12px;
@@ -120,8 +118,7 @@
     background: rgba(0,255,255,0.8);
     box-shadow:0 0 8px rgba(0,255,255,0.8), 0 0 15px rgba(0,255,255,0.5);
     pointer-events:none;
-    transform: none;
-    transition: transform 0.05s linear;
+    transform: translate(-50%, -50%);
     z-index:10;
   }
 </style>
@@ -154,8 +151,8 @@
         </div>
       </div>
     </div>
+    <div id="cursor-dot"></div>
   </div>
-  <div id="cursor-dot"></div>
 </div>
 
 <script>
@@ -291,21 +288,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Flicker
   function randomFlicker() {
     if(Math.random() < 0.3){
-      flicker.style.opacity = (0.05 + Math.random() * 0.1).toFixed(2);
+      flicker.style.opacity = (0.05 + Math.random() * 0.15).toFixed(2);
       setTimeout(() => { flicker.style.opacity = 0; }, 50 + Math.random() * 100);
     }
   }
   setInterval(randomFlicker, 100);
 
   // Distortion
-  screen.addEventListener('mousemove', e => {
-    const rect = screen.getBoundingClientRect();
-    mouseX = e.clientX - rect.left;
-    mouseY = e.clientY - rect.top;
-    cursorDot.style.transform = `translate(${mouseX-6}px, ${mouseY-6}px)`;
-  });
-
-  const mouse = {x:0,y:0};
   function randomDistortion() {
     if(Math.random() < 0.03) {
       const xShift = (Math.random() * 4 - 2).toFixed(1);
@@ -315,6 +304,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   setInterval(randomDistortion, 100);
+
+  // Cursor tracking inside screen
+  screen.addEventListener('mousemove', e => {
+    const rect = screen.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    cursorDot.style.left = x + 'px';
+    cursorDot.style.top = y + 'px';
+  });
 
 });
 </script>
