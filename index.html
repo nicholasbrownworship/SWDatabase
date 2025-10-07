@@ -79,6 +79,7 @@
   #distortion {
     position:absolute;
     inset:0;
+    background: radial-gradiant(circle at var(--x) var(--y), rgba(0,255,255,0.2) 0%, transport 40%)
     pointer-events:none;
     z-index:6;
   }
@@ -312,6 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   setInterval(randomFlicker, 80);
 
+
   // Distortion
   function randomDistortion() {
     if(Math.random() < 0.03) {
@@ -330,6 +332,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const y = e.clientY - rect.top;
     cursorDot.style.left = x + 'px';
     cursorDot.style.top = y + 'px';
+  });
+
+    document.addEventListener('mousemove', (e) => {
+    cursorDot.style.left = e.clientX + 'px';
+    cursorDot.style.top = e.clientY + 'px';
+    distortion.style.background = `radial-gradient(circle at ${e.clientX}px ${e.clientY}px, rgba(0,255,255,0.15) 0%, transparent 60%)`;
   });
 
 });
