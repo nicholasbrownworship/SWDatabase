@@ -6,15 +6,14 @@
 <title>Rebel Datapad Codex</title>
 <style>
   * { box-sizing:border-box; margin:0; padding:0; font-family:'OCR A Std','Courier New', monospace; }
-
   body {
     background: radial-gradient(ellipse at center, #050505 0%, #000 100%);
     color:#a0d8ff;
     height:100vh; display:flex; justify-content:center; align-items:center;
     overflow:hidden;
+    cursor: none;
   }
 
-  /* --- Datapad Frame --- */
   #datapad {
     width:900px; height:600px;
     background: url('images/metal_texture.jpg') center/cover no-repeat;
@@ -34,7 +33,6 @@
     z-index:0;
   }
 
-  /* --- Screen Area --- */
   #screen {
     position:absolute;
     top:40px; left:40px;
@@ -53,18 +51,16 @@
     100% { box-shadow: inset 0 0 25px rgba(0,255,255,0.2); }
   }
 
-  /* --- Flicker Overlay --- */
-  #screen::after {
-    content:"";
+  /* Flicker overlay */
+  #flicker {
     position:absolute; inset:0;
-    background: repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 2px, transparent 3px);
-    animation: flicker 0.15s infinite;
+    background: repeating-linear-gradient(0deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1px, transparent 2px, transparent 3px);
     pointer-events:none;
-    z-index:2;
+    z-index:3;
+    opacity:0;
   }
-  @keyframes flicker { 0%,100%{opacity:0.03;} 50%{opacity:0.07;} }
 
-  /* --- Scanlines --- */
+  /* Scanlines */
   #screen::before {
     content:"";
     position:absolute;
@@ -80,22 +76,20 @@
     animation: scanlines 1s linear infinite;
     z-index:2;
   }
+
   @keyframes scanlines {
     0% { background-position: 0 0; }
     100% { background-position: 0 4px; }
   }
 
-  /* --- Glitch Overlay --- */
-  #glitch {
+  /* Distortion overlay */
+  #distortion {
     position:absolute;
     inset:0;
-    background: rgba(255,255,255,0.05);
-    opacity:0;
     pointer-events:none;
     z-index:4;
   }
 
-  /* --- Layout --- */
   #content { display:flex; height:100%; position:relative; z-index:2; }
   #sidebar {
     width:200px; background:rgba(5,15,20,0.8); border-right:1px solid #033;
@@ -112,28 +106,20 @@
 
   #search { margin-top:auto; padding:6px; background:#0b1c23; border:1px solid #33cfff; color:#a0d8ff; }
 
-  #main {
-    flex:1; padding:20px; overflow-y:auto;
-  }
-  #breadcrumbs {
-    margin-bottom:10px; font-size:14px; color:#33cfff;
-  }
+  #main { flex:1; padding:20px; overflow-y:auto; }
+  #breadcrumbs { margin-bottom:10px; font-size:14px; color:#33cfff; }
   #breadcrumbs span { cursor: default; }
   #breadcrumbs span:hover { text-decoration: underline; }
   #entryContent h1 { font-size:22px; margin-bottom:10px; color:#66f0ff; }
 
   #entryContent img {
-    display: block;
-    margin: 10px auto;
-    max-width: 300px;
-    height: auto;
-    border: 2px solid #33cfff;
-    border-radius: 4px;
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+    display:block; margin:10px auto; max-width:300px; height:auto;
+    border:2px solid #33cfff; border-radius:4px;
+    box-shadow:0 0 15px rgba(0,255,255,0.3);
   }
   #entryContent p { font-size:15px; line-height:1.5em; }
 
-  /* --- Decorative Lights --- */
+  /* Indicators */
   .indicator {
     position:absolute; width:12px; height:12px; border-radius:50%;
     background:#0f0; box-shadow:0 0 8px #0f0;
@@ -153,7 +139,8 @@
   <div class="indicator"></div>
 
   <div id="screen">
-    <div id="glitch"></div>
+    <div id="flicker"></div>
+    <div id="distortion"></div>
     <div id="content">
       <div id="sidebar">
         <h2>Codex</h2>
@@ -177,7 +164,6 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-
   const codexData = {
     planets: [
       { name:"Yavin 4", image:"images/yavin-4.jpeg", description:"A jungle-covered moon used by the Rebel Alliance as a hidden base during the Galactic Civil War. Site of the first major victory against the Empire." },
@@ -202,7 +188,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const categoryBtns = document.querySelectorAll('.category-btn');
   const searchInput = document.getElementById('search');
   const homeBtn = document.getElementById('homeBtn');
-  const glitch = document.getElementById('glitch');
+  const flicker = document.getElementById('flicker');
+  const distortion = document.getElementById('distortion');
+  const screen = document.getElementById('screen');
 
   let activeCategory = null;
   let activeSubFile = null;
@@ -300,16 +288,35 @@ document.addEventListener('DOMContentLoaded', () => {
     breadcrumbs.innerHTML = '';
     entryContent.innerHTML = `<h1>Rebel Alliance Field Codex</h1>
                               <p>Loading encrypted entries... Select a category on the left to access the database.</p>`;
+    categoryBtns.forEach(b => b.classList.remove('active'));
   });
 
-  // Random subtle glitch flashes
-  function randomGlitch() {
-    if(Math.random() < 0.05) {
-      glitch.style.opacity = (Math.random() * 0.08 + 0.02).toFixed(2);
-      setTimeout(() => { glitch.style.opacity = 0; }, 50 + Math.random() * 100);
+  // --- Punchier random flicker ---
+  function randomFlicker() {
+    if(Math.random() < 0.3){
+      flicker.style.opacity = (0.05 + Math.random() * 0.1).toFixed(2);
+      setTimeout(() => { flicker.style.opacity = 0; }, 50 + Math.random() * 100);
     }
   }
-  setInterval(randomGlitch, 100);
+  setInterval(randomFlicker, 100);
+
+  // --- Random distortion around cursor ---
+  const mouse = {x:0,y:0};
+  screen.addEventListener('mousemove', (e) => {
+    const rect = screen.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left;
+    mouse.y = e.clientY - rect.top;
+  });
+
+  function randomDistortion() {
+    if(Math.random() < 0.03) {
+      const xShift = (Math.random() * 4 - 2).toFixed(1);
+      const yShift = (Math.random() * 4 - 2).toFixed(1);
+      distortion.style.transform = `translate(${xShift}px, ${yShift}px)`;
+      setTimeout(() => { distortion.style.transform = 'translate(0,0)'; }, 50 + Math.random() * 50);
+    }
+  }
+  setInterval(randomDistortion, 100);
 
 });
 </script>
