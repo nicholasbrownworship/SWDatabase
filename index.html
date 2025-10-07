@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rebel Datapad Codex</title>
+<style>
+  /* --- Reset & Base --- */
+  * { box-sizing: border-box; margin:0; padding:0; font-family:'Courier New', monospace; }
+  body { background:#0b0b0b; color:#a0d8ff; overflow:hidden; }
+
+  /* --- Container --- */
+  #datapad {
+    display:flex;
+    width:100vw; height:100vh;
+    background: #111 url('https://i.imgur.com/pfGdH2Y.jpg') no-repeat center center; 
+    background-size: cover;
+    position: relative;
+    filter: contrast(1.1) brightness(0.95);
+  }
+
+  /* --- Sidebar --- */
+  #sidebar {
+    width:220px; background:#141414; border-right:2px solid #0a5266;
+    display:flex; flex-direction:column; padding:15px;
+  }
+  #sidebar h2 { margin-bottom:10px; color:#33cfff; text-align:center; font-size:18px; text-shadow:0 0 6px #000; }
+  .category-btn {
+    background:#0a1f26; border:none; margin:5px 0; padding:10px; color:#33cfff;
+    cursor:pointer; text-align:left; border-left:4px solid #0a5266;
+    transition: all 0.2s;
+  }
+  .category-btn:hover { background:#0e2a34; border-left-color:#66f0ff; }
+
+  /* --- Main Display --- */
+  #main {
+    flex:1; padding:20px; position:relative;
+    background: rgba(10,10,10,0.85); overflow-y:auto;
+  }
+  #main h1 { font-size:24px; margin-bottom:10px; color:#66f0ff; }
+  #main img { max-width:100%; margin-bottom:15px; border:2px solid #33cfff; }
+  #main p { font-size:16px; line-height:1.5em; text-shadow:0 0 4px #000; }
+
+  /* --- Search Bar --- */
+  #search-container { margin-bottom:15px; }
+  #search {
+    width:100%; padding:8px; background:#0b1c23; border:1px solid #33cfff;
+    color:#a0d8ff; outline:none; font-size:14px;
+  }
+
+  /* --- Flicker Overlay --- */
+  #flicker {
+    position:absolute; top:0; left:0; width:100%; height:100%;
+    pointer-events:none; background:rgba(255,255,255,0.02);
+    animation:flicker 0.15s infinite;
+  }
+  @keyframes flicker {
+    0%, 100% { opacity:0.02; }
+    50% { opacity:0.05; }
+  }
+</style>
+</head>
+<body>
+
+<div id="datapad">
+  <div id="sidebar">
+    <h2>Datapad Codex</h2>
+    <button class="category-btn" data-category="planets">Planets</button>
+    <button class="category-btn" data-category="factions">Factions</button>
+    <button class="category-btn" data-category="technology">Technology</button>
+    <button class="category-btn" data-category="characters">Characters</button>
+    <div id="search-container">
+      <input type="text" id="search" placeholder="Search...">
+    </div>
+  </div>
+
+  <div id="main">
+    <h1>Welcome</h1>
+    <p>Select a category from the sidebar to explore the Rebel Alliance Codex.</p>
+  </div>
+
+  <div id="flicker"></div>
+</div>
+
+<script>
+const codexData = {
+  planets: [
+    { name:"Yavin 4", image:"https://i.imgur.com/VbV1X3R.jpg", description:"A jungle-covered moon and base for the Rebel Alliance during the Galactic Civil War. Famous for the Battle of Yavin." }
+  ],
+  factions: [
+    { name:"Rebel Alliance", image:"https://i.imgur.com/j7F0z2U.png", description:"A coalition of resistance cells fighting against the Galactic Empire. Known for daring missions and resourcefulness." }
+  ],
+  technology: [
+    { name:"X-wing Starfighter", image:"https://i.imgur.com/WgRnrXL.jpg", description:"The backbone of the Rebel fleet. Highly versatile starfighter capable of dogfighting and long-range attacks." }
+  ],
+  characters: [
+    { name:"Mon Mothma", image:"https://i.imgur.com/x2G2m03.jpg", description:"A prominent leader of the Rebel Alliance, known for her political acumen and dedication to freedom across the galaxy." }
+  ]
+};
+
+const main = document.getElementById('main');
+const categoryBtns = document.querySelectorAll('.category-btn');
+const searchInput = document.getElementById('search');
+
+function renderEntries(category, filter="") {
+  main.innerHTML = "";
+  const entries = codexData[category].filter(e => e.name.toLowerCase().includes(filter.toLowerCase()));
+  if(entries.length === 0) {
+    main.innerHTML = `<h1>No entries found.</h1>`;
+    return;
+  }
+  entries.forEach(entry => {
+    const container = document.createElement('div');
+    container.innerHTML = `<h1>${entry.name}</h1>
+                           <img src="${entry.image}" alt="${entry.name}">
+                           <p>${entry.description}</p>`;
+    main.appendChild(container);
+  });
+}
+
+categoryBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    renderEntries(btn.dataset.category, searchInput.value);
+  });
+});
+
+searchInput.addEventListener('input', () => {
+  const activeCategoryBtn = Array.from(categoryBtns).find(b => b.classList.contains('active'));
+  if(activeCategoryBtn) {
+    renderEntries(activeCategoryBtn.dataset.category, searchInput.value);
+  }
+});
+</script>
+
+</body>
+</html>
