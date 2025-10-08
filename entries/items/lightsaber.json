@@ -1,0 +1,7 @@
+{
+  "id": "lighsaber",
+  "name": "Lightsaber",
+  "image": "images/lightsaber.jpeg",
+  "description": "This is a test.",
+  "gmMode": true
+}
