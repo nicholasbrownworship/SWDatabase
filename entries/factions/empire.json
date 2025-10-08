@@ -1,0 +1,7 @@
+{
+  "id": "empire",
+  "name": "The Empire",
+  "image": "images/rebel.jpeg",
+  "description": "This is a test.",
+  "gmMode": true
+}
