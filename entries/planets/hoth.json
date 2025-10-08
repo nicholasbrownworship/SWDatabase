@@ -1,0 +1,7 @@
+{
+  "id": "hoth",
+  "name": "Hoth",
+  "image": "images/hoth.jpeg",
+  "description": "Test text.",
+  "gmMode": true
+}
