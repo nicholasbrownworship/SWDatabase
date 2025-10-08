@@ -3,5 +3,5 @@
   "name": "Luke Skywalker",
   "image": "images/luke_skywalker.jpeg",
   "description": "This is a test.",
-  "gmMode": false
+  "gmMode": true
 }
