@@ -86,14 +86,43 @@ body {
   inset:0;
   background-color: rgba(0,255,255,0.35);
   pointer-events:none; 
-  z-index:1; /* above entry content but below sidebar/buttons */
+  z-index:1;
   mix-blend-mode: screen;
+}
+#blueBase::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(0,255,255,0.05) 0px, rgba(0,255,255,0.05) 1px, transparent 2px, transparent 3px);
+  opacity: 0.3;
+  animation: staticNoise 0.2s steps(2) infinite;
+  z-index:2;
+}
+@keyframes staticNoise {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100%; }
+}
+#dotFlicker {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index:4;
+}
+.dot {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: rgba(0,255,255,0.6);
+  box-shadow: 0 0 4px rgba(0,255,255,0.8);
+  pointer-events: none;
 }
 #content { display:flex; height:100%; position:relative; z-index:0; }
 #sidebar {
   width:200px; background:rgba(5,15,20,0.8); border-right:1px solid #033;
   display:flex; flex-direction:column; padding:15px;
-  z-index:2; /* above overlay */
+  z-index:2;
 }
 #sidebar h2 { color:#33cfff; text-align:center; margin-bottom:10px; }
 .category-btn {
@@ -143,11 +172,9 @@ body {
   <div class="indicator red"></div>
   <div class="indicator red"></div>
   <div class="indicator"></div>
-
   <div id="screen">
     <div id="flicker"></div>
     <div id="distortion"></div>
-
     <div id="content">
       <div id="sidebar">
         <h2>Codex</h2>
@@ -164,11 +191,10 @@ body {
           <h1>Rebel Alliance Field Codex</h1>
           <p>Loading encrypted entries... Select a category on the left to access the database.</p>
         </div>
-        <!-- Blue overlay after entryContent so it covers images/text -->
         <div id="blueBase"></div>
       </div>
     </div>
-
+    <div id="dotFlicker"></div>
     <div id="cursor-dot"></div>
   </div>
 </div>
@@ -203,6 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const distortion = document.getElementById('distortion');
   const screen = document.getElementById('screen');
   const cursorDot = document.getElementById('cursor-dot');
+  const dotFlicker = document.getElementById('dotFlicker');
 
   let activeCategory = null;
   let activeSubFile = null;
@@ -331,6 +358,20 @@ document.addEventListener('DOMContentLoaded', () => {
     cursorDot.style.left = x + 'px';
     cursorDot.style.top = y + 'px';
   });
+
+  // Random dot flicker
+  function createRandomDot() {
+    const dot = document.createElement('div');
+    dot.classList.add('dot');
+    dot.style.left = Math.random() * 100 + '%';
+    dot.style.top = Math.random() * 100 + '%';
+    dotFlicker.appendChild(dot);
+    setTimeout(() => dot.remove(), 100 + Math.random() * 200);
+  }
+  setInterval(() => {
+    if(Math.random() < 0.3) createRandomDot();
+  }, 50);
+
 });
 </script>
 </body>
