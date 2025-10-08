@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Rebel Datapad Codex</title>
 <style>
+/* Base layout + aesthetic (keeps your previous styling) */
 * { box-sizing:border-box; margin:0; padding:0; font-family:'OCR A Std','Courier New', monospace; }
 body {
   background: radial-gradient(ellipse at center, #050505 0%, #000 100%);
@@ -43,11 +44,8 @@ body {
   cursor:none;
 }
 #screen * { cursor:none; }
-@keyframes glowPulse {
-  0% { box-shadow: inset 0 0 20px rgba(0,255,255,0.15); }
-  50% { box-shadow: inset 0 0 35px rgba(0,255,255,0.3); }
-  100% { box-shadow: inset 0 0 25px rgba(0,255,255,0.2); }
-}
+@keyframes glowPulse { 0% { box-shadow: inset 0 0 20px rgba(0,255,255,0.15); } 50% { box-shadow: inset 0 0 35px rgba(0,255,255,0.3); } 100% { box-shadow: inset 0 0 25px rgba(0,255,255,0.2); } }
+
 #flicker {
   position:absolute; inset:0;
   background: repeating-linear-gradient(0deg, rgba(0,255,255,0.15) 0px, rgba(0,255,255,0.15) 1px, transparent 2px, transparent 3px);
@@ -60,24 +58,16 @@ body {
   position:absolute;
   inset:0;
   pointer-events:none;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(0,255,255,0.03) 0px,
-    rgba(0,255,255,0.03) 1px,
-    transparent 2px,
-    transparent 3px
-  );
+  background: repeating-linear-gradient(to bottom, rgba(0,255,255,0.03) 0px, rgba(0,255,255,0.03) 1px, transparent 2px, transparent 3px);
   animation: scanlines 1s linear infinite;
   z-index:7;
 }
-@keyframes scanlines {
-  0% { background-position: 0 0; }
-  100% { background-position: 0 4px; }
-}
+@keyframes scanlines { 0% { background-position: 0 0; } 100% { background-position: 0 4px; } }
+
 #distortion {
   position:absolute;
   inset:0;
-  background: radial-gradient(circle at var(--x) var(--y), rgba(0,255,255,0.25) 0%, transparent 50%);
+  background: radial-gradient(circle at var(--x,50%) var(--y,50%), rgba(0,255,255,0.18) 0%, transparent 40%);
   pointer-events:none;
   z-index:5;
 }
@@ -85,8 +75,8 @@ body {
   position:absolute;
   inset:0;
   background-color: rgba(0,255,255,0.35);
-  pointer-events:none; 
-  z-index:1; 
+  pointer-events:none;
+  z-index:1;
   mix-blend-mode: screen;
 }
 #blueBase::after {
@@ -94,82 +84,83 @@ body {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: repeating-linear-gradient(
-      0deg, 
-      rgba(0,255,255,0.05) 0px, 
-      rgba(0,255,255,0.05) 1px, 
-      transparent 2px, 
-      transparent 3px
-  );
+  background: repeating-linear-gradient(0deg, rgba(0,255,255,0.05) 0px, rgba(0,255,255,0.05) 1px, transparent 2px, transparent 3px);
   opacity: 0.3;
   animation: staticNoise 0.2s steps(2) infinite;
-  z-index:2; 
+  z-index:2;
 }
-@keyframes staticNoise {
-  0% { background-position: 0 0; }
-  100% { background-position: 0 100%; }
-}
+@keyframes staticNoise { 0% { background-position: 0 0; } 100% { background-position: 0 100%; } }
+
 #content { display:flex; height:100%; position:relative; z-index:0; }
 #sidebar {
   width:200px; background:rgba(5,15,20,0.8); border-right:1px solid #033;
-  display:flex; flex-direction:column; padding:15px;
-  z-index:2; 
+  display:flex; flex-direction:column; padding:15px; gap:6px;
+  z-index:2;
 }
-#sidebar h2 { color:#33cfff; text-align:center; margin-bottom:10px; }
+#sidebar h2 { color:#33cfff; text-align:center; margin-bottom:6px; }
 .category-btn {
-  background:#0a1f26; border:none; margin:4px 0; padding:8px; color:#33cfff;
+  background:#0a1f26; border:none; padding:8px; color:#33cfff;
   cursor:pointer; text-align:left; border-left:4px solid #0a5266;
-  transition: all 0.2s;
+  transition: all 0.14s;
 }
 .category-btn:hover { background:#0e2a34; border-left-color:#66f0ff; }
 .category-btn.active { border-left-color:#00ffff; background:#0e2a34; }
 #search { margin-top:auto; padding:6px; background:#0b1c23; border:1px solid #33cfff; color:#a0d8ff; }
+
 #main { flex:1; padding:20px; overflow-y:auto; position:relative; z-index:0; }
-#breadcrumbs { margin-bottom:10px; font-size:14px; color:#33cfff; }
-#breadcrumbs span { cursor: default; }
-#breadcrumbs span:hover { text-decoration: underline; }
+#breadcrumbs { margin-bottom:10px; font-size:14px; color:#33cfff; display:flex; gap:6px; align-items:center; }
+#breadcrumbs span { cursor: pointer; }
 #entryContent h1 { font-size:22px; margin-bottom:10px; color:#66f0ff; position:relative; z-index:0; }
-#entryContent img {
-  display:block; margin:10px auto; max-width:100%; max-height:300px;
-  border:2px solid #33cfff; border-radius:4px;
-  box-shadow:0 0 15px rgba(0,255,255,0.3);
-  position:relative; z-index:0;
+#entryContent img { display:block; margin:10px auto; max-width:100%; max-height:300px; border:2px solid #33cfff; border-radius:4px; box-shadow:0 0 15px rgba(0,255,255,0.3); position:relative; z-index:0; }
+#entryContent p { font-size:15px; line-height:1.5em; position:relative; z-index:0; white-space:pre-wrap; }
+
+/* Entry list button coloring indicators */
+.entry-row { display:flex; align-items:center; gap:8px; margin:6px 0; }
+.entry-title {
+  flex:1;
+  background:#0a1f26; border:none; padding:8px; color:#a0d8ff; text-align:left; cursor:pointer; border-left:6px solid #0a5266;
+  border-radius:4px;
 }
-#entryContent p { font-size:15px; line-height:1.5em; position:relative; z-index:0; }
-.indicator {
-  position:absolute; width:12px; height:12px; border-radius:50%;
-  background:#0f0; box-shadow:0 0 8px #0f0;
+.entry-title.locked { border-left-color:#777; color:#777; }       /* hidden to players, but shown in GM as muted */
+.entry-title.gm-locked { border-left-color:#ffcc33; color:#ffffcc; } /* locked but visible to GM */
+.entry-title.unlocked { border-left-color:#0f0; color:#bfffdc; }   /* unlocked for players */
+
+.unlock-btn {
+  padding:6px 8px; border:none; border-radius:4px; cursor:pointer;
+  background:#003; color:#66ffff;
 }
+.unlock-btn.remove { background:#700; color:#ffc; }
+
+#gmIndicator {
+  position:absolute;
+  top:10px;
+  left:12px;
+  background: rgba(0,0,0,0.45);
+  color:#66ffff;
+  font-size:12px;
+  font-weight:700;
+  padding:4px 8px;
+  border-radius:6px;
+  z-index:8;
+  pointer-events:none;
+  opacity:0;
+  transition: opacity 0.16s ease;
+}
+#gmIndicator.active { opacity:1; }
+
+/* cursor dot and indicators */
+.indicator { position:absolute; width:12px; height:12px; border-radius:50%; background:#0f0; box-shadow:0 0 8px #0f0; }
 .indicator.red { background:#f00; box-shadow:0 0 8px #f00; }
 .indicator:nth-child(1){ top:10px; left:10px; }
 .indicator:nth-child(2){ top:10px; right:10px; }
 .indicator:nth-child(3){ bottom:10px; left:10px; }
 .indicator:nth-child(4){ bottom:10px; right:10px; }
-#cursor-dot {
-  position:absolute;
-  width:12px; height:12px;
-  border-radius:50%;
-  background: rgba(0,255,255,0.8);
-  box-shadow:0 0 8px rgba(0,255,255,0.8), 0 0 15px rgba(0,255,255,0.5);
-  pointer-events:none;
-  transform: translate(-50%, -50%);
-  z-index:3;
-}
-#dotFlicker {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 4; 
-}
-.dot {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  border-radius: 50%;
-  background: rgba(0,255,255,0.6);
-  box-shadow: 0 0 4px rgba(0,255,255,0.8);
-  pointer-events: none;
-}
+#cursor-dot { position:absolute; width:12px; height:12px; border-radius:50%; background: rgba(0,255,255,0.8); box-shadow:0 0 8px rgba(0,255,255,0.8), 0 0 15px rgba(0,255,255,0.5); pointer-events:none; transform: translate(-50%, -50%); z-index:3; }
+#dotFlicker { position:absolute; inset:0; pointer-events:none; z-index:4; }
+.dot { position:absolute; width:2px; height:2px; border-radius:50%; background: rgba(0,255,255,0.6); box-shadow:0 0 4px rgba(0,255,255,0.8); pointer-events:none; }
+
+/* small responsive tweak */
+@media (max-width:960px){ #datapad{ transform: scale(0.92); } }
 </style>
 </head>
 <body>
@@ -188,210 +179,346 @@ body {
         <h2>Codex</h2>
         <button id="homeBtn" class="category-btn">Home</button>
         <button class="category-btn" data-category="planets">Planets</button>
-        <button class="category-btn" data-category="factions">Factions</button>
-        <button class="category-btn" data-category="technology">Technology</button>
         <button class="category-btn" data-category="characters">Characters</button>
+        <button class="category-btn" data-category="technology">Technology</button>
+        <button class="category-btn" data-category="items">Items</button>
+        <button class="category-btn" data-category="factions">Factions</button>
+        <button class="category-btn" data-category="missions">Missions</button>
         <input type="text" id="search" placeholder="Search...">
       </div>
+
       <div id="main">
         <div id="breadcrumbs"></div>
         <div id="entryContent">
           <h1>Rebel Alliance Field Codex</h1>
-          <p>Loading encrypted entries... Select a category on the left to access the database.</p>
+          <p>Entries are not loaded until a category is selected. Click a category on the left to begin.</p>
         </div>
         <div id="blueBase"></div>
       </div>
     </div>
+
     <div id="dotFlicker"></div>
     <div id="cursor-dot"></div>
+    <div id="gmIndicator">GM</div>
   </div>
 </div>
 
 <script>
+/* Full functionality:
+   - categories mapped to entries/<category>/manifest.json (manifest is an array of filenames)
+   - each entry: entries/<category>/<file>.json expected
+   - GM Mode toggled with Ctrl+Shift+G (hidden), unlocks persist via localStorage
+   - search + breadcrumbs + visuals preserved
+*/
+
 document.addEventListener('DOMContentLoaded', () => {
-  const categoryBtns = document.querySelectorAll('.category-btn');
+  const categories = ['planets','characters','technology','items','factions','missions'];
   const entryContent = document.getElementById('entryContent');
   const breadcrumbs = document.getElementById('breadcrumbs');
-  const homeBtn = document.getElementById('homeBtn');
+  const categoryBtns = document.querySelectorAll('.category-btn');
   const searchInput = document.getElementById('search');
+  const homeBtn = document.getElementById('homeBtn');
   const flicker = document.getElementById('flicker');
   const distortion = document.getElementById('distortion');
   const screen = document.getElementById('screen');
   const cursorDot = document.getElementById('cursor-dot');
   const dotFlicker = document.getElementById('dotFlicker');
+  const gmIndicator = document.getElementById('gmIndicator');
 
   let activeCategory = null;
-  let activeSubFile = null;
+  let activeEntry = null;
   let isGM = false;
+  // cache loaded entries per category to avoid refetching unless user wants to refresh
+  const cache = {};
 
-  // Example entries data; in real use, fetch JSONs instead
-  const entriesData = [
-    {
-      id: 'yavin-4',
-      category: 'planets',
-      name: 'Yavin 4',
-      description: 'Yavin 4 is a jungle-covered moon orbiting the gas giant Yavin in the Outer Rim. Its dense forests, tangled undergrowth, and towering Massassi temples provided natural concealment, making it the perfect location for the Rebel Alliance’s first major hidden base. The moon is alive with vibrant, untamed flora: massive ferns and vine-draped trees dominate the canopy, while luminescent fungi and orchids add pockets of color in the shadowed underbrush. The fauna is equally diverse and unpredictable, from skittering multi-legged insects to silent, camouflaged predators lurking in the misty jungles. Hidden pools and marshlands provide water sources, but also conceal swamp-dwelling creatures and crawling reptiles that challenge even experienced scouts. These jungles and valleys created a natural fortress, keeping Imperial eyes from discovering the fledgling Rebellion’s operations.\n\nFollowing the destruction of the Death Star, Yavin 4’s role as a Rebel base became untenable. With the Empire now aware of the moon’s significance, the Alliance evacuated personnel and critical resources, leaving only traces of the operations that had taken place there. The Massassi temples, once bustling with activity, now sit silent amidst the jungles, echoing the first great victory against Imperial tyranny.\n\nFor the Rebellion, Yavin 4 remains a symbol of hope and resilience. Though abandoned, the moon represents the courage of those who stood against overwhelming odds, and the daring that made the Alliance’s early victories possible. Scouts and historians note the ruins not only for their tactical significance but as a reminder of the sacrifices and ingenuity that continue to fuel the fight for freedom.',
-      gmMode: true
+  // helper localStorage key
+  const lsKey = id => `entry_unlocked__${id}`;
+
+  // utility: safe fetch JSON or null
+  async function fetchJson(path) {
+    try {
+      const r = await fetch(path, { cache: "no-cache" });
+      if (!r.ok) return null;
+      return await r.json();
+    } catch (e) {
+      console.error('fetch error', path, e);
+      return null;
     }
-    // Add more entries here, or fetch from entries/<category>/ JSONs
-  ];
+  }
 
-  // GM Mode toggle with Ctrl+Shift+G
-  document.addEventListener('keydown', (e) => {
-    if(e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'g'){
-      isGM = !isGM;
-      console.log('GM Mode:', isGM ? 'ON' : 'OFF');
-      renderEntries(entriesData);
+  // load manifest (simple array) and then each entry JSON
+  async function loadCategoryEntries(category) {
+    // return cached if present
+    if (cache[category]) return cache[category];
+
+    const manifestPath = `entries/${category}/manifest.json`;
+    const files = await fetchJson(manifestPath);
+    if (!Array.isArray(files)) {
+      console.warn('manifest missing or invalid for', category, manifestPath);
+      cache[category] = [];
+      return [];
     }
-  });
 
-  function renderEntries(data){
+    const entries = [];
+    for (const file of files) {
+      const filePath = `entries/${category}/${file}`;
+      const data = await fetchJson(filePath);
+      if (!data) {
+        console.warn('failed to load entry', filePath);
+        continue;
+      }
+      // ensure id exists (use filename if not)
+      if (!data.id) {
+        // strip extension from file
+        data.id = file.replace(/\.[^/.]+$/, "");
+      }
+      // attach category
+      data.category = category;
+      entries.push(data);
+    }
+    cache[category] = entries;
+    return entries;
+  }
+
+  // helpers for breadcrumbs
+  function updateBreadcrumbs() {
+    breadcrumbs.innerHTML = '';
+    if (!activeCategory) return;
+    const catSpan = document.createElement('span');
+    catSpan.textContent = activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1);
+    catSpan.addEventListener('click', ()=> { activeEntry = null; renderListForActiveCategory(); });
+    breadcrumbs.appendChild(catSpan);
+    if (activeEntry) {
+      const sep = document.createElement('span'); sep.textContent = ' > ';
+      const entrySpan = document.createElement('span'); entrySpan.textContent = activeEntry.name;
+      breadcrumbs.appendChild(sep); breadcrumbs.appendChild(entrySpan);
+    }
+  }
+
+  // render list for active category (with search and GM visibility)
+  async function renderListForActiveCategory() {
     entryContent.innerHTML = '';
-    const filter = searchInput.value.toLowerCase();
+    if (!activeCategory) {
+      entryContent.innerHTML = `<h1>Rebel Alliance Field Codex</h1>
+        <p>Entries are not loaded until a category is selected. Click a category on the left to begin.</p>`;
+      updateBreadcrumbs();
+      return;
+    }
 
-    data.forEach(entry => {
-      if(entry.category !== activeCategory && activeCategory) return;
+    const entries = await loadCategoryEntries(activeCategory);
+    const q = (searchInput.value || '').trim().toLowerCase();
 
-      // Check unlock status
-      const unlocked = entry.gmMode ? localStorage.getItem(entry.id) === "true" : true;
-      if(!unlocked && !isGM) return;
+    // list container
+    const list = document.createElement('div');
 
-      if(filter && !entry.name.toLowerCase().includes(filter)) return;
+    for (const entry of entries) {
+      // determine unlocked state; for non-gmMode entries, unlocked by default
+      const isGMOnly = Boolean(entry.gmMode);
+      const unlocked = isGMOnly ? (localStorage.getItem(lsKey(entry.id)) === "true") : true;
 
-      const btn = document.createElement('button');
-      btn.classList.add('category-btn');
-      btn.textContent = entry.name;
-      btn.style.color = unlocked ? "#33cfff" : "#ffff66"; // yellow if GM sees locked
-      btn.addEventListener('click', () => {
-        activeSubFile = entry;
+      // if not unlocked for player and not in GM Mode, hide
+      if (!unlocked && !isGM) continue;
+
+      // apply search filter
+      if (q && !entry.name.toLowerCase().includes(q) && !(entry.description || '').toLowerCase().includes(q)) continue;
+
+      // create row
+      const row = document.createElement('div');
+      row.className = 'entry-row';
+
+      const titleBtn = document.createElement('button');
+      titleBtn.className = 'entry-title';
+      titleBtn.textContent = entry.name;
+
+      // color / classes
+      if (unlocked) titleBtn.classList.add('unlocked');
+      else if (isGM) titleBtn.classList.add('gm-locked');
+      else titleBtn.classList.add('locked');
+
+      titleBtn.addEventListener('click', () => {
+        activeEntry = entry;
         renderEntryDetail(entry);
       });
 
-      // GM Unlock/Lock button
-      if(isGM && entry.gmMode){
-        const lockBtn = document.createElement('button');
-        lockBtn.textContent = unlocked ? "Lock" : "Unlock";
-        lockBtn.style.marginLeft = "8px";
-        lockBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          if(localStorage.getItem(entry.id) === "true") localStorage.removeItem(entry.id);
-          else localStorage.setItem(entry.id,"true");
-          renderEntries(data);
+      row.appendChild(titleBtn);
+
+      // GM controls: Add/Remove only visible when GM Mode is ON and entry marked gmMode
+      if (isGM && isGMOnly) {
+        const btn = document.createElement('button');
+        btn.className = 'unlock-btn ' + (unlocked ? 'remove' : 'add');
+        btn.textContent = unlocked ? 'Remove' : 'Add';
+        btn.title = unlocked ? 'Remove from player view' : 'Add to player view';
+        btn.addEventListener('click', (ev) => {
+          ev.stopPropagation();
+          if (localStorage.getItem(lsKey(entry.id)) === "true") {
+            localStorage.removeItem(lsKey(entry.id));
+          } else {
+            localStorage.setItem(lsKey(entry.id), "true");
+          }
+          // re-render list to show updated state
+          renderListForActiveCategory();
         });
-        btn.appendChild(lockBtn);
+        row.appendChild(btn);
       }
 
-      entryContent.appendChild(btn);
-    });
+      list.appendChild(row);
+    }
+
+    // if nothing to show
+    if (!list.childElementCount) {
+      const msg = document.createElement('p');
+      msg.textContent = isGM ? 'No entries match the current filter.' : 'No entries available (locked or none).';
+      entryContent.appendChild(msg);
+    } else {
+      entryContent.appendChild(list);
+    }
+    updateBreadcrumbs();
+  }
+
+  // render a single entry detail
+  function renderEntryDetail(entry) {
+    entryContent.innerHTML = '';
+    const title = document.createElement('h1');
+    title.textContent = entry.name;
+    entryContent.appendChild(title);
+
+    if (entry.image) {
+      const img = document.createElement('img');
+      img.src = entry.image;
+      img.alt = entry.name;
+      entryContent.appendChild(img);
+    }
+
+    const p = document.createElement('p');
+    p.textContent = entry.description || '';
+    entryContent.appendChild(p);
+
+    // GM mode lock/unlock control inside detail
+    if (isGM && entry.gmMode) {
+      const unlocked = localStorage.getItem(lsKey(entry.id)) === "true";
+      const gmBtn = document.createElement('button');
+      gmBtn.className = 'unlock-btn ' + (unlocked ? 'remove' : 'add');
+      gmBtn.textContent = unlocked ? 'Remove' : 'Add';
+      gmBtn.style.marginTop = '10px';
+      gmBtn.addEventListener('click', () => {
+        if (unlocked) localStorage.removeItem(lsKey(entry.id));
+        else localStorage.setItem(lsKey(entry.id), "true");
+        // After changing unlock state, return to list so GM can see effect
+        renderListForActiveCategory();
+      });
+      entryContent.appendChild(gmBtn);
+    }
+
+    // Back button
+    const back = document.createElement('button');
+    back.className = 'category-btn';
+    back.textContent = 'Back';
+    back.style.marginTop = '12px';
+    back.addEventListener('click', () => { activeEntry = null; renderListForActiveCategory(); });
+    entryContent.appendChild(back);
 
     updateBreadcrumbs();
   }
 
-  function renderEntryDetail(entry){
-    entryContent.innerHTML = `<h1>${entry.name}</h1><p>${entry.description}</p>`;
-    if(isGM && entry.gmMode){
-      const unlockBtn = document.createElement('button');
-      const unlocked = localStorage.getItem(entry.id) === "true";
-      unlockBtn.textContent = unlocked ? "Lock" : "Unlock";
-      unlockBtn.classList.add('category-btn');
-      unlockBtn.style.marginTop = "10px";
-      unlockBtn.addEventListener('click', () => {
-        if(unlocked) localStorage.removeItem(entry.id);
-        else localStorage.setItem(entry.id,"true");
-        renderEntries(entriesData);
-      });
-      entryContent.appendChild(unlockBtn);
-    }
-  }
-
-  function updateBreadcrumbs(){
-    breadcrumbs.innerHTML = '';
-    if(activeCategory){
-      const catSpan = document.createElement('span');
-      catSpan.textContent = activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1);
-      catSpan.style.cursor = 'pointer';
-      catSpan.addEventListener('click', () => {
-        activeSubFile = null;
-        renderEntries(entriesData);
-      });
-      breadcrumbs.appendChild(catSpan);
-
-      if(activeSubFile){
-        const sep = document.createElement('span');
-        sep.textContent = ' > ';
-        breadcrumbs.appendChild(sep);
-
-        const subSpan = document.createElement('span');
-        subSpan.textContent = activeSubFile.name;
-        breadcrumbs.appendChild(subSpan);
-      }
-    }
-  }
-
+  // Category button wiring
   categoryBtns.forEach(btn => {
-    if(btn.id === "homeBtn") return;
-    btn.addEventListener('click', () => {
+    // skip Home special-case
+    if (btn.id === 'homeBtn') return;
+    btn.addEventListener('click', async () => {
+      // find category
+      const cat = btn.dataset.category;
+      if (!categories.includes(cat)) {
+        console.warn('unknown category', cat);
+        return;
+      }
+      // UI active state
       categoryBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      activeCategory = btn.dataset.category;
-      activeSubFile = null;
-      renderEntries(entriesData);
+
+      activeCategory = cat;
+      activeEntry = null;
+
+      // load entries for category and render
+      await loadCategoryEntries(cat);
+      renderListForActiveCategory();
     });
   });
 
+  // Home button
   homeBtn.addEventListener('click', () => {
-    activeCategory = null;
-    activeSubFile = null;
     categoryBtns.forEach(b => b.classList.remove('active'));
+    activeCategory = null;
+    activeEntry = null;
+    searchInput.value = '';
     entryContent.innerHTML = `<h1>Rebel Alliance Field Codex</h1>
-                              <p>Loading encrypted entries... Select a category on the left to access the database.</p>`;
+      <p>Entries are not loaded until a category is selected. Click a category on the left to begin.</p>`;
     breadcrumbs.innerHTML = '';
   });
 
-  searchInput.addEventListener('input', () => { renderEntries(entriesData); });
+  // Search handler (filters current category list)
+  searchInput.addEventListener('input', () => {
+    // only re-render if a category is active
+    if (activeCategory) renderListForActiveCategory();
+  });
 
-  // Flicker effect
+  // GM Mode toggle: Ctrl+Shift+G (hidden to players)
+  document.addEventListener('keydown', (ev) => {
+    if (ev.ctrlKey && ev.shiftKey && ev.key.toLowerCase() === 'g') {
+      isGM = !isGM;
+      gmIndicator.classList.toggle('active', isGM);
+      // rerender current view so GM-only controls appear/disappear
+      if (activeCategory) renderListForActiveCategory();
+      else {
+        // update breadcrumbs / header state if necessary
+        renderListForActiveCategory();
+      }
+      // small console feedback
+      console.log('GM Mode', isGM ? 'ON' : 'OFF');
+    }
+  });
+
+  // Flicker
   function randomFlicker() {
-    if(Math.random() < 0.4){
-      flicker.style.opacity = (0.1 + Math.random() * 0.3).toFixed(2);
-      setTimeout(() => { flicker.style.opacity = 0; }, 50 + Math.random() * 150);
+    if (Math.random() < 0.4) {
+      flicker.style.opacity = (0.08 + Math.random() * 0.32).toFixed(2);
+      setTimeout(()=> { flicker.style.opacity = 0; }, 50 + Math.random()*180);
     }
   }
   setInterval(randomFlicker, 80);
 
-  // Distortion effect
+  // Distortion nudge
   function randomDistortion() {
-    if(Math.random() < 0.05) {
-      const xShift = (Math.random() * 8 - 4).toFixed(1);
-      const yShift = (Math.random() * 8 - 4).toFixed(1);
-      distortion.style.transform = `translate(${xShift}px, ${yShift}px)`;
-      setTimeout(() => { distortion.style.transform = 'translate(0,0)'; }, 50 + Math.random() * 50);
+    if (Math.random() < 0.06) {
+      const x = (Math.random()*10 - 5).toFixed(1);
+      const y = (Math.random()*10 - 5).toFixed(1);
+      distortion.style.transform = `translate(${x}px, ${y}px)`;
+      setTimeout(()=> distortion.style.transform = 'translate(0,0)', 60 + Math.random()*140);
     }
   }
-  setInterval(randomDistortion, 100);
+  setInterval(randomDistortion, 120);
 
-  // Cursor tracking
-  screen.addEventListener('mousemove', e => {
-    const rect = screen.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+  // cursor dot
+  screen.addEventListener('mousemove', (e) => {
+    const r = screen.getBoundingClientRect();
+    const x = e.clientX - r.left;
+    const y = e.clientY - r.top;
     cursorDot.style.left = x + 'px';
     cursorDot.style.top = y + 'px';
   });
 
-  // Dot flicker
+  // dot flicker overlay
   function createRandomDot() {
-    const dot = document.createElement('div');
-    dot.classList.add('dot');
-    dot.style.left = Math.random() * 100 + '%';
-    dot.style.top = Math.random() * 100 + '%';
-    dotFlicker.appendChild(dot);
-    setTimeout(() => dot.remove(), 100 + Math.random()*200);
+    const d = document.createElement('div');
+    d.className = 'dot';
+    d.style.left = Math.random()*100 + '%';
+    d.style.top = Math.random()*100 + '%';
+    dotFlicker.appendChild(d);
+    setTimeout(()=> d.remove(), 120 + Math.random()*220);
   }
-  setInterval(() => { if(Math.random() < 0.2) createRandomDot(); }, 50);
+  setInterval(()=> { if (Math.random() < 0.28) createRandomDot(); }, 55);
 
-  // Initial render
-  renderEntries(entriesData);
+  // initial clean state (no category loaded)
+  homeBtn.click(); // sets initial UI state
 });
 </script>
 </body>
