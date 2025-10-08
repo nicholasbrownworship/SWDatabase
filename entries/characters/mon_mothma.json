@@ -1,1 +1,6 @@
-
+{
+  "name": "Mon Mothma",
+  "image": "images/mothma.jpeg",
+  "description": "This is a test.",
+  "gmMode": false
+}
