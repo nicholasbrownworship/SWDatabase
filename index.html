@@ -180,6 +180,25 @@ body {
   border-radius:4px;
   cursor:pointer;
 }
+  #gmIndicator {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0, 255, 255, 0.3);
+  color: #00ffff;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 4px;
+  z-index: 8;
+  pointer-events: none;
+  opacity: 0; /* hidden by default */
+  transition: opacity 0.2s;
+}
+#gmIndicator.active {
+  opacity: 1; /* visible when GM Mode is on */
+}
+
 </style>
 </head>
 <body>
@@ -212,6 +231,7 @@ body {
     </div>
     <div id="dotFlicker"></div>
     <div id="cursor-dot"></div>
+    <div id="gmIndicator">GM</div>
   </div>
 </div>
 
@@ -428,6 +448,17 @@ document.addEventListener('DOMContentLoaded', () => {
     cursorDot.style.left = x + 'px';
     cursorDot.style.top = y + 'px';
   });
+  
+});
+
+  // GM Mode toggle
+const gmIndicator = document.getElementById('gmIndicator');
+document.addEventListener('keydown', e => {
+  if(e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'g'){
+    gmMode = !gmMode;
+    renderSubFiles(activeCategory);
+    gmIndicator.classList.toggle('active', gmMode);
+  }
 });
 
 // Dot flicker overlay
