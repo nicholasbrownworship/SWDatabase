@@ -85,15 +85,15 @@ body {
   position:absolute;
   inset:0;
   background-color: rgba(0,255,255,0.35);
-  pointer-events:none;
-  z-index:8;
+  pointer-events:none; 
+  z-index:1; /* above entry content but below sidebar/buttons */
   mix-blend-mode: screen;
 }
-#content { display:flex; height:100%; position:relative; z-index:9; }
+#content { display:flex; height:100%; position:relative; z-index:0; }
 #sidebar {
   width:200px; background:rgba(5,15,20,0.8); border-right:1px solid #033;
   display:flex; flex-direction:column; padding:15px;
-  z-index:10;
+  z-index:2; /* above overlay */
 }
 #sidebar h2 { color:#33cfff; text-align:center; margin-bottom:10px; }
 .category-btn {
@@ -104,18 +104,18 @@ body {
 .category-btn:hover { background:#0e2a34; border-left-color:#66f0ff; }
 .category-btn.active { border-left-color:#00ffff; background:#0e2a34; }
 #search { margin-top:auto; padding:6px; background:#0b1c23; border:1px solid #33cfff; color:#a0d8ff; }
-#main { flex:1; padding:20px; overflow-y:auto; position:relative; z-index:9; }
+#main { flex:1; padding:20px; overflow-y:auto; position:relative; z-index:0; }
 #breadcrumbs { margin-bottom:10px; font-size:14px; color:#33cfff; }
 #breadcrumbs span { cursor: default; }
 #breadcrumbs span:hover { text-decoration: underline; }
-#entryContent h1 { font-size:22px; margin-bottom:10px; color:#66f0ff; position:relative; z-index:1; }
+#entryContent h1 { font-size:22px; margin-bottom:10px; color:#66f0ff; position:relative; z-index:0; }
 #entryContent img {
   display:block; margin:10px auto; max-width:100%; max-height:300px;
   border:2px solid #33cfff; border-radius:4px;
   box-shadow:0 0 15px rgba(0,255,255,0.3);
-  position:relative; z-index:1;
+  position:relative; z-index:0;
 }
-#entryContent p { font-size:15px; line-height:1.5em; position:relative; z-index:1; }
+#entryContent p { font-size:15px; line-height:1.5em; position:relative; z-index:0; }
 .indicator {
   position:absolute; width:12px; height:12px; border-radius:50%;
   background:#0f0; box-shadow:0 0 8px #0f0;
@@ -133,7 +133,7 @@ body {
   box-shadow:0 0 8px rgba(0,255,255,0.8), 0 0 15px rgba(0,255,255,0.5);
   pointer-events:none;
   transform: translate(-50%, -50%);
-  z-index:11;
+  z-index:3;
 }
 </style>
 </head>
@@ -147,7 +147,7 @@ body {
   <div id="screen">
     <div id="flicker"></div>
     <div id="distortion"></div>
-    <div id="blueBase"></div>
+
     <div id="content">
       <div id="sidebar">
         <h2>Codex</h2>
@@ -164,8 +164,11 @@ body {
           <h1>Rebel Alliance Field Codex</h1>
           <p>Loading encrypted entries... Select a category on the left to access the database.</p>
         </div>
+        <!-- Blue overlay after entryContent so it covers images/text -->
+        <div id="blueBase"></div>
       </div>
     </div>
+
     <div id="cursor-dot"></div>
   </div>
 </div>
