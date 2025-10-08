@@ -1,42 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Rebel Datapad Codex</title>
 <style>
-/* Base styling (similar to your previous datapad design) */
+/* Basic styling & effects */
 * { box-sizing:border-box; margin:0; padding:0; font-family:'OCR A Std','Courier New', monospace; }
-body {
-  background: radial-gradient(ellipse at center, #050505 0%, #000 100%);
-  color:#a0d8ff;
-  height:100vh; display:flex; justify-content:center; align-items:center;
-  overflow:hidden;
-  cursor:none;
-}
-#datapad {
-  width:900px; height:600px;
-  background: url('images/metal_texture.jpg') center/cover no-repeat;
-  border:6px solid #333; border-radius:25px; position:relative;
-  box-shadow: 0 0 60px rgba(0,255,255,0.05), inset 0 0 20px #000;
-  overflow:hidden;
-}
-#screen {
-  position:absolute; top:40px; left:40px;
-  width:820px; height:520px;
-  background:radial-gradient(circle at 50% 50%, rgba(10,20,25,0.95) 0%, rgba(5,10,12,0.9) 100%);
-  border-radius:15px; overflow:hidden; box-shadow: inset 0 0 20px rgba(0,255,255,0.2);
-  z-index:1; animation: glowPulse 3s infinite alternate; cursor:none;
-}
+body { background: radial-gradient(ellipse at center, #050505 0%, #000 100%); color:#a0d8ff; height:100vh; display:flex; justify-content:center; align-items:center; overflow:hidden; cursor:none; }
+#datapad { width:900px; height:600px; background:url('images/metal_texture.jpg') center/cover no-repeat; border:6px solid #333; border-radius:25px; position:relative; box-shadow:0 0 60px rgba(0,255,255,0.05), inset 0 0 20px #000; overflow:hidden; }
+#datapad::before { content:""; position:absolute; inset:0; border-radius:25px; background:url('images/metal_noise.png') repeat; opacity:0.2; z-index:0; }
+#screen { position:absolute; top:40px; left:40px; width:820px; height:520px; background:radial-gradient(circle at 50% 50%, rgba(10,20,25,0.95) 0%, rgba(5,10,12,0.9) 100%); border-radius:15px; overflow:hidden; box-shadow: inset 0 0 20px rgba(0,255,255,0.2); z-index:1; animation: glowPulse 3s infinite alternate; cursor:none; }
 #screen * { cursor:none; }
 @keyframes glowPulse { 0% { box-shadow: inset 0 0 20px rgba(0,255,255,0.15); } 50% { box-shadow: inset 0 0 35px rgba(0,255,255,0.3); } 100% { box-shadow: inset 0 0 25px rgba(0,255,255,0.2); } }
+#flicker { position:absolute; inset:0; background: repeating-linear-gradient(0deg, rgba(0,255,255,0.15) 0px, rgba(0,255,255,0.15) 1px, transparent 2px, transparent 3px); pointer-events:none; z-index:6; opacity:0; }
+#screen::before { content:""; position:absolute; inset:0; pointer-events:none; background: repeating-linear-gradient(to bottom, rgba(0,255,255,0.03) 0px, rgba(0,255,255,0.03) 1px, transparent 2px, transparent 3px); animation: scanlines 1s linear infinite; z-index:7; }
+@keyframes scanlines { 0% { background-position: 0 0; } 100% { background-position: 0 4px; } }
+#distortion { position:absolute; inset:0; background: radial-gradient(circle at var(--x,50%) var(--y,50%), rgba(0,255,255,0.18) 0%, transparent 40%); pointer-events:none; z-index:5; }
+#blueBase { position:absolute; inset:0; background-color: rgba(0,255,255,0.35); pointer-events:none; z-index:1; mix-blend-mode: screen; }
+#blueBase::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,255,255,0.05) 0px, rgba(0,255,255,0.05) 1px, transparent 2px, transparent 3px); opacity: 0.3; animation: staticNoise 0.2s steps(2) infinite; z-index:2; }
+@keyframes staticNoise { 0% { background-position: 0 0; } 100% { background-position: 0 100%; } }
 
 #content { display:flex; height:100%; position:relative; z-index:0; }
-#sidebar { width:200px; background:rgba(5,15,20,0.8); border-right:1px solid #033;
-  display:flex; flex-direction:column; padding:15px; gap:6px; z-index:2; }
+#sidebar { width:200px; background:rgba(5,15,20,0.8); border-right:1px solid #033; display:flex; flex-direction:column; padding:15px; gap:6px; z-index:2; }
 #sidebar h2 { color:#33cfff; text-align:center; margin-bottom:6px; }
-.category-btn { background:#0a1f26; border:none; padding:8px; color:#33cfff; cursor:pointer;
-  text-align:left; border-left:4px solid #0a5266; transition: all 0.14s; }
+.category-btn { background:#0a1f26; border:none; padding:8px; color:#33cfff; cursor:pointer; text-align:left; border-left:4px solid #0a5266; transition: all 0.14s; }
 .category-btn:hover { background:#0e2a34; border-left-color:#66f0ff; }
 .category-btn.active { border-left-color:#00ffff; background:#0e2a34; }
 #search { margin-top:auto; padding:6px; background:#0b1c23; border:1px solid #33cfff; color:#a0d8ff; }
@@ -44,27 +32,31 @@ body {
 #main { flex:1; padding:20px; overflow-y:auto; position:relative; z-index:0; }
 #breadcrumbs { margin-bottom:10px; font-size:14px; color:#33cfff; display:flex; gap:6px; align-items:center; }
 #breadcrumbs span { cursor: pointer; }
-#entryContent h1 { font-size:22px; margin-bottom:10px; color:#66f0ff; }
-#entryContent img { display:block; margin:10px auto; max-width:100%; max-height:300px; border:2px solid #33cfff; border-radius:4px; box-shadow:0 0 15px rgba(0,255,255,0.3); }
-#entryContent p { font-size:15px; line-height:1.5em; white-space:pre-wrap; }
+#entryContent h1 { font-size:22px; margin-bottom:10px; color:#66f0ff; position:relative; z-index:0; }
+#entryContent img { display:block; margin:10px auto; max-width:100%; max-height:300px; border:2px solid #33cfff; border-radius:4px; box-shadow:0 0 15px rgba(0,255,255,0.3); position:relative; z-index:0; }
+#entryContent p { font-size:15px; line-height:1.5em; position:relative; z-index:0; white-space:pre-wrap; }
 
-/* Entry list button coloring indicators */
 .entry-row { display:flex; align-items:center; gap:8px; margin:6px 0; }
 .entry-title { flex:1; background:#0a1f26; border:none; padding:8px; color:#a0d8ff; text-align:left; cursor:pointer; border-left:6px solid #0a5266; border-radius:4px; }
-.entry-title.unlocked { border-left-color:#0f0; color:#bfffdc; }
 .entry-title.locked { border-left-color:#777; color:#777; }
+.entry-title.gm-locked { border-left-color:#ffcc33; color:#ffffcc; }
+.entry-title.unlocked { border-left-color:#0f0; color:#bfffdc; }
 
-#gmIndicator {
-  position:absolute; top:10px; left:12px;
-  background: rgba(0,0,0,0.45);
-  color:#66ffff; font-size:12px; font-weight:700; padding:4px 8px;
-  border-radius:6px; z-index:8; pointer-events:none; opacity:0; transition: opacity 0.16s ease; }
+#gmIndicator { position:absolute; top:10px; left:12px; background: rgba(0,0,0,0.45); color:#66ffff; font-size:12px; font-weight:700; padding:4px 8px; border-radius:6px; z-index:8; pointer-events:none; opacity:0; transition: opacity 0.16s ease; }
 #gmIndicator.active { opacity:1; }
+
+#cursor-dot { position:absolute; width:12px; height:12px; border-radius:50%; background: rgba(0,255,255,0.8); box-shadow:0 0 8px rgba(0,255,255,0.8), 0 0 15px rgba(0,255,255,0.5); pointer-events:none; transform: translate(-50%, -50%); z-index:3; }
+#dotFlicker { position:absolute; inset:0; pointer-events:none; z-index:4; }
+.dot { position:absolute; width:2px; height:2px; border-radius:50%; background: rgba(0,255,255,0.6); box-shadow:0 0 4px rgba(0,255,255,0.8); pointer-events:none; }
+
+@media (max-width:960px){ #datapad{ transform: scale(0.92); } }
 </style>
 </head>
 <body>
 <div id="datapad">
   <div id="screen">
+    <div id="flicker"></div>
+    <div id="distortion"></div>
     <div id="content">
       <div id="sidebar">
         <h2>Codex</h2>
@@ -83,8 +75,11 @@ body {
           <h1>Rebel Alliance Field Codex</h1>
           <p>Entries are not loaded until a category is selected. Click a category on the left to begin.</p>
         </div>
+        <div id="blueBase"></div>
       </div>
     </div>
+    <div id="dotFlicker"></div>
+    <div id="cursor-dot"></div>
     <div id="gmIndicator">GM</div>
   </div>
 </div>
@@ -97,119 +92,109 @@ document.addEventListener('DOMContentLoaded', () => {
   const categoryBtns = document.querySelectorAll('.category-btn');
   const searchInput = document.getElementById('search');
   const homeBtn = document.getElementById('homeBtn');
+  const flicker = document.getElementById('flicker');
+  const distortion = document.getElementById('distortion');
+  const cursorDot = document.getElementById('cursor-dot');
+  const dotFlicker = document.getElementById('dotFlicker');
   const gmIndicator = document.getElementById('gmIndicator');
 
   let activeCategory = null;
   let activeEntry = null;
   let isGM = false;
-  const cache = {}; // loaded entry JSON
-  let unlocked = {}; // fetched unlocked entries
+  const cache = {};
+  let unlockedData = {};
 
-  const lsKey = id => `entry_unlocked__${id}`;
-
-  async function fetchJson(path) {
-    try { const r = await fetch(path+'?t='+Date.now()); if(!r.ok) return null; return await r.json(); }
-    catch(e){ console.error('fetch error', path, e); return null; }
+  async function fetchJson(path){
+    try{ const r = await fetch(path+'?t='+Date.now()); if(!r.ok)return null; return await r.json(); }
+    catch(e){ console.error('fetch error',path,e); return null; }
   }
 
-  async function loadUnlocked() {
+  async function loadUnlocked(){
     const data = await fetchJson('entries/unlocked.json');
-    if(data) unlocked = data; else unlocked = {};
+    unlockedData = Array.isArray(data)?data.reduce((acc,id)=>{acc[id]=true; return acc;},{}) : {};
   }
 
-  async function loadCategoryEntries(category) {
-    if (cache[category]) return cache[category];
+  async function loadCategoryEntries(category){
+    if(cache[category]) return cache[category];
     const files = await fetchJson(`entries/${category}/manifest.json`);
     if(!Array.isArray(files)){ cache[category]=[]; return []; }
-    const entries = [];
+    const entries=[];
     for(const file of files){
-      const e = await fetchJson(`entries/${category}/${file}`);
-      if(!e) continue;
-      if(!e.id) e.id = file.replace(/\.[^/.]+$/,"");
-      e.category = category;
-      entries.push(e);
+      const data = await fetchJson(`entries/${category}/${file}`);
+      if(!data) continue;
+      if(!data.id) data.id=file.replace(/\.[^/.]+$/,'');
+      data.category=category;
+      entries.push(data);
     }
-    cache[category] = entries;
+    cache[category]=entries;
     return entries;
   }
 
-  function updateBreadcrumbs() {
+  function updateBreadcrumbs(){
     breadcrumbs.innerHTML='';
     if(!activeCategory) return;
     const catSpan=document.createElement('span');
     catSpan.textContent=activeCategory.charAt(0).toUpperCase()+activeCategory.slice(1);
-    catSpan.addEventListener('click', ()=>{activeEntry=null; renderList();});
+    catSpan.addEventListener('click',()=>{ activeEntry=null; renderListForActiveCategory(); });
     breadcrumbs.appendChild(catSpan);
-    if(activeEntry){ const sep=document.createElement('span'); sep.textContent=' > '; const entrySpan=document.createElement('span'); entrySpan.textContent=activeEntry.name; breadcrumbs.appendChild(sep); breadcrumbs.appendChild(entrySpan);}
+    if(activeEntry){ const sep=document.createElement('span'); sep.textContent=' > '; breadcrumbs.appendChild(sep); const entrySpan=document.createElement('span'); entrySpan.textContent=activeEntry.name; breadcrumbs.appendChild(entrySpan);}
   }
 
-  async function renderList(){
+  async function renderListForActiveCategory(){
     entryContent.innerHTML='';
-    if(!activeCategory){
-      entryContent.innerHTML=`<h1>Rebel Alliance Field Codex</h1><p>Entries are not loaded until a category is selected. Click a category on the left to begin.</p>`;
-      updateBreadcrumbs(); return;
-    }
+    if(!activeCategory){ entryContent.innerHTML=`<h1>Rebel Alliance Field Codex</h1><p>Entries are not loaded until a category is selected. Click a category on the left to begin.</p>`; updateBreadcrumbs(); return; }
     const entries = await loadCategoryEntries(activeCategory);
     const q = (searchInput.value||'').trim().toLowerCase();
-    const list = document.createElement('div');
-    for(const e of entries){
-      const isUnlocked = (unlocked[activeCategory]||[]).includes(e.id) || isGM;
-      if(!isUnlocked && !isGM) continue;
-      if(q && !e.name.toLowerCase().includes(q) && !(e.description||'').toLowerCase().includes(q)) continue;
-
+    const list=document.createElement('div');
+    for(const entry of entries){
+      const isGMOnly=Boolean(entry.gmMode);
+      const unlocked=isGMOnly ? unlockedData[entry.id]===true : true;
+      if(!unlocked && !isGM) continue;
+      if(q && !entry.name.toLowerCase().includes(q) && !(entry.description||'').toLowerCase().includes(q)) continue;
       const row=document.createElement('div'); row.className='entry-row';
-      const btn=document.createElement('button'); btn.className='entry-title'; btn.textContent=e.name;
-      btn.classList.add(isUnlocked?'unlocked':'locked');
-      btn.addEventListener('click', ()=>{activeEntry=e; renderEntry(e);});
-      row.appendChild(btn);
-      list.appendChild(row);
+      const titleBtn=document.createElement('button'); titleBtn.className='entry-title'; titleBtn.textContent=entry.name;
+      if(unlocked) titleBtn.classList.add('unlocked'); else if(isGM) titleBtn.classList.add('gm-locked'); else titleBtn.classList.add('locked');
+      titleBtn.addEventListener('click',()=>{ activeEntry=entry; renderEntryDetail(entry); });
+      row.appendChild(titleBtn); list.appendChild(row);
     }
-    if(!list.childElementCount){ const msg=document.createElement('p'); msg.textContent='No entries available.'; entryContent.appendChild(msg);}
+    if(!list.childElementCount){ const msg=document.createElement('p'); msg.textContent=isGM?'No entries match the filter.':'No entries available (locked or none).'; entryContent.appendChild(msg);}
     else entryContent.appendChild(list);
     updateBreadcrumbs();
   }
 
-  function renderEntry(entry){
+  function renderEntryDetail(entry){
     entryContent.innerHTML='';
-    const h1=document.createElement('h1'); h1.textContent=entry.name; entryContent.appendChild(h1);
+    const title=document.createElement('h1'); title.textContent=entry.name; entryContent.appendChild(title);
     if(entry.image){ const img=document.createElement('img'); img.src=entry.image; img.alt=entry.name; entryContent.appendChild(img);}
     const p=document.createElement('p'); p.textContent=entry.description||''; entryContent.appendChild(p);
-    const back=document.createElement('button'); back.className='category-btn'; back.textContent='Back'; back.style.marginTop='12px'; back.addEventListener('click', ()=>{activeEntry=null; renderList();}); entryContent.appendChild(back);
+    const back=document.createElement('button'); back.className='category-btn'; back.textContent='Back'; back.style.marginTop='12px'; back.addEventListener('click',()=>{activeEntry=null; renderListForActiveCategory();});
+    entryContent.appendChild(back);
     updateBreadcrumbs();
   }
 
   categoryBtns.forEach(btn=>{
     if(btn.id==='homeBtn') return;
-    btn.addEventListener('click', ()=>{
+    btn.addEventListener('click',async()=>{
       const cat=btn.dataset.category; if(!categories.includes(cat)) return;
       categoryBtns.forEach(b=>b.classList.remove('active')); btn.classList.add('active');
-      activeCategory=cat; activeEntry=null; renderList();
+      activeCategory=cat; activeEntry=null; await loadCategoryEntries(cat); renderListForActiveCategory();
     });
   });
 
-  homeBtn.addEventListener('click', ()=>{
-    categoryBtns.forEach(b=>b.classList.remove('active'));
-    activeCategory=null; activeEntry=null; searchInput.value=''; entryContent.innerHTML=`<h1>Rebel Alliance Field Codex</h1><p>Entries are not loaded until a category is selected. Click a category on the left to begin.</p>`;
-    breadcrumbs.innerHTML='';
-  });
+  homeBtn.addEventListener('click',()=>{ categoryBtns.forEach(b=>b.classList.remove('active')); activeCategory=null; activeEntry=null; searchInput.value=''; entryContent.innerHTML=`<h1>Rebel Alliance Field Codex</h1><p>Entries are not loaded until a category is selected. Click a category on the left to begin.</p>`; breadcrumbs.innerHTML=''; });
 
-  searchInput.addEventListener('input', ()=>{ if(activeCategory) renderList(); });
+  searchInput.addEventListener('input',()=>{ if(activeCategory) renderListForActiveCategory(); });
 
-  document.addEventListener('keydown',(ev)=>{
-    if(ev.ctrlKey && ev.shiftKey && ev.key.toLowerCase()==='g'){
-      isGM=!isGM; gmIndicator.classList.toggle('active',isGM); renderList();
-      console.log('GM Mode',isGM?'ON':'OFF');
-    }
-  });
+  document.addEventListener('keydown',ev=>{ if(ev.ctrlKey && ev.shiftKey && ev.key.toLowerCase()==='g'){ isGM=!isGM; gmIndicator.classList.toggle('active',isGM); if(activeCategory) renderListForActiveCategory(); console.log('GM Mode',isGM?'ON':'OFF'); } });
 
-  async function pollUnlocked(){
-    await loadUnlocked();
-    if(activeCategory && !activeEntry) renderList();
-    setTimeout(pollUnlocked, 5000);
-  }
-
+  async function pollUnlocked(){ await loadUnlocked(); if(activeCategory) renderListForActiveCategory(); setTimeout(pollUnlocked,5000);}
   pollUnlocked();
-  homeBtn.click();
+
+  function randomFlicker(){ if(Math.random()<0.4){ flicker.style.opacity=(0.08+Math.random()*0.32).toFixed(2); setTimeout(()=>{flicker.style.opacity=0;},50+Math.random()*180);}}
+  setInterval(randomFlicker,80);
+
+  document.addEventListener('mousemove',e=>{ cursorDot.style.left=e.clientX+'px'; cursorDot.style.top=e.clientY+'px'; distortion.style.setProperty('--x', e.clientX/screen.offsetWidth*100+'%'); distortion.style.setProperty('--y', e.clientY/screen.offsetHeight*100+'%'); });
+
 });
 </script>
 </body>
