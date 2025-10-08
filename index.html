@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Rebel Datapad Codex</title>
+<title>Rebel Datapad Entries</title>
 <style>
 * { box-sizing:border-box; margin:0; padding:0; font-family:'OCR A Std','Courier New', monospace; }
 body {
@@ -172,33 +172,6 @@ body {
   box-shadow: 0 0 4px rgba(0,255,255,0.8);
   pointer-events: none;
 }
-.unlock-btn {
-  display:block;
-  margin:4px 0 8px 0;
-  padding:4px 8px;
-  border:none;
-  border-radius:4px;
-  cursor:pointer;
-}
-  #gmIndicator {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background: rgba(0, 255, 255, 0.3);
-  color: #00ffff;
-  font-size: 12px;
-  font-weight: bold;
-  padding: 2px 6px;
-  border-radius: 4px;
-  z-index: 8;
-  pointer-events: none;
-  opacity: 0; /* hidden by default */
-  transition: opacity 0.2s;
-}
-#gmIndicator.active {
-  opacity: 1; /* visible when GM Mode is on */
-}
-
 </style>
 </head>
 <body>
@@ -207,9 +180,11 @@ body {
   <div class="indicator red"></div>
   <div class="indicator red"></div>
   <div class="indicator"></div>
+
   <div id="screen">
     <div id="flicker"></div>
     <div id="distortion"></div>
+
     <div id="content">
       <div id="sidebar">
         <h2>Codex</h2>
@@ -223,39 +198,19 @@ body {
       <div id="main">
         <div id="breadcrumbs"></div>
         <div id="entryContent">
-          <h1>Rebel Alliance Field Codex</h1>
-          <p>Loading encrypted entries... Select a category on the left to access the database.</p>
+          <h1>Rebel Alliance Field Entries</h1>
+          <p>Loading entries... Select a category on the left to access the database.</p>
         </div>
         <div id="blueBase"></div>
       </div>
     </div>
     <div id="dotFlicker"></div>
     <div id="cursor-dot"></div>
-    <div id="gmIndicator">GM</div>
   </div>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const codexData = {
-    planets: [
-      { name:"Yavin 4", image:"images/yavin-4.jpeg", description:"A jungle-covered moon used by the Rebel Alliance as a hidden base during the Galactic Civil War. Site of the first major victory against the Empire." },
-      { name:"Hoth", image:"images/hoth.jpg", description:"An icy planet that served as a Rebel base during the Galactic Civil War." }
-    ],
-    factions: [
-      { name:"Rebel Alliance", image:"images/rebel.jpeg", description:"An alliance of freedom fighters opposing the tyranny of the Galactic Empire." },
-      { name:"Galactic Empire", image:"images/empire.jpeg", description:"The authoritarian regime controlling the galaxy with fear and military might." }
-    ],
-    technology: [
-      { name:"X-wing Starfighter", image:"images/x-wing.jpeg", description:"Fast, reliable, and deadly starfighter used by the Rebel Alliance." },
-      { name:"TIE Fighter", image:"images/tie.jpg", description:"The Imperial starfighter: fast, cheap, and overwhelming in numbers." }
-    ],
-    characters: [
-      { name:"Mon Mothma", image:"images/mothma.jpeg", description:"Founder and leader of the Alliance." },
-      { name:"Luke Skywalker", image:"images/luke.jpg", description:"The farm boy who became a Jedi Knight and hero of the Rebellion." }
-    ]
-  };
-
   const entryContent = document.getElementById('entryContent');
   const breadcrumbs = document.getElementById('breadcrumbs');
   const categoryBtns = document.querySelectorAll('.category-btn');
@@ -265,32 +220,43 @@ document.addEventListener('DOMContentLoaded', () => {
   const distortion = document.getElementById('distortion');
   const screen = document.getElementById('screen');
   const cursorDot = document.getElementById('cursor-dot');
+  const dotFlicker = document.getElementById('dotFlicker');
 
   let activeCategory = null;
   let activeSubFile = null;
-  let gmMode = false;
+  let entriesData = [];
+  let isGM = false;
 
-  // Initialize unlocked state from localStorage
-  function initUnlocks() {
-    Object.keys(codexData).forEach(cat => {
-      codexData[cat].forEach(entry => {
-        const val = localStorage.getItem(getEntryKey(cat, entry.name));
-        entry.unlocked = val === "true";
-      });
-    });
-  }
-  function getEntryKey(category, entryName){ return `codex_${category}_${entryName}_unlocked`; }
-
-  initUnlocks();
-
-  // GM Mode toggle with Ctrl+Shift+G
+  // GM Mode toggle
   document.addEventListener('keydown', e => {
-    if(e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'g'){
-      gmMode = !gmMode;
-      renderSubFiles(activeCategory);
-      alert(`GM Mode ${gmMode ? 'Enabled' : 'Disabled'}`);
+    if(e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'g') {
+      isGM = !isGM;
+      console.log("GM Mode:", isGM);
+      renderEntries(entriesData);
     }
   });
+
+  async function loadCategoryEntries(category) {
+    const manifestPath = `entries/${category}/manifest.json`;
+    let entryList = [];
+    try {
+      const manifestResponse = await fetch(manifestPath);
+      if (!manifestResponse.ok) throw new Error(`Could not fetch manifest for ${category}`);
+      const files = await manifestResponse.json();
+      for (const file of files) {
+        const entryResponse = await fetch(`entries/${category}/${file}`);
+        if (!entryResponse.ok) continue;
+        const entryData = await entryResponse.json();
+        const unlocked = entryData.gmMode ? localStorage.getItem(entryData.id) === "true" : true;
+        if (unlocked || isGM) entryList.push(entryData);
+      }
+      entriesData = entryList;
+      return entryList;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
 
   function updateBreadcrumbs() {
     breadcrumbs.innerHTML = '';
@@ -300,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
       catSpan.style.cursor = 'pointer';
       catSpan.addEventListener('click', () => {
         activeSubFile = null;
-        renderSubFiles(activeCategory);
+        renderEntries(entriesData);
       });
       breadcrumbs.appendChild(catSpan);
 
@@ -316,115 +282,96 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function renderSubFiles(category) {
+  function renderEntries(entries) {
     updateBreadcrumbs();
     entryContent.innerHTML = '';
-    if(!category) return;
-
-    codexData[category].forEach(entry => {
-      if(!entry.unlocked && !gmMode) return; // hide from players if locked
-      const btn = document.createElement('button');
-      btn.textContent = entry.name;
-      btn.classList.add('category-btn');
-      btn.style.margin = '6px 0';
-      btn.style.borderLeftColor = entry.unlocked ? '#0f0' : '#f00';
-      btn.addEventListener('click', () => {
-        activeSubFile = entry;
-        renderEntryDetail(entry);
-      });
-      entryContent.appendChild(btn);
-
-      if(gmMode){
-        const gmBtn = document.createElement('button');
-        gmBtn.classList.add('unlock-btn');
-        gmBtn.style.background = entry.unlocked ? '#900' : '#060';
-        gmBtn.style.color = '#0ff';
-        gmBtn.textContent = entry.unlocked ? 'Remove' : 'Add';
-        gmBtn.addEventListener('click', () => {
-          entry.unlocked = !entry.unlocked;
-          localStorage.setItem(getEntryKey(category, entry.name), entry.unlocked ? "true" : "false");
-          renderSubFiles(category);
+    if(!activeSubFile){
+      entries.forEach(entry => {
+        const btn = document.createElement('button');
+        btn.textContent = entry.name;
+        btn.classList.add('category-btn');
+        btn.style.margin = '6px 0';
+        const unlocked = entry.gmMode ? localStorage.getItem(entry.id) === "true" : true;
+        btn.style.color = unlocked ? "#33cfff" : (isGM ? "#ffff66" : "#555");
+        btn.addEventListener('click', () => {
+          activeSubFile = entry;
+          renderEntryDetail(entry);
         });
-        entryContent.appendChild(gmBtn);
-      }
-    });
+        entryContent.appendChild(btn);
+        if(isGM && entry.gmMode){
+          const removeBtn = document.createElement('button');
+          removeBtn.textContent = unlocked ? "Lock" : "Unlock";
+          removeBtn.style.marginLeft = "5px";
+          removeBtn.style.background="#222";
+          removeBtn.style.color="#ff0";
+          removeBtn.addEventListener('click', e=>{
+            e.stopPropagation();
+            if(localStorage.getItem(entry.id) === "true") localStorage.removeItem(entry.id);
+            else localStorage.setItem(entry.id,"true");
+            renderEntries(entries);
+          });
+          btn.appendChild(removeBtn);
+        }
+      });
+    } else {
+      renderEntryDetail(activeSubFile);
+    }
   }
 
-  function renderEntryDetail(entry) {
+  function renderEntryDetail(entry){
     updateBreadcrumbs();
     entryContent.innerHTML = `<h1>${entry.name}</h1>
                               <img src="${entry.image}" alt="${entry.name}">
                               <p>${entry.description}</p>`;
+    if(isGM && entry.gmMode){
+      const removeBtn = document.createElement('button');
+      removeBtn.textContent = localStorage.getItem(entry.id) === "true" ? "Lock" : "Unlock";
+      removeBtn.classList.add('category-btn');
+      removeBtn.style.marginTop='10px';
+      removeBtn.addEventListener('click', ()=>{
+        if(localStorage.getItem(entry.id) === "true") localStorage.removeItem(entry.id);
+        else localStorage.setItem(entry.id,"true");
+        renderEntries(entriesData);
+      });
+      entryContent.appendChild(removeBtn);
+    }
     const backBtn = document.createElement('button');
     backBtn.textContent = 'Back';
     backBtn.classList.add('category-btn');
-    backBtn.style.marginTop = '20px';
-    backBtn.addEventListener('click', () => {
-      activeSubFile = null;
-      renderSubFiles(activeCategory);
+    backBtn.style.marginTop='10px';
+    backBtn.addEventListener('click', ()=>{
+      activeSubFile=null;
+      renderEntries(entriesData);
     });
     entryContent.appendChild(backBtn);
   }
 
   categoryBtns.forEach(btn => {
     if(btn.id === "homeBtn") return;
-    btn.addEventListener('click', () => {
-      categoryBtns.forEach(b => b.classList.remove('active'));
+    btn.addEventListener('click', async ()=>{
+      categoryBtns.forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
       activeCategory = btn.dataset.category;
-      activeSubFile = null;
-      renderSubFiles(activeCategory);
+      activeSubFile=null;
+      const entries = await loadCategoryEntries(activeCategory);
+      renderEntries(entries);
     });
   });
 
-  searchInput.addEventListener('input', () => {
-    if(activeCategory && !activeSubFile){
-      const filter = searchInput.value.toLowerCase();
-      entryContent.innerHTML = '';
-      codexData[activeCategory].filter(entry => entry.name.toLowerCase().includes(filter) && (entry.unlocked || gmMode))
-        .forEach(entry => {
-          const btn = document.createElement('button');
-          btn.textContent = entry.name;
-          btn.classList.add('category-btn');
-          btn.style.margin = '6px 0';
-          btn.style.borderLeftColor = entry.unlocked ? '#0f0' : '#f00';
-          btn.addEventListener('click', () => {
-            activeSubFile = entry;
-            renderEntryDetail(entry);
-          });
-          entryContent.appendChild(btn);
-
-          if(gmMode){
-            const gmBtn = document.createElement('button');
-            gmBtn.classList.add('unlock-btn');
-            gmBtn.style.background = entry.unlocked ? '#900' : '#060';
-            gmBtn.style.color = '#0ff';
-            gmBtn.textContent = entry.unlocked ? 'Remove' : 'Add';
-            gmBtn.addEventListener('click', () => {
-              entry.unlocked = !entry.unlocked;
-              localStorage.setItem(getEntryKey(activeCategory, entry.name), entry.unlocked ? "true" : "false");
-              renderSubFiles(activeCategory);
-            });
-            entryContent.appendChild(gmBtn);
-          }
-        });
-    }
-  });
-
-  homeBtn.addEventListener('click', () => {
-    activeCategory = null;
-    activeSubFile = null;
-    breadcrumbs.innerHTML = '';
-    entryContent.innerHTML = `<h1>Rebel Alliance Field Codex</h1>
-                              <p>Loading encrypted entries... Select a category on the left to access the database.</p>`;
-    categoryBtns.forEach(b => b.classList.remove('active'));
+  homeBtn.addEventListener('click', ()=>{
+    activeCategory=null;
+    activeSubFile=null;
+    breadcrumbs.innerHTML='';
+    entryContent.innerHTML=`<h1>Rebel Alliance Field Entries</h1>
+                            <p>Loading entries... Select a category on the left to access the database.</p>`;
+    categoryBtns.forEach(b=>b.classList.remove('active'));
   });
 
   // Flicker
   function randomFlicker() {
     if(Math.random() < 0.4){
       flicker.style.opacity = (0.1 + Math.random() * 0.3).toFixed(2);
-      setTimeout(() => { flicker.style.opacity = 0; }, 50 + Math.random() * 150);
+      setTimeout(()=>{ flicker.style.opacity = 0; }, 50 + Math.random()*150);
     }
   }
   setInterval(randomFlicker, 80);
@@ -432,46 +379,35 @@ document.addEventListener('DOMContentLoaded', () => {
   // Distortion
   function randomDistortion() {
     if(Math.random() < 0.05) {
-      const xShift = (Math.random() * 8 - 4).toFixed(1);
-      const yShift = (Math.random() * 8 - 4).toFixed(1);
+      const xShift = (Math.random()*8-4).toFixed(1);
+      const yShift = (Math.random()*8-4).toFixed(1);
       distortion.style.transform = `translate(${xShift}px, ${yShift}px)`;
-      setTimeout(() => { distortion.style.transform = 'translate(0,0)'; }, 50 + Math.random() * 50);
+      setTimeout(()=>{ distortion.style.transform = 'translate(0,0)'; }, 50 + Math.random()*50);
     }
   }
   setInterval(randomDistortion, 100);
 
   // Cursor tracking inside screen
-  screen.addEventListener('mousemove', e => {
+  screen.addEventListener('mousemove', e=>{
     const rect = screen.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     cursorDot.style.left = x + 'px';
     cursorDot.style.top = y + 'px';
   });
-  
-});
 
-  // GM Mode toggle
-const gmIndicator = document.getElementById('gmIndicator');
-document.addEventListener('keydown', e => {
-  if(e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'g'){
-    gmMode = !gmMode;
-    renderSubFiles(activeCategory);
-    gmIndicator.classList.toggle('active', gmMode);
+  // Dot flicker overlay
+  function createRandomDot() {
+    const dot = document.createElement('div');
+    dot.classList.add('dot');
+    dot.style.left = Math.random()*100+'%';
+    dot.style.top = Math.random()*100+'%';
+    dotFlicker.appendChild(dot);
+    setTimeout(()=>dot.remove(), 100+Math.random()*200);
   }
-});
+  setInterval(()=>{ if(Math.random()<0.3) createRandomDot(); }, 50);
 
-// Dot flicker overlay
-const dotFlicker = document.getElementById('dotFlicker');
-function createRandomDot() {
-  const dot = document.createElement('div');
-  dot.classList.add('dot');
-  dot.style.left = Math.random() * 100 + '%';
-  dot.style.top = Math.random() * 100 + '%';
-  dotFlicker.appendChild(dot);
-  setTimeout(() => dot.remove(), 100 + Math.random() * 200);
-}
-setInterval(() => { if(Math.random() < 0.3) createRandomDot(); }, 50);
+});
 </script>
 </body>
 </html>
