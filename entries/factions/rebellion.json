@@ -3,5 +3,5 @@
   "name": "Rebellion",
   "image": "images/rebel.jpeg",
   "description": "This is a test.",
-  "gmMode": false
+  "gmMode": true
 }
