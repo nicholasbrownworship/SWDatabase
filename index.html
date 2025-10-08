@@ -5,130 +5,167 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rebel Datapad Codex</title>
 <style>
-* { box-sizing:border-box; margin:0; padding:0; font-family:'OCR A Std','Courier New', monospace; }
-body {
-  background: radial-gradient(ellipse at center, #050505 0%, #000 100%);
-  color:#a0d8ff;
-  height:100vh; display:flex; justify-content:center; align-items:center;
-  overflow:hidden;
-}
-#datapad {
-  width:900px; height:600px;
-  background: url('images/metal_texture.jpg') center/cover no-repeat;
-  border:6px solid #333;
-  border-radius:25px;
-  position:relative;
-  box-shadow: 0 0 60px rgba(0,255,255,0.05), inset 0 0 20px #000;
-  overflow:hidden;
-}
-#datapad::before {
-  content:"";
-  position:absolute; inset:0;
-  border-radius:25px;
-  background: url('images/metal_noise.png') repeat;
-  opacity:0.2;
-  z-index:0;
-}
+  * { box-sizing:border-box; margin:0; padding:0; font-family:'OCR A Std','Courier New', monospace; }
+  body {
+    background: radial-gradient(ellipse at center, #050505 0%, #000 100%);
+    color:#a0d8ff;
+    height:100vh; display:flex; justify-content:center; align-items:center;
+    overflow:hidden;
+  }
+  #datapad {
+    width:900px; height:600px;
+    background: url('images/metal_texture.jpg') center/cover no-repeat;
+    border:6px solid #333;
+    border-radius:25px;
+    position:relative;
+    box-shadow: 0 0 60px rgba(0,255,255,0.05), inset 0 0 20px #000;
+    overflow:hidden;
+  }
+  #datapad::before {
+    content:"";
+    position:absolute; inset:0;
+    border-radius:25px;
+    background: url('images/metal_noise.png') repeat;
+    opacity:0.2;
+    z-index:0;
+  }
 
-/* Screen */
-#screen {
-  position:absolute;
-  top:40px; left:40px;
-  width:820px; height:520px;
-  background:radial-gradient(circle at 50% 50%, rgba(10,20,25,0.95) 0%, rgba(5,10,12,0.9) 100%);
-  border-radius:15px;
-  overflow:hidden;
-  box-shadow: inset 0 0 20px rgba(0,255,255,0.2);
-  cursor: none;
-}
+  /* === SCREEN CORE === */
+  #screen {
+    position:absolute;
+    top:40px; left:40px;
+    width:820px; height:520px;
+    background:radial-gradient(circle at 50% 50%, rgba(10,20,25,0.95) 0%, rgba(5,10,12,0.9) 100%);
+    border-radius:15px;
+    overflow:hidden;
+    box-shadow: inset 0 0 20px rgba(0,255,255,0.2);
+    animation: glowPulse 3s infinite alternate;
+    cursor: none;
+  }
 
-/* Entry content + images */
-#entryContainer {
-  position:absolute;
-  inset:0;
-  overflow-y:auto;
-  padding:20px;
-  z-index:1;
-}
-#entryContainer img {
-  display:block;
-  margin:10px auto;
-  max-width:300px;
-  height:auto;
-  border:2px solid #33cfff;
-  border-radius:4px;
-  box-shadow:0 0 15px rgba(0,255,255,0.3);
-}
+  @keyframes glowPulse {
+    0% { box-shadow: inset 0 0 20px rgba(0,255,255,0.15); }
+    50% { box-shadow: inset 0 0 35px rgba(0,255,255,0.3); }
+    100% { box-shadow: inset 0 0 25px rgba(0,255,255,0.2); }
+  }
 
-/* Overlay effects */
-#overlayEffects {
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  z-index:2;
-}
-#blueBase {
-  position:absolute; inset:0;
-  background-color: rgba(0,255,255,0.25);
-  mix-blend-mode: screen;
-}
-#distortion {
-  position:absolute; inset:0;
-  background: radial-gradient(circle at var(--x,50%) var(--y,50%), rgba(0,255,255,0.25) 0%, rgba(0,255,255,0.1) 10%, transparent 50%);
-  transition: background 0.08s ease;
-}
-#flicker {
-  position:absolute; inset:0;
-  background: repeating-linear-gradient(0deg, rgba(0,255,255,0.2) 0px, rgba(0,255,255,0.2) 1px, transparent 2px, transparent 3px);
-  opacity:0;
-}
+  #screen * { cursor:none; }
 
-/* Sidebar and UI */
-#content { display:flex; height:100%; position:relative; z-index:3; }
-#sidebar {
-  width:200px; background:rgba(5,15,20,0.8); border-right:1px solid #033;
-  display:flex; flex-direction:column; padding:15px;
-}
-#sidebar h2 { color:#33cfff; text-align:center; margin-bottom:10px; }
-.category-btn {
-  background:#0a1f26; border:none; margin:4px 0; padding:8px; color:#33cfff;
-  cursor:pointer; text-align:left; border-left:4px solid #0a5266;
-  transition: all 0.2s;
-}
-.category-btn:hover { background:#0e2a34; border-left-color:#66f0ff; }
-.category-btn.active { border-left-color:#00ffff; background:#0e2a34; }
-#search { margin-top:auto; padding:6px; background:#0b1c23; border:1px solid #33cfff; color:#a0d8ff; }
+  /* === ENTRY LAYER (Images + Text) === */
+  #entryContainer {
+    position:absolute;
+    inset:0;
+    z-index:1;
+    overflow-y:auto;
+    padding:20px;
+  }
+  #entryContainer img {
+    display:block;
+    margin:10px auto;
+    max-width:300px;
+    height:auto;
+    border:2px solid #33cfff;
+    border-radius:4px;
+    box-shadow:0 0 15px rgba(0,255,255,0.3);
+  }
 
-/* Main content text */
-#main { flex:1; padding:20px; overflow-y:auto; }
-#breadcrumbs { margin-bottom:10px; font-size:14px; color:#33cfff; }
-#breadcrumbs span { cursor: default; }
-#breadcrumbs span:hover { text-decoration: underline; }
-#entryContent h1 { font-size:22px; margin-bottom:10px; color:#66f0ff; }
-#entryContent p { font-size:15px; line-height:1.5em; }
+  /* === OVERLAY EFFECTS (Above images, below UI) === */
+  #overlayEffects {
+    position:absolute;
+    inset:0;
+    z-index:2;
+    pointer-events:none;
+  }
+  #blueBase {
+    position:absolute;
+    inset:0;
+    background-color:rgba(0,255,255,0.35);
+    mix-blend-mode:screen;
+  }
+  #flicker {
+    position:absolute;
+    inset:0;
+    background: repeating-linear-gradient(0deg, rgba(0,255,255,0.25) 0px, rgba(0,255,255,0.25) 1px, transparent 2px, transparent 3px);
+    opacity:0;
+    transition:opacity 0.1s;
+  }
+  #distortion {
+    position:absolute;
+    inset:0;
+    background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(0,255,255,0.5) 0%, rgba(0,255,255,0.2) 20%, rgba(0,255,255,0.1) 35%, transparent 60%);
+    opacity:0.45;
+    mix-blend-mode:screen;
+    filter: blur(10px);
+    transform: scale(1);
+    transition: transform 0.1s ease-out;
+  }
+  #screen::before {
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(0,255,255,0.05) 0px,
+      rgba(0,255,255,0.05) 1px,
+      transparent 2px,
+      transparent 3px
+    );
+    animation: scanlines 1s linear infinite;
+    z-index:3;
+  }
+  @keyframes scanlines {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 4px; }
+  }
 
-/* Indicators */
-.indicator {
-  position:absolute; width:12px; height:12px; border-radius:50%;
-  background:#0f0; box-shadow:0 0 8px #0f0;
-}
-.indicator.red { background:#f00; box-shadow:0 0 8px #f00; }
-.indicator:nth-child(1){ top:10px; left:10px; }
-.indicator:nth-child(2){ top:10px; right:10px; }
-.indicator:nth-child(3){ bottom:10px; left:10px; }
-.indicator:nth-child(4){ bottom:10px; right:10px; }
+  /* === MAIN CONTENT/UI === */
+  #content {
+    position:absolute;
+    inset:0;
+    z-index:3;
+    display:flex;
+  }
+  #sidebar {
+    width:200px; background:rgba(5,15,20,0.8); border-right:1px solid #033;
+    display:flex; flex-direction:column; padding:15px;
+  }
+  #sidebar h2 { color:#33cfff; text-align:center; margin-bottom:10px; }
+  .category-btn {
+    background:#0a1f26; border:none; margin:4px 0; padding:8px; color:#33cfff;
+    cursor:pointer; text-align:left; border-left:4px solid #0a5266;
+    transition: all 0.2s;
+  }
+  .category-btn:hover { background:#0e2a34; border-left-color:#66f0ff; }
+  .category-btn.active { border-left-color:#00ffff; background:#0e2a34; }
+  #search { margin-top:auto; padding:6px; background:#0b1c23; border:1px solid #33cfff; color:#a0d8ff; }
+  #main { flex:1; padding:20px; overflow-y:auto; }
+  #breadcrumbs { margin-bottom:10px; font-size:14px; color:#33cfff; }
+  #breadcrumbs span:hover { text-decoration: underline; }
+  #entryContent h1 { font-size:22px; margin-bottom:10px; color:#66f0ff; }
+  #entryContent p { font-size:15px; line-height:1.5em; }
 
-/* Cursor dot */
-#cursor-dot {
-  position:absolute; width:12px; height:12px; border-radius:50%;
-  background: rgba(0,255,255,0.8);
-  box-shadow:0 0 8px rgba(0,255,255,0.8), 0 0 15px rgba(0,255,255,0.5);
-  pointer-events:none; transform: translate(-50%, -50%);
-  z-index:4;
-}
+  /* === INDICATORS AND CURSOR === */
+  .indicator {
+    position:absolute; width:12px; height:12px; border-radius:50%;
+    background:#0f0; box-shadow:0 0 8px #0f0;
+  }
+  .indicator.red { background:#f00; box-shadow:0 0 8px #f00; }
+  .indicator:nth-child(1){ top:10px; left:10px; }
+  .indicator:nth-child(2){ top:10px; right:10px; }
+  .indicator:nth-child(3){ bottom:10px; left:10px; }
+  .indicator:nth-child(4){ bottom:10px; right:10px; }
 
-/* Hide cursor over screen */
-#screen, #screen * { cursor:none; }
+  #cursor-dot {
+    position:absolute;
+    width:12px; height:12px;
+    border-radius:50%;
+    background: rgba(0,255,255,0.8);
+    box-shadow:0 0 8px rgba(0,255,255,0.8), 0 0 15px rgba(0,255,255,0.5);
+    pointer-events:none;
+    transform: translate(-50%, -50%);
+    z-index:4;
+  }
 </style>
 </head>
 <body>
@@ -139,7 +176,6 @@ body {
   <div class="indicator"></div>
 
   <div id="screen">
-    <!-- Entry images + text -->
     <div id="entryContainer">
       <div id="entryContent">
         <h1>Rebel Alliance Field Codex</h1>
@@ -147,14 +183,12 @@ body {
       </div>
     </div>
 
-    <!-- Overlay effects -->
     <div id="overlayEffects">
       <div id="blueBase"></div>
-      <div id="distortion"></div>
       <div id="flicker"></div>
+      <div id="distortion"></div>
     </div>
 
-    <!-- Sidebar and UI -->
     <div id="content">
       <div id="sidebar">
         <h2>Codex</h2>
@@ -169,6 +203,7 @@ body {
         <div id="breadcrumbs"></div>
       </div>
     </div>
+
     <div id="cursor-dot"></div>
   </div>
 </div>
@@ -219,10 +254,12 @@ document.addEventListener('DOMContentLoaded', () => {
         renderSubFiles(activeCategory);
       });
       breadcrumbs.appendChild(catSpan);
+
       if(activeSubFile) {
         const sep = document.createElement('span');
         sep.textContent = ' > ';
         breadcrumbs.appendChild(sep);
+
         const subSpan = document.createElement('span');
         subSpan.textContent = activeSubFile.name;
         breadcrumbs.appendChild(subSpan);
@@ -248,7 +285,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderEntryDetail(entry) {
     updateBreadcrumbs();
-    entryContent.innerHTML = `<h1>${entry.name}</h1><img src="${entry.image}" alt="${entry.name}"><p>${entry.description}</p>`;
+    entryContent.innerHTML = `<h1>${entry.name}</h1>
+                              <img src="${entry.image}" alt="${entry.name}">
+                              <p>${entry.description}</p>`;
     const backBtn = document.createElement('button');
     backBtn.textContent = 'Back';
     backBtn.classList.add('category-btn');
@@ -300,7 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
     categoryBtns.forEach(b => b.classList.remove('active'));
   });
 
-  // Flicker
+  // Flicker (stronger)
   function randomFlicker() {
     if(Math.random() < 0.5){
       flicker.style.opacity = (0.15 + Math.random() * 0.5).toFixed(2);
@@ -318,10 +357,11 @@ document.addEventListener('DOMContentLoaded', () => {
     distortion.style.setProperty('--y', y + '%');
   });
 
+  // Random distortion pulse (slightly larger)
   function randomDistortionPulse() {
-    const scale = 1 + Math.random()*0.02;
+    const scale = 1 + Math.random()*0.05;
     distortion.style.transform = `scale(${scale})`;
-    setTimeout(() => { distortion.style.transform = 'scale(1)'; }, 50 + Math.random()*50);
+    setTimeout(() => { distortion.style.transform = 'scale(1)'; }, 80 + Math.random()*70);
   }
   setInterval(randomDistortionPulse, 100);
 
