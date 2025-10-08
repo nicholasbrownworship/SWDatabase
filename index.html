@@ -86,7 +86,7 @@ body {
   inset:0;
   background-color: rgba(0,255,255,0.35);
   pointer-events:none; 
-  z-index:1; 
+  z-index:1;
   mix-blend-mode: screen;
 }
 #blueBase::after {
@@ -95,11 +95,11 @@ body {
   inset: 0;
   pointer-events: none;
   background: repeating-linear-gradient(
-      0deg, 
-      rgba(0,255,255,0.05) 0px, 
-      rgba(0,255,255,0.05) 1px, 
-      transparent 2px, 
-      transparent 3px
+    0deg, 
+    rgba(0,255,255,0.05) 0px, 
+    rgba(0,255,255,0.05) 1px, 
+    transparent 2px, 
+    transparent 3px
   );
   opacity: 0.3;
   animation: staticNoise 0.2s steps(2) infinite;
@@ -113,7 +113,7 @@ body {
 #sidebar {
   width:200px; background:rgba(5,15,20,0.8); border-right:1px solid #033;
   display:flex; flex-direction:column; padding:15px;
-  z-index:2; 
+  z-index:2;
 }
 #sidebar h2 { color:#33cfff; text-align:center; margin-bottom:10px; }
 .category-btn {
@@ -159,7 +159,7 @@ body {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 4; 
+  z-index:4;
 }
 .dot {
   position: absolute;
@@ -169,6 +169,9 @@ body {
   background: rgba(0,255,255,0.6);
   box-shadow: 0 0 4px rgba(0,255,255,0.8);
   pointer-events: none;
+}
+.unlock-btn {
+  display:inline-block; margin:4px 0; padding:4px 6px; background:#066; color:#0ff; border:none; cursor:pointer; font-size:13px; border-radius:3px;
 }
 </style>
 </head>
@@ -209,25 +212,22 @@ body {
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // Hidden GM Mode
-  let gmMode = false;
-
   const codexData = {
     planets: [
-      { name:"Yavin 4", image:"images/yavin-4.jpeg", description:"A jungle-covered moon used by the Rebel Alliance as a hidden base.", gmMode:true, unlocked:false },
-      { name:"Hoth", image:"images/hoth.jpg", description:"An icy planet that served as a Rebel base.", gmMode:false, unlocked:true }
+      { name:"Yavin 4", image:"images/yavin-4.jpeg", description:"A jungle-covered moon used by the Rebel Alliance as a hidden base during the Galactic Civil War. Site of the first major victory against the Empire.", gmMode:true, unlocked:false },
+      { name:"Hoth", image:"images/hoth.jpg", description:"An icy planet that served as a Rebel base during the Galactic Civil War.", gmMode:true, unlocked:false }
     ],
     factions: [
-      { name:"Rebel Alliance", image:"images/rebel.jpeg", description:"An alliance of freedom fighters.", gmMode:false, unlocked:true },
-      { name:"Galactic Empire", image:"images/empire.jpeg", description:"The authoritarian regime controlling the galaxy.", gmMode:true, unlocked:false }
+      { name:"Rebel Alliance", image:"images/rebel.jpeg", description:"An alliance of freedom fighters opposing the tyranny of the Galactic Empire.", gmMode:true, unlocked:false },
+      { name:"Galactic Empire", image:"images/empire.jpeg", description:"The authoritarian regime controlling the galaxy with fear and military might.", gmMode:true, unlocked:false }
     ],
     technology: [
-      { name:"X-wing Starfighter", image:"images/x-wing.jpeg", description:"Fast, reliable starfighter.", gmMode:false, unlocked:true },
-      { name:"TIE Fighter", image:"images/tie.jpg", description:"Imperial starfighter.", gmMode:true, unlocked:false }
+      { name:"X-wing Starfighter", image:"images/x-wing.jpeg", description:"Fast, reliable, and deadly starfighter used by the Rebel Alliance.", gmMode:true, unlocked:false },
+      { name:"TIE Fighter", image:"images/tie.jpg", description:"The Imperial starfighter: fast, cheap, and overwhelming in numbers.", gmMode:true, unlocked:false }
     ],
     characters: [
       { name:"Mon Mothma", image:"images/mothma.jpeg", description:"Founder and leader of the Alliance.", gmMode:true, unlocked:false },
-      { name:"Luke Skywalker", image:"images/luke.jpg", description:"Farm boy turned Jedi Knight.", gmMode:false, unlocked:true }
+      { name:"Luke Skywalker", image:"images/luke.jpg", description:"The farm boy who became a Jedi Knight and hero of the Rebellion.", gmMode:true, unlocked:false }
     ]
   };
 
@@ -240,18 +240,30 @@ document.addEventListener('DOMContentLoaded', () => {
   const distortion = document.getElementById('distortion');
   const screen = document.getElementById('screen');
   const cursorDot = document.getElementById('cursor-dot');
+  const dotFlicker = document.getElementById('dotFlicker');
 
   let activeCategory = null;
   let activeSubFile = null;
+  let gmMode = false;
 
-  // --- GM Mode toggle via Ctrl+Shift+G ---
-  document.addEventListener('keydown', e => {
-    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'g') {
-      gmMode = !gmMode;
-      console.log(`GM Mode: ${gmMode ? 'ON' : 'OFF'}`);
-      if (activeCategory) renderSubFiles(activeCategory);
-    }
-  });
+  function getEntryKey(category, entryName) { return `${category}::${entryName}`; }
+
+  function loadUnlockedEntries() {
+    Object.keys(codexData).forEach(category => {
+      codexData[category].forEach(entry => {
+        const key = getEntryKey(category, entry.name);
+        if(localStorage.getItem(key) === "true") entry.unlocked = true;
+      });
+    });
+  }
+  loadUnlockedEntries();
+
+  function unlockEntry(category, entry) {
+    entry.unlocked = true;
+    const key = getEntryKey(category, entry.name);
+    localStorage.setItem(key,"true");
+    renderSubFiles(category);
+  }
 
   function updateBreadcrumbs() {
     breadcrumbs.innerHTML = '';
@@ -281,32 +293,23 @@ document.addEventListener('DOMContentLoaded', () => {
     updateBreadcrumbs();
     entryContent.innerHTML = '';
     codexData[category].forEach(entry => {
-      if(entry.unlocked || (gmMode && entry.gmMode)) {
-        // Entry visible
-        const btn = document.createElement('button');
-        btn.textContent = entry.name;
-        btn.classList.add('category-btn');
-        btn.style.margin = '6px 0';
-        btn.addEventListener('click', () => {
-          activeSubFile = entry;
-          renderEntryDetail(entry);
-        });
-        entryContent.appendChild(btn);
+      if(!entry.unlocked && !gmMode) return; // hide entries if not unlocked
+      const btn = document.createElement('button');
+      btn.textContent = entry.name;
+      btn.classList.add('category-btn');
+      btn.style.margin = '6px 0';
+      btn.addEventListener('click', () => {
+        activeSubFile = entry;
+        renderEntryDetail(entry);
+      });
+      entryContent.appendChild(btn);
 
-        // GM unlock button
-        if(gmMode && !entry.unlocked) {
-          const unlockBtn = document.createElement('button');
-          unlockBtn.textContent = 'Unlock';
-          unlockBtn.classList.add('category-btn');
-          unlockBtn.style.background = '#004455';
-          unlockBtn.style.color = '#66ffff';
-          unlockBtn.style.marginLeft = '10px';
-          unlockBtn.addEventListener('click', () => {
-            entry.unlocked = true;
-            renderSubFiles(category);
-          });
-          btn.parentNode.insertBefore(unlockBtn, btn.nextSibling);
-        }
+      if(gmMode && !entry.unlocked) {
+        const unlockBtn = document.createElement('button');
+        unlockBtn.textContent = 'Add';
+        unlockBtn.classList.add('unlock-btn');
+        unlockBtn.addEventListener('click', () => unlockEntry(category, entry));
+        entryContent.appendChild(unlockBtn);
       }
     });
   }
@@ -316,19 +319,6 @@ document.addEventListener('DOMContentLoaded', () => {
     entryContent.innerHTML = `<h1>${entry.name}</h1>
                               <img src="${entry.image}" alt="${entry.name}">
                               <p>${entry.description}</p>`;
-    if(gmMode && entry.gmMode && !entry.unlocked) {
-      const unlockBtn = document.createElement('button');
-      unlockBtn.textContent = 'Unlock';
-      unlockBtn.classList.add('category-btn');
-      unlockBtn.style.background = '#004455';
-      unlockBtn.style.color = '#66ffff';
-      unlockBtn.style.marginTop = '10px';
-      unlockBtn.addEventListener('click', () => {
-        entry.unlocked = true;
-        renderSubFiles(activeCategory);
-      });
-      entryContent.appendChild(unlockBtn);
-    }
     const backBtn = document.createElement('button');
     backBtn.textContent = 'Back';
     backBtn.classList.add('category-btn');
@@ -356,8 +346,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const filter = searchInput.value.toLowerCase();
       entryContent.innerHTML = '';
       codexData[activeCategory]
-        .filter(entry => (entry.unlocked || (gmMode && entry.gmMode)) && entry.name.toLowerCase().includes(filter))
+        .filter(entry => entry.name.toLowerCase().includes(filter))
         .forEach(entry => {
+          if(!entry.unlocked && !gmMode) return;
           const btn = document.createElement('button');
           btn.textContent = entry.name;
           btn.classList.add('category-btn');
@@ -368,18 +359,12 @@ document.addEventListener('DOMContentLoaded', () => {
           });
           entryContent.appendChild(btn);
 
-          if(gmMode && !entry.unlocked && entry.gmMode) {
+          if(gmMode && !entry.unlocked) {
             const unlockBtn = document.createElement('button');
-            unlockBtn.textContent = 'Unlock';
-            unlockBtn.classList.add('category-btn');
-            unlockBtn.style.background = '#004455';
-            unlockBtn.style.color = '#66ffff';
-            unlockBtn.style.marginLeft = '10px';
-            unlockBtn.addEventListener('click', () => {
-              entry.unlocked = true;
-              renderSubFiles(activeCategory);
-            });
-            btn.parentNode.insertBefore(unlockBtn, btn.nextSibling);
+            unlockBtn.textContent = 'Add';
+            unlockBtn.classList.add('unlock-btn');
+            unlockBtn.addEventListener('click', () => unlockEntry(activeCategory, entry));
+            entryContent.appendChild(unlockBtn);
           }
         });
     }
@@ -394,7 +379,15 @@ document.addEventListener('DOMContentLoaded', () => {
     categoryBtns.forEach(b => b.classList.remove('active'));
   });
 
-  // --- Flicker ---
+  // GM Mode toggle: Ctrl+Shift+G
+  document.addEventListener('keydown', e => {
+    if(e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'g') {
+      gmMode = !gmMode;
+      renderSubFiles(activeCategory || '');
+    }
+  });
+
+  // Flicker
   function randomFlicker() {
     if(Math.random() < 0.4){
       flicker.style.opacity = (0.1 + Math.random() * 0.3).toFixed(2);
@@ -403,7 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   setInterval(randomFlicker, 80);
 
-  // --- Distortion ---
+  // Distortion
   function randomDistortion() {
     if(Math.random() < 0.05) {
       const xShift = (Math.random() * 8 - 4).toFixed(1);
@@ -414,7 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   setInterval(randomDistortion, 100);
 
-  // --- Cursor tracking ---
+  // Cursor tracking inside screen
   screen.addEventListener('mousemove', e => {
     const rect = screen.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -423,8 +416,7 @@ document.addEventListener('DOMContentLoaded', () => {
     cursorDot.style.top = y + 'px';
   });
 
-  // --- Dot flicker ---
-  const dotFlicker = document.getElementById('dotFlicker');
+  // Dot flicker
   function createRandomDot() {
     const dot = document.createElement('div');
     dot.classList.add('dot');
@@ -433,10 +425,7 @@ document.addEventListener('DOMContentLoaded', () => {
     dotFlicker.appendChild(dot);
     setTimeout(() => dot.remove(), 100 + Math.random() * 200);
   }
-  setInterval(() => {
-    if(Math.random() < 0.3) createRandomDot();
-  }, 50);
-
+  setInterval(() => { if(Math.random() < 0.3) createRandomDot(); }, 50);
 });
 </script>
 </body>
