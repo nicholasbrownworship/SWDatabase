@@ -3,5 +3,5 @@
   "name": "X-Wing Starfighter",
   "image": "images/x-wing.jpeg",
   "description": "This is a test.",
-  "gmMode": false
+  "gmMode": true
 }
