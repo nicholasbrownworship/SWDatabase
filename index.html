@@ -114,16 +114,15 @@ body {
 #entryContent img { display:block; margin:10px auto; max-width:100%; max-height:300px; border:2px solid #33cfff; border-radius:4px; box-shadow:0 0 15px rgba(0,255,255,0.3); position:relative; z-index:0; }
 #entryContent p { font-size:15px; line-height:1.5em; position:relative; z-index:0; white-space:pre-wrap; }
 
-/* Entry list button coloring indicators */
 .entry-row { display:flex; align-items:center; gap:8px; margin:6px 0; }
 .entry-title {
   flex:1;
   background:#0a1f26; border:none; padding:8px; color:#a0d8ff; text-align:left; cursor:pointer; border-left:6px solid #0a5266;
   border-radius:4px;
 }
-.entry-title.locked { border-left-color:#777; color:#777; }       /* hidden to players, but shown in GM as muted */
-.entry-title.gm-locked { border-left-color:#ffcc33; color:#ffffcc; } /* locked but visible to GM */
-.entry-title.unlocked { border-left-color:#0f0; color:#bfffdc; }   /* unlocked for players */
+.entry-title.locked { border-left-color:#777; color:#777; }
+.entry-title.gm-locked { border-left-color:#ffcc33; color:#ffffcc; }
+.entry-title.unlocked { border-left-color:#0f0; color:#bfffdc; }
 
 .unlock-btn {
   padding:6px 8px; border:none; border-radius:4px; cursor:pointer;
@@ -148,7 +147,6 @@ body {
 }
 #gmIndicator.active { opacity:1; }
 
-/* cursor dot and indicators */
 .indicator { position:absolute; width:12px; height:12px; border-radius:50%; background:#0f0; box-shadow:0 0 8px #0f0; }
 .indicator.red { background:#f00; box-shadow:0 0 8px #f00; }
 .indicator:nth-child(1){ top:10px; left:10px; }
@@ -159,7 +157,6 @@ body {
 #dotFlicker { position:absolute; inset:0; pointer-events:none; z-index:4; }
 .dot { position:absolute; width:2px; height:2px; border-radius:50%; background: rgba(0,255,255,0.6); box-shadow:0 0 4px rgba(0,255,255,0.8); pointer-events:none; }
 
-/* small responsive tweak */
 @media (max-width:960px){ #datapad{ transform: scale(0.92); } }
 </style>
 </head>
@@ -204,13 +201,6 @@ body {
 </div>
 
 <script>
-/* Full functionality:
-   - categories mapped to entries/<category>/manifest.json (manifest is an array of filenames)
-   - each entry: entries/<category>/<file>.json expected
-   - GM Mode toggled with Ctrl+Shift+G (hidden), unlocks persist via localStorage
-   - search + breadcrumbs + visuals preserved
-*/
-
 document.addEventListener('DOMContentLoaded', () => {
   const categories = ['planets','characters','technology','items','factions','missions'];
   const entryContent = document.getElementById('entryContent');
@@ -228,51 +218,45 @@ document.addEventListener('DOMContentLoaded', () => {
   let activeCategory = null;
   let activeEntry = null;
   let isGM = false;
-  // cache loaded entries per category to avoid refetching unless user wants to refresh
   const cache = {};
+  let unlocks = {};
 
-  // helper localStorage key
-  const lsKey = id => `entry_unlocked__${id}`;
+  async function fetchUnlocks() {
+    try {
+      const r = await fetch('/api/unlocks');
+      if (r.ok) unlocks = await r.json();
+    } catch(e){ console.error('unlock fetch error', e); }
+  }
 
-  // utility: safe fetch JSON or null
+  async function updateUnlock(category, id, action) {
+    try {
+      await fetch('/api/unlocks', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({category,id,action})
+      });
+      await fetchUnlocks();
+      await renderListForActiveCategory();
+    } catch(e){ console.error('unlock update error', e); }
+  }
+
   async function fetchJson(path) {
     try {
       const r = await fetch(path, { cache: "no-cache" });
       if (!r.ok) return null;
       return await r.json();
-    } catch (e) {
-      console.error('fetch error', path, e);
-      return null;
-    }
+    } catch (e) { console.error('fetch error', path, e); return null; }
   }
 
-  // load manifest (simple array) and then each entry JSON
   async function loadCategoryEntries(category) {
-    // return cached if present
     if (cache[category]) return cache[category];
-
-    const manifestPath = `entries/${category}/manifest.json`;
-    const files = await fetchJson(manifestPath);
-    if (!Array.isArray(files)) {
-      console.warn('manifest missing or invalid for', category, manifestPath);
-      cache[category] = [];
-      return [];
-    }
-
+    const files = await fetchJson(`/api/manifest/${category}`);
+    if (!Array.isArray(files)) { cache[category]=[]; return []; }
     const entries = [];
     for (const file of files) {
-      const filePath = `entries/${category}/${file}`;
-      const data = await fetchJson(filePath);
-      if (!data) {
-        console.warn('failed to load entry', filePath);
-        continue;
-      }
-      // ensure id exists (use filename if not)
-      if (!data.id) {
-        // strip extension from file
-        data.id = file.replace(/\.[^/.]+$/, "");
-      }
-      // attach category
+      const data = await fetchJson(`/api/entries/${category}/${file}`);
+      if (!data) continue;
+      if (!data.id) data.id = file.replace(/\.[^/.]+$/,'');
       data.category = category;
       entries.push(data);
     }
@@ -280,83 +264,54 @@ document.addEventListener('DOMContentLoaded', () => {
     return entries;
   }
 
-  // helpers for breadcrumbs
   function updateBreadcrumbs() {
-    breadcrumbs.innerHTML = '';
-    if (!activeCategory) return;
+    breadcrumbs.innerHTML='';
+    if(!activeCategory) return;
     const catSpan = document.createElement('span');
-    catSpan.textContent = activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1);
-    catSpan.addEventListener('click', ()=> { activeEntry = null; renderListForActiveCategory(); });
+    catSpan.textContent = activeCategory.charAt(0).toUpperCase()+activeCategory.slice(1);
+    catSpan.addEventListener('click', ()=>{ activeEntry=null; renderListForActiveCategory(); });
     breadcrumbs.appendChild(catSpan);
-    if (activeEntry) {
-      const sep = document.createElement('span'); sep.textContent = ' > ';
-      const entrySpan = document.createElement('span'); entrySpan.textContent = activeEntry.name;
+    if(activeEntry){
+      const sep=document.createElement('span'); sep.textContent=' > ';
+      const entrySpan=document.createElement('span'); entrySpan.textContent=activeEntry.name;
       breadcrumbs.appendChild(sep); breadcrumbs.appendChild(entrySpan);
     }
   }
 
-  // render list for active category (with search and GM visibility)
   async function renderListForActiveCategory() {
-    entryContent.innerHTML = '';
-    if (!activeCategory) {
-      entryContent.innerHTML = `<h1>Rebel Alliance Field Codex</h1>
+    entryContent.innerHTML='';
+    if(!activeCategory){
+      entryContent.innerHTML=`<h1>Rebel Alliance Field Codex</h1>
         <p>Entries are not loaded until a category is selected. Click a category on the left to begin.</p>`;
-      updateBreadcrumbs();
-      return;
+      updateBreadcrumbs(); return;
     }
-
     const entries = await loadCategoryEntries(activeCategory);
-    const q = (searchInput.value || '').trim().toLowerCase();
+    const q=(searchInput.value||'').trim().toLowerCase();
+    const list=document.createElement('div');
 
-    // list container
-    const list = document.createElement('div');
-
-    for (const entry of entries) {
-      // determine unlocked state; for non-gmMode entries, unlocked by default
+    for(const entry of entries){
       const isGMOnly = Boolean(entry.gmMode);
-      const unlocked = isGMOnly ? (localStorage.getItem(lsKey(entry.id)) === "true") : true;
+      const unlocked = unlocks[entry.category]?.includes(entry.id) || !isGMOnly;
 
-      // if not unlocked for player and not in GM Mode, hide
-      if (!unlocked && !isGM) continue;
+      if(!unlocked && !isGM) continue;
+      if(q && !entry.name.toLowerCase().includes(q) && !(entry.description||'').toLowerCase().includes(q)) continue;
 
-      // apply search filter
-      if (q && !entry.name.toLowerCase().includes(q) && !(entry.description || '').toLowerCase().includes(q)) continue;
-
-      // create row
-      const row = document.createElement('div');
-      row.className = 'entry-row';
-
-      const titleBtn = document.createElement('button');
-      titleBtn.className = 'entry-title';
-      titleBtn.textContent = entry.name;
-
-      // color / classes
-      if (unlocked) titleBtn.classList.add('unlocked');
-      else if (isGM) titleBtn.classList.add('gm-locked');
+      const row=document.createElement('div'); row.className='entry-row';
+      const titleBtn=document.createElement('button'); titleBtn.className='entry-title';
+      titleBtn.textContent=entry.name;
+      if(unlocked) titleBtn.classList.add('unlocked');
+      else if(isGM) titleBtn.classList.add('gm-locked');
       else titleBtn.classList.add('locked');
-
-      titleBtn.addEventListener('click', () => {
-        activeEntry = entry;
-        renderEntryDetail(entry);
-      });
-
+      titleBtn.addEventListener('click', ()=>{ activeEntry=entry; renderEntryDetail(entry); });
       row.appendChild(titleBtn);
 
-      // GM controls: Add/Remove only visible when GM Mode is ON and entry marked gmMode
-      if (isGM && isGMOnly) {
-        const btn = document.createElement('button');
-        btn.className = 'unlock-btn ' + (unlocked ? 'remove' : 'add');
-        btn.textContent = unlocked ? 'Remove' : 'Add';
-        btn.title = unlocked ? 'Remove from player view' : 'Add to player view';
-        btn.addEventListener('click', (ev) => {
+      if(isGM && isGMOnly){
+        const btn=document.createElement('button'); btn.className='unlock-btn '+(unlocked?'remove':'add');
+        btn.textContent=unlocked?'Remove':'Add';
+        btn.title=unlocked?'Remove from player view':'Add to player view';
+        btn.addEventListener('click',(ev)=>{
           ev.stopPropagation();
-          if (localStorage.getItem(lsKey(entry.id)) === "true") {
-            localStorage.removeItem(lsKey(entry.id));
-          } else {
-            localStorage.setItem(lsKey(entry.id), "true");
-          }
-          // re-render list to show updated state
-          renderListForActiveCategory();
+          updateUnlock(entry.category, entry.id, unlocked?'remove':'add');
         });
         row.appendChild(btn);
       }
@@ -364,161 +319,86 @@ document.addEventListener('DOMContentLoaded', () => {
       list.appendChild(row);
     }
 
-    // if nothing to show
-    if (!list.childElementCount) {
-      const msg = document.createElement('p');
-      msg.textContent = isGM ? 'No entries match the current filter.' : 'No entries available (locked or none).';
+    if(!list.childElementCount){
+      const msg=document.createElement('p');
+      msg.textContent=isGM?'No entries match the current filter.':'No entries available (locked or none).';
       entryContent.appendChild(msg);
-    } else {
-      entryContent.appendChild(list);
-    }
+    } else entryContent.appendChild(list);
+
     updateBreadcrumbs();
   }
 
-  // render a single entry detail
-  function renderEntryDetail(entry) {
-    entryContent.innerHTML = '';
-    const title = document.createElement('h1');
-    title.textContent = entry.name;
-    entryContent.appendChild(title);
+  function renderEntryDetail(entry){
+    entryContent.innerHTML='';
+    const title=document.createElement('h1'); title.textContent=entry.name; entryContent.appendChild(title);
+    if(entry.image){ const img=document.createElement('img'); img.src=entry.image; img.alt=entry.name; entryContent.appendChild(img); }
+    const p=document.createElement('p'); p.textContent=entry.description||''; entryContent.appendChild(p);
 
-    if (entry.image) {
-      const img = document.createElement('img');
-      img.src = entry.image;
-      img.alt = entry.name;
-      entryContent.appendChild(img);
-    }
-
-    const p = document.createElement('p');
-    p.textContent = entry.description || '';
-    entryContent.appendChild(p);
-
-    // GM mode lock/unlock control inside detail
-    if (isGM && entry.gmMode) {
-      const unlocked = localStorage.getItem(lsKey(entry.id)) === "true";
-      const gmBtn = document.createElement('button');
-      gmBtn.className = 'unlock-btn ' + (unlocked ? 'remove' : 'add');
-      gmBtn.textContent = unlocked ? 'Remove' : 'Add';
-      gmBtn.style.marginTop = '10px';
-      gmBtn.addEventListener('click', () => {
-        if (unlocked) localStorage.removeItem(lsKey(entry.id));
-        else localStorage.setItem(lsKey(entry.id), "true");
-        // After changing unlock state, return to list so GM can see effect
-        renderListForActiveCategory();
-      });
+    if(isGM && entry.gmMode){
+      const unlocked = unlocks[entry.category]?.includes(entry.id);
+      const gmBtn=document.createElement('button'); gmBtn.className='unlock-btn '+(unlocked?'remove':'add');
+      gmBtn.textContent=unlocked?'Remove':'Add'; gmBtn.style.marginTop='10px';
+      gmBtn.addEventListener('click', ()=>{ updateUnlock(entry.category, entry.id, unlocked?'remove':'add'); });
       entryContent.appendChild(gmBtn);
     }
 
-    // Back button
-    const back = document.createElement('button');
-    back.className = 'category-btn';
-    back.textContent = 'Back';
-    back.style.marginTop = '12px';
-    back.addEventListener('click', () => { activeEntry = null; renderListForActiveCategory(); });
+    const back=document.createElement('button'); back.className='category-btn';
+    back.textContent='Back'; back.style.marginTop='12px';
+    back.addEventListener('click', ()=>{ activeEntry=null; renderListForActiveCategory(); });
     entryContent.appendChild(back);
 
     updateBreadcrumbs();
   }
 
-  // Category button wiring
-  categoryBtns.forEach(btn => {
-    // skip Home special-case
-    if (btn.id === 'homeBtn') return;
-    btn.addEventListener('click', async () => {
-      // find category
-      const cat = btn.dataset.category;
-      if (!categories.includes(cat)) {
-        console.warn('unknown category', cat);
-        return;
-      }
-      // UI active state
-      categoryBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      activeCategory = cat;
-      activeEntry = null;
-
-      // load entries for category and render
-      await loadCategoryEntries(cat);
+  categoryBtns.forEach(btn=>{
+    if(btn.id==='homeBtn') return;
+    btn.addEventListener('click', async ()=>{
+      const cat=btn.dataset.category;
+      if(!categories.includes(cat)) return;
+      categoryBtns.forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+      activeCategory=cat; activeEntry=null;
+      await fetchUnlocks();
       renderListForActiveCategory();
     });
   });
 
-  // Home button
-  homeBtn.addEventListener('click', () => {
-    categoryBtns.forEach(b => b.classList.remove('active'));
-    activeCategory = null;
-    activeEntry = null;
-    searchInput.value = '';
-    entryContent.innerHTML = `<h1>Rebel Alliance Field Codex</h1>
-      <p>Entries are not loaded until a category is selected. Click a category on the left to begin.</p>`;
-    breadcrumbs.innerHTML = '';
+  homeBtn.addEventListener('click', ()=>{
+    categoryBtns.forEach(b=>b.classList.remove('active'));
+    activeCategory=null; activeEntry=null; searchInput.value='';
+    renderListForActiveCategory();
   });
 
-  // Search handler (filters current category list)
-  searchInput.addEventListener('input', () => {
-    // only re-render if a category is active
-    if (activeCategory) renderListForActiveCategory();
+  searchInput.addEventListener('input', ()=>{ renderListForActiveCategory(); });
+
+  // GM toggle via keypress (Ctrl+G)
+  document.addEventListener('keydown', e=>{
+    if(e.ctrlKey && e.key.toLowerCase()==='g'){ isGM=!isGM; gmIndicator.classList.toggle('active',isGM); renderListForActiveCategory(); }
   });
 
-  // GM Mode toggle: Ctrl+Shift+G (hidden to players)
-  document.addEventListener('keydown', (ev) => {
-    if (ev.ctrlKey && ev.shiftKey && ev.key.toLowerCase() === 'g') {
-      isGM = !isGM;
-      gmIndicator.classList.toggle('active', isGM);
-      // rerender current view so GM-only controls appear/disappear
-      if (activeCategory) renderListForActiveCategory();
-      else {
-        // update breadcrumbs / header state if necessary
-        renderListForActiveCategory();
-      }
-      // small console feedback
-      console.log('GM Mode', isGM ? 'ON' : 'OFF');
-    }
+  // Cursor distortion
+  document.addEventListener('mousemove', e=>{
+    cursorDot.style.left=e.clientX+'px'; cursorDot.style.top=e.clientY+'px';
+    distortion.style.setProperty('--x', e.clientX/screen.clientWidth*100+'%');
+    distortion.style.setProperty('--y', e.clientY/screen.clientHeight*100+'%');
   });
 
   // Flicker
-  function randomFlicker() {
-    if (Math.random() < 0.4) {
-      flicker.style.opacity = (0.08 + Math.random() * 0.32).toFixed(2);
-      setTimeout(()=> { flicker.style.opacity = 0; }, 50 + Math.random()*180);
+  setInterval(()=>{
+    flicker.style.opacity=Math.random()*0.12;
+    dotFlicker.innerHTML='';
+    for(let i=0;i<3;i++){
+      const d=document.createElement('div'); d.className='dot';
+      d.style.left=Math.random()*screen.clientWidth+'px';
+      d.style.top=Math.random()*screen.clientHeight+'px';
+      dotFlicker.appendChild(d);
     }
-  }
-  setInterval(randomFlicker, 80);
+  },80);
 
-  // Distortion nudge
-  function randomDistortion() {
-    if (Math.random() < 0.06) {
-      const x = (Math.random()*10 - 5).toFixed(1);
-      const y = (Math.random()*10 - 5).toFixed(1);
-      distortion.style.transform = `translate(${x}px, ${y}px)`;
-      setTimeout(()=> distortion.style.transform = 'translate(0,0)', 60 + Math.random()*140);
-    }
-  }
-  setInterval(randomDistortion, 120);
+  // Poll server for unlock updates for players every 5s
+  setInterval(()=>{ if(!isGM && activeCategory) renderListForActiveCategory(); },5000);
 
-  // cursor dot
-  screen.addEventListener('mousemove', (e) => {
-    const r = screen.getBoundingClientRect();
-    const x = e.clientX - r.left;
-    const y = e.clientY - r.top;
-    cursorDot.style.left = x + 'px';
-    cursorDot.style.top = y + 'px';
-  });
-
-  // dot flicker overlay
-  function createRandomDot() {
-    const d = document.createElement('div');
-    d.className = 'dot';
-    d.style.left = Math.random()*100 + '%';
-    d.style.top = Math.random()*100 + '%';
-    dotFlicker.appendChild(d);
-    setTimeout(()=> d.remove(), 120 + Math.random()*220);
-  }
-  setInterval(()=> { if (Math.random() < 0.28) createRandomDot(); }, 55);
-
-  // initial clean state (no category loaded)
-  homeBtn.click(); // sets initial UI state
+  // Initial
+  renderListForActiveCategory();
 });
 </script>
 </body>
