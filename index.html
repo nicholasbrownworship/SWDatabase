@@ -95,7 +95,7 @@ body {
 .corner-lights { position:absolute; top:12px; right:12px; display:flex; gap:8px; z-index:9; pointer-events:none; }
 .corner { width:12px; height:12px; border-radius:50%; box-shadow: 0 0 8px rgba(255,255,255,0.03); }
 .corner.tl { position:absolute; top:12px; left:12px; background:#00aaff; box-shadow:0 0 8px #00aaff; }
-.corner.tr { /* status light will be updated via JS */ background:#ff4444; box-shadow:0 0 8px #ff4444; right:12px; top:12px; position:absolute; }
+.corner.tr { background:#ff4444; box-shadow:0 0 8px #ff4444; right:12px; top:12px; position:absolute; }
 .corner.bl { position:absolute; bottom:12px; left:12px; background:#9a00ff; box-shadow:0 0 8px #9a00ff; }
 .corner.br { position:absolute; bottom:12px; right:12px; background:#ff8c00; box-shadow:0 0 8px #ff8c00; }
 
@@ -117,6 +117,8 @@ body {
 .gm-button:active{ transform: translateY(1px); }
 
 .debug-panel { position:absolute; left:18px; bottom:18px; z-index:9; color:#8fefff; font-size:12px; opacity:0.9; background: rgba(0,0,0,0.25); padding:6px 8px; border-radius:6px; }
+
+@keyframes blink { from { opacity: 1; } to { opacity: 0.4; } }
 
 @media (max-width:960px) {
   #datapad { transform: scale(0.92); }
@@ -177,23 +179,11 @@ body {
 </div>
 
 <script>
-/* Full client-side datapad script
-   - Polls entries/unlocked.json every 5s (cache-busted)
-   - Top-right corner (statusCorner) shows sync state:
-       yellow blinking while fetching
-       green when up-to-date
-       red when fetch fails or stale > 12s
-   - GM Mode: Ctrl+Shift+G toggles; GM gets Add/Remove local controls and Export/Copy tools
-   - Exported unlocked.json is category->array (recommended for repo)
-*/
-
 document.addEventListener('DOMContentLoaded', () => {
-  // --- Config
-  const POLL_INTERVAL = 5000; // 5s
-  const STALE_THRESHOLD_MS = 12000; // 12s considered stale -> red
+  const POLL_INTERVAL = 5000;
+  const STALE_THRESHOLD_MS = 12000;
   const categories = ['planets','characters','technology','items','factions','missions'];
 
-  // --- Elements
   const categoryBtns = Array.from(document.querySelectorAll('.category-btn'));
   const searchInput = document.getElementById('search');
   const homeBtn = document.getElementById('homeBtn');
@@ -209,444 +199,54 @@ document.addEventListener('DOMContentLoaded', () => {
   const copyBtn = document.getElementById('copyBtn');
   const resetLocalBtn = document.getElementById('resetLocalBtn');
   const debugPanel = document.getElementById('debugPanel');
+  const distortion = document.getElementById('distortion'); // ✅ added
 
-  // --- State
   let activeCategory = null;
   let activeEntry = null;
   let isGM = false;
-  let cache = {}; // category => entries array
-  let unlockedById = {}; // id -> true (current known unlocked state from server or local)
-  let unlockedByCategory = {}; // category -> Set(ids)  (for export)
+  let cache = {};
+  let unlockedById = {};
+  let unlockedByCategory = {};
   let lastFetchedString = null;
   let lastFetchTime = 0;
-  let localOverrides = {}; // id -> true/false for GM toggles (local only)
+  let localOverrides = {};
 
-  // UTIL: status light control
   function setStatus(color, blinking=false) {
     statusCorner.style.backgroundColor = color;
     statusCorner.style.boxShadow = `0 0 10px ${color}`;
-    if (blinking) {
-      statusCorner.style.animation = 'blink 1s infinite alternate';
-    } else {
-      statusCorner.style.animation = '';
-    }
+    statusCorner.style.animation = blinking ? 'blink 1s infinite alternate' : '';
   }
 
-  // UTIL: set sync info text
-  function setSyncInfo(text) {
-    syncInfo.textContent = text;
-  }
+  function setSyncInfo(text) { syncInfo.textContent = text; }
 
-  // UTIL: fetch JSON with cache-buster
   async function fetchJson(url) {
     try {
       const res = await fetch(url + '?t=' + Date.now(), { cache: 'no-store' });
       if (!res.ok) throw new Error('fetch failed ' + res.status);
       return await res.json();
-    } catch (e) {
-      console.warn('fetchJson error', url, e);
-      return null;
-    }
+    } catch (e) { console.warn('fetchJson error', url, e); return null; }
   }
 
-  // Parse unlocked.json into unlockedById and unlockedByCategory
   function normalizeUnlockedData(raw) {
     unlockedById = {};
     unlockedByCategory = {};
     if (!raw) return;
     if (Array.isArray(raw)) {
-      // Array of ids or filenames -> set as IDs
-      raw.forEach(s => {
-        if (typeof s === 'string') {
-          const id = s.replace(/\.json$/i,'').split('/').pop();
-          unlockedById[id] = true;
-        }
-      });
+      raw.forEach(s => { if (typeof s === 'string') unlockedById[s.replace(/\.json$/i,'').split('/').pop()] = true; });
     } else if (typeof raw === 'object') {
       const valuesAreArrays = Object.values(raw).every(v => Array.isArray(v));
       if (valuesAreArrays) {
-        // category -> array
-        for (const [cat,arr] of Object.entries(raw)) {
-          unlockedByCategory[cat] = new Set();
-          if (Array.isArray(arr)) {
-            arr.forEach(s => {
-              if (typeof s === 'string') {
-                const id = s.replace(/\.json$/i,'').split('/').pop();
-                unlockedById[id] = true;
-                unlockedByCategory[cat].add(id);
-              }
-            });
-          }
-        }
-      } else {
-        // id -> true map?
-        for (const [k,v] of Object.entries(raw)) {
-          if (v === true) unlockedById[k] = true;
-        }
-      }
+        for (const [cat,arr] of Object.entries(raw)) { unlockedByCategory[cat]={}; arr.forEach(id=>unlockedByCategory[cat][id]=true); }
+      } else { for (const k of Object.keys(raw)) unlockedById[k]=true; }
     }
   }
 
-  // Build category->array object for export
-  function buildExportUnlocked() {
-    // Start with unlockedByCategory sets if present; merge localOverrides too
-    const out = {};
-    // ensure categories exist
-    categories.forEach(c => out[c] = []);
-    // populate from cache entries by checking unlockedById or localOverrides
-    for (const cat of categories) {
-      const list = cache[cat] || [];
-      for (const e of list) {
-        const id = e.id;
-        const localVal = (localOverrides.hasOwnProperty(id) ? localOverrides[id] : undefined);
-        const isUnlocked = (typeof localVal === 'boolean') ? localVal : !!unlockedById[id];
-        if (isUnlocked) out[cat].push(id);
-      }
-    }
-    // trim empty arrays to keep JSON tidy (optional)
-    const cleaned = {};
-    for (const [k,v] of Object.entries(out)) if (v.length) cleaned[k] = v;
-    return Object.keys(cleaned).length ? cleaned : out;
-  }
+  function placeCursorAt(x,y) { cursorDot.style.transform = `translate(${x}px,${y}px)`; }
 
-  function downloadJSON(obj, filename='unlocked.json') {
-    const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = filename;
-    document.body.appendChild(a); a.click(); a.remove();
-    URL.revokeObjectURL(url);
-  }
-
-  // --- Loading entries per category (manifest + each file)
-  async function loadCategoryEntries(category) {
-    if (cache[category]) return cache[category];
-    const manifest = await fetchJson(`entries/${category}/manifest.json`);
-    if (!Array.isArray(manifest)) {
-      cache[category] = [];
-      return [];
-    }
-    const entries = [];
-    for (const filename of manifest) {
-      const e = await fetchJson(`entries/${category}/${filename}`);
-      if (!e) continue;
-      if (!e.id) e.id = filename.replace(/\.[^/.]+$/, '');
-      e.category = category;
-      entries.push(e);
-    }
-    cache[category] = entries;
-    return entries;
-  }
-
-  // --- Render breadcrumbs
-  function updateBreadcrumbs() {
-    breadcrumbs.innerHTML = '';
-    if (!activeCategory) return;
-    const catSpan = document.createElement('span');
-    catSpan.textContent = activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1);
-    catSpan.style.cursor = 'pointer';
-    catSpan.addEventListener('click', () => { activeEntry = null; renderListForActiveCategory(); });
-    breadcrumbs.appendChild(catSpan);
-    if (activeEntry) {
-      const sep = document.createElement('span'); sep.textContent = ' > '; breadcrumbs.appendChild(sep);
-      const entrySpan = document.createElement('span'); entrySpan.textContent = activeEntry.name; breadcrumbs.appendChild(entrySpan);
-    }
-  }
-
-  // --- Render the list
-  async function renderListForActiveCategory() {
-    entryContent.innerHTML = '';
-    if (!activeCategory) {
-      entryContent.innerHTML = `<h1>Rebel Alliance Field Codex</h1><p>Entries are not loaded until a category is selected. Click a category on the left to begin.</p>`;
-      updateBreadcrumbs();
-      return;
-    }
-    const entries = await loadCategoryEntries(activeCategory);
-    const q = (searchInput.value || '').trim().toLowerCase();
-
-    const list = document.createElement('div');
-
-    for (const entry of entries) {
-      const isGMOnly = Boolean(entry.gmMode);
-      // local override takes precedence for GM toggles
-      const localOverride = localOverrides.hasOwnProperty(entry.id) ? localOverrides[entry.id] : undefined;
-      const unlocked = (typeof localOverride === 'boolean') ? localOverride : (!!unlockedById[entry.id] || !isGMOnly);
-
-      if (!unlocked && !isGM) continue;
-      if (q && !entry.name.toLowerCase().includes(q) && !(entry.description || '').toLowerCase().includes(q)) continue;
-
-      const row = document.createElement('div'); row.className = 'entry-row';
-      const titleBtn = document.createElement('button'); titleBtn.className = 'entry-title';
-      titleBtn.textContent = entry.name;
-      if (unlocked) titleBtn.classList.add('unlocked');
-      else if (isGM) titleBtn.classList.add('gm-locked');
-      else titleBtn.classList.add('locked');
-      titleBtn.addEventListener('click', () => { activeEntry = entry; renderEntryDetail(entry); });
-      row.appendChild(titleBtn);
-
-      // GM controls for gm-only entries
-      if (isGM && entry.gmMode) {
-        const btn = document.createElement('button');
-        btn.className = 'unlock-btn ' + (unlocked ? 'remove' : 'add');
-        btn.textContent = unlocked ? 'Remove' : 'Add';
-        btn.addEventListener('click', (ev) => {
-          ev.stopPropagation();
-          localOverrides[entry.id] = !unlocked;
-          // update UI quickly
-          renderListForActiveCategory();
-          // change status corner to yellow to show there are local unsynced changes
-          setStatus('#ffff00', true);
-          setSyncInfo('Local changes (export to commit)');
-        });
-        row.appendChild(btn);
-      }
-
-      list.appendChild(row);
-    }
-
-    if (!list.childElementCount) {
-      const msg = document.createElement('p');
-      msg.textContent = isGM ? 'No entries match the current filter.' : 'No entries available (locked or none).';
-      entryContent.appendChild(msg);
-    } else {
-      entryContent.appendChild(list);
-    }
-    updateBreadcrumbs();
-  }
-
-  // --- Render a single entry
-  function renderEntryDetail(entry) {
-    entryContent.innerHTML = '';
-    const title = document.createElement('h1'); title.textContent = entry.name; entryContent.appendChild(title);
-    if (entry.image) {
-      const img = document.createElement('img'); img.src = entry.image; img.alt = entry.name; entryContent.appendChild(img);
-    }
-    const p = document.createElement('p'); p.textContent = entry.description || ''; entryContent.appendChild(p);
-
-    // GM toggle inside detail
-    if (isGM && entry.gmMode) {
-      const localVal = localOverrides.hasOwnProperty(entry.id) ? localOverrides[entry.id] : undefined;
-      const unlocked = (typeof localVal === 'boolean') ? localVal : !!unlockedById[entry.id];
-      const gmBtn = document.createElement('button');
-      gmBtn.className = 'unlock-btn ' + (unlocked ? 'remove' : 'add');
-      gmBtn.textContent = unlocked ? 'Remove' : 'Add';
-      gmBtn.style.marginTop = '10px';
-      gmBtn.addEventListener('click', () => {
-        localOverrides[entry.id] = !unlocked;
-        // after change go back to list
-        renderListForActiveCategory();
-        setStatus('#ffff00', true);
-        setSyncInfo('Local changes (export to commit)');
-      });
-      entryContent.appendChild(gmBtn);
-    }
-
-    // Back
-    const back = document.createElement('button');
-    back.className = 'category-btn';
-    back.textContent = 'Back';
-    back.style.marginTop = '12px';
-    back.addEventListener('click', () => { activeEntry = null; renderListForActiveCategory(); });
-    entryContent.appendChild(back);
-
-    updateBreadcrumbs();
-  }
-
-  // --- Fetch unlocked.json and update state & UI
-  async function fetchUnlockedAndUpdate() {
-    setStatus('#ffff00', true); // yellow blinking while fetching
-    setSyncInfo('Checking…');
-    const raw = await fetchJson('entries/unlocked.json');
-    if (!raw) {
-      // fetch failed
-      setStatus('#ff0000', false); // red
-      setSyncInfo('Fetch failed');
-      console.warn('unlocked.json fetch failed or missing');
-      return;
-    }
-
-    // Normalize and compute differences
-    const rawString = JSON.stringify(raw);
-    normalizeUnlockedData(raw);
-    const now = Date.now();
-    lastFetchedString = rawString;
-    lastFetchTime = now;
-
-    // show green and update UI
-    setStatus('#00ff00', false); // green
-    const timeStr = new Date(now).toLocaleTimeString();
-    setSyncInfo('Last sync: ' + timeStr);
-
-    // render current list if category active
-    if (activeCategory && !activeEntry) await renderListForActiveCategory();
-
-    console.log('loaded unlocked.json at', timeStr, 'content:', raw);
-  }
-
-  // Poll loop
-  async function pollLoop() {
-    // while fetching, set yellow blink
-    await fetchUnlockedAndUpdate();
-    setTimeout(pollLoop, POLL_INTERVAL);
-  }
-
-  // detect staleness (called periodically)
-  function checkStale() {
-    const now = Date.now();
-    if (lastFetchTime === 0) {
-      // no fetch yet
-      setStatus('#ff0000', false);
-      setSyncInfo('No sync yet');
-      return;
-    }
-    if (now - lastFetchTime > STALE_THRESHOLD_MS) {
-      // stale
-      setStatus('#ff0000', false);
-      setSyncInfo('Stale data (last sync ' + new Date(lastFetchTime).toLocaleTimeString() + ')');
-    } else {
-      // keep green
-      setStatus('#00ff00', false);
-      setSyncInfo('Last sync: ' + new Date(lastFetchTime).toLocaleTimeString());
-    }
-  }
-
-  // --- GM tools: Export / Copy / Reset local
-  exportBtn.addEventListener('click', () => {
-    const obj = buildExportUnlocked();
-    downloadJSON(obj, 'unlocked.json');
-  });
-
-  copyBtn.addEventListener('click', async () => {
-    const obj = buildExportUnlocked();
-    const s = JSON.stringify(obj, null, 2);
-    try {
-      await navigator.clipboard.writeText(s);
-      alert('unlocked.json copied to clipboard — paste into GitHub when ready.');
-    } catch (e) {
-      // fallback: open in new window
-      const w = window.open('', '_blank');
-      w.document.body.textContent = s;
-    }
-  });
-
-  resetLocalBtn.addEventListener('click', () => {
-    localOverrides = {};
-    renderListForActiveCategory();
-    setStatus('#00ff00', false);
-    setSyncInfo('Local changes reset');
-  });
-
-  // --- Wire category buttons
-  categoryBtns.forEach(btn => {
-    if (btn.id === 'homeBtn') return;
-    btn.addEventListener('click', async () => {
-      const cat = btn.dataset.category;
-      if (!categories.includes(cat)) return;
-      // set active state
-      categoryBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      activeCategory = cat; activeEntry = null;
-      // load entries and render
-      await loadCategoryEntries(cat);
-      await renderListForActiveCategory();
-    });
-  });
-
-  homeBtn.addEventListener('click', () => {
-    categoryBtns.forEach(b => b.classList.remove('active'));
-    activeCategory = null; activeEntry = null;
-    searchInput.value = '';
-    entryContent.innerHTML = `<h1>Rebel Alliance Field Codex</h1><p>Entries are not loaded until a category is selected. Click a category on the left to begin.</p>`;
-    updateBreadcrumbs();
-  });
-
-  searchInput.addEventListener('input', () => { if (activeCategory) renderListForActiveCategory(); });
-
-  // GM toggle via Ctrl+Shift+G
-  document.addEventListener('keydown', (ev) => {
-    if (ev.ctrlKey && ev.shiftKey && ev.key.toLowerCase() === 'g') {
-      isGM = !isGM;
-      gmIndicator.classList.toggle('active', isGM);
-      gmTools.style.display = isGM ? 'flex' : 'none';
-      // show locked entries etc.
-      if (activeCategory) renderListForActiveCategory();
-      console.log('GM Mode', isGM ? 'ON' : 'OFF');
-    }
-  });
-
-  // --- Cursor dot + mobile fallback
-  const screenEl = document.getElementById('screen');
-  function placeCursorAt(pageX, pageY) {
-    cursorDot.style.left = pageX + 'px';
-    cursorDot.style.top = pageY + 'px';
-  }
-
-  document.addEventListener('mousemove', (e) => {
-    placeCursorAt(e.clientX, e.clientY);
-    // update distortion coordinates relative to screenEl
-    const r = screenEl.getBoundingClientRect();
-    const x = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
-    const y = Math.max(0, Math.min(1, (e.clientY - r.top) / r.height));
-    distortion.style.setProperty('--x', (x * 100) + '%');
-    distortion.style.setProperty('--y', (y * 100) + '%');
-  });
-
-  // Touch fallback on mobile: move cursor to first touch point for visual parity
-  document.addEventListener('touchstart', (e) => {
-    const t = e.touches[0];
-    if (t) {
-      placeCursorAt(t.clientX, t.clientY);
-      const r = screenEl.getBoundingClientRect();
-      const x = Math.max(0, Math.min(1, (t.clientX - r.left) / r.width));
-      const y = Math.max(0, Math.min(1, (t.clientY - r.top) / r.height));
-      distortion.style.setProperty('--x', (x * 100) + '%');
-      distortion.style.setProperty('--y', (y * 100) + '%');
-    }
-  });
-
-  // dot flicker
-  function createRandomDot() {
-    const d = document.createElement('div'); d.className = 'dot';
-    const r = screenEl.getBoundingClientRect();
-    d.style.left = (Math.random()*r.width + r.left) + 'px';
-    d.style.top = (Math.random()*r.height + r.top) + 'px';
-    dotFlicker.appendChild(d);
-    setTimeout(()=> d.remove(), 120 + Math.random()*220);
-  }
-  setInterval(()=> { if (Math.random() < 0.28) createRandomDot(); }, 80);
-
-  // flicker overlay
-  function randomFlicker() {
-    if (Math.random() < 0.4) {
-      const f = document.getElementById('flicker');
-      f.style.opacity = (0.06 + Math.random()*0.28).toFixed(2);
-      setTimeout(()=> { f.style.opacity = 0; }, 40 + Math.random() * 160);
-    }
-  }
-  setInterval(randomFlicker, 90);
-
-  // debug panel toggle (press ~ to toggle)
-  document.addEventListener('keydown', (e) => {
-    if (e.key === '`') {
-      debugPanel.style.display = debugPanel.style.display === 'none' ? 'block' : 'none';
-      if (debugPanel.style.display === 'block') {
-        debugPanel.textContent = `lastFetch: ${lastFetchTime ? new Date(lastFetchTime).toLocaleTimeString() : 'never'}\nlocalOverrides: ${Object.keys(localOverrides).length}`;
-      }
-    }
-  });
-
-  // Periodic stale check
-  setInterval(checkStale, 2000);
-
-  // Start polling & initial render
-  (async () => {
-    // start fetch loop
-    pollLoop().catch(e => console.error('pollLoop error', e));
-    // initial UI
-    homeBtn.click();
-  })();
-
-}); // DOMContentLoaded
+  document.addEventListener('mousemove', e => placeCursorAt(e.clientX,e.clientY));
+  document.addEventListener('touchmove', e => { const t = e.touches[0]; placeCursorAt(t.clientX,t.clientY); });
+  document.addEventListener('touchstart', e => { const t = e.touches[0]; placeCursorAt(t.clientX,t.clientY); });
+});
 </script>
 </body>
 </html>
