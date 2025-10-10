@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Rebel Datapad Codex</title>
 <style>
-/* Base layout + aesthetic (keeps previous styling) */
+/* Base layout + aesthetic */
 * { box-sizing:border-box; margin:0; padding:0; font-family:'OCR A Std','Courier New', monospace; }
 
 body {
@@ -13,7 +13,7 @@ body {
   background: radial-gradient(ellipse at center, #1E3A8A 0%, #050505 100%);
   color: #a0d8ff;
   cursor: none;
-  overflow: auto; /* allow scrolling behind datapad */
+  overflow: auto; /* scroll behind datapad */
   margin: 0;
   padding: 0;
 }
@@ -25,7 +25,7 @@ body {
   background: url('images/metal_texture.jpg') center/cover no-repeat;
   border:6px solid #333;
   border-radius:25px;
-  position: fixed; /* center on screen */
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -43,25 +43,50 @@ body {
   z-index:0;
 }
 
+/* Screen container */
 #screen {
   position:absolute;
   top:40px; left:40px;
   width:820px; height:520px;
-  background:radial-gradient(circle at 50% 50%, rgba(10,20,25,0.95) 0%, rgba(5,10,12,0.9) 100%);
   border-radius:15px;
-  overflow-y: auto; /* scroll content inside screen */
-  box-shadow: inset 0 0 20px rgba(0,255,255,0.2);
+  overflow:hidden; /* inner scrolling */
   z-index:1;
+  box-shadow: inset 0 0 20px rgba(0,255,255,0.2);
   animation: glowPulse 3s infinite alternate;
   cursor:none;
 }
 #screen * { cursor:none; }
 
-@keyframes glowPulse {
-  0% { box-shadow: inset 0 0 20px rgba(0,255,255,0.15); }
-  50% { box-shadow: inset 0 0 35px rgba(0,255,255,0.3); }
-  100% { box-shadow: inset 0 0 25px rgba(0,255,255,0.2); }
+/* Inner scrollable content with persistent background */
+#screen-inner {
+  height:100%;
+  overflow-y:auto;
+  background: radial-gradient(circle at 50% 50%, rgba(10,20,25,0.95) 0%, rgba(5,10,12,0.9) 100%);
+  position: relative;
 }
+
+/* Blue overlay covering entire scrollable content */
+#blueBase {
+  position:absolute;
+  inset:0;
+  background-color: rgba(0,255,255,0.35);
+  pointer-events:none;
+  z-index:1;
+  mix-blend-mode: screen;
+}
+#blueBase::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(0,255,255,0.05) 0px, rgba(0,255,255,0.05) 1px, transparent 2px, transparent 3px);
+  opacity: 0.3;
+  animation: staticNoise 0.2s steps(2) infinite;
+  z-index:2;
+}
+
+/* Glow & flicker effects */
+@keyframes glowPulse { 0% { box-shadow: inset 0 0 20px rgba(0,255,255,0.15); } 50% { box-shadow: inset 0 0 35px rgba(0,255,255,0.3); } 100% { box-shadow: inset 0 0 25px rgba(0,255,255,0.2); } }
 
 #flicker {
   position:absolute; inset:0;
@@ -89,26 +114,8 @@ body {
   pointer-events:none;
   z-index:5;
 }
-#blueBase {
-  position:absolute;
-  inset:0;
-  background-color: rgba(0,255,255,0.35);
-  pointer-events:none;
-  z-index:1;
-  mix-blend-mode: screen;
-}
-#blueBase::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: repeating-linear-gradient(0deg, rgba(0,255,255,0.05) 0px, rgba(0,255,255,0.05) 1px, transparent 2px, transparent 3px);
-  opacity: 0.3;
-  animation: staticNoise 0.2s steps(2) infinite;
-  z-index:2;
-}
-@keyframes staticNoise { 0% { background-position: 0 0; } 100% { background-position: 0 100%; } }
 
+/* Content layout */
 #content { display:flex; height:100%; position:relative; z-index:0; }
 #sidebar {
   width:200px; background:rgba(5,15,20,0.8); border-right:1px solid #033;
@@ -139,9 +146,9 @@ body {
   background:#0a1f26; border:none; padding:8px; color:#a0d8ff; text-align:left; cursor:pointer; border-left:6px solid #0a5266;
   border-radius:4px;
 }
-.entry-title.locked { border-left-color:#777; color:#777; }       /* hidden to players, but shown in GM as muted */
-.entry-title.gm-locked { border-left-color:#ffcc33; color:#ffffcc; } /* locked but visible to GM */
-.entry-title.unlocked { border-left-color:#0f0; color:#bfffdc; }   /* unlocked for players */
+.entry-title.locked { border-left-color:#777; color:#777; }
+.entry-title.gm-locked { border-left-color:#ffcc33; color:#ffffcc; }
+.entry-title.unlocked { border-left-color:#0f0; color:#bfffdc; }
 
 .unlock-btn {
   padding:6px 8px; border:none; border-radius:4px; cursor:pointer;
@@ -180,6 +187,7 @@ body {
 /* small responsive tweak */
 @media (max-width:960px){ #datapad{ transform: scale(0.92); } }
 </style>
+
 
 </head>
 <body>
