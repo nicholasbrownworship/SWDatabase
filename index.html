@@ -471,55 +471,89 @@ document.addEventListener('DOMContentLoaded', () => {
 
       container.appendChild(row);
 
-      // ====== LOAD ENTRIES FROM JSON FILES IN /entries DIRECTORY ======
+      // ======== DYNAMIC JSON LOADER ========
 
-// Function to fetch JSON files from entries directory
-async function loadEntriesFromJSON() {
-  const categories = ['planets','characters','technology','items','factions','missions'];
+// Holds all loaded entries by category
+const entriesByCategory = {
+  characters: [],
+  factions: [],
+  items: [],
+  missions: [],
+  planets: [],
+  technology: []
+};
+
+// Holds unlocked entries (from unlocked.json)
+let unlockedEntries = [];
+
+// Utility to ensure category exists in entriesByCategory
+function ensureCategoryExists(cat) {
+  if (!entriesByCategory[cat]) entriesByCategory[cat] = [];
+}
+
+// Load unlocked entries
+async function loadUnlockedEntries() {
+  try {
+    const resp = await fetch('entries/unlocked.json');
+    if (!resp.ok) throw new Error('Failed to load unlocked.json');
+    unlockedEntries = await resp.json(); // array of filenames like "luke_skywalker.json"
+  } catch (err) {
+    console.error('Error loading unlocked.json:', err);
+    unlockedEntries = [];
+  }
+}
+
+// Load all entries from manifests
+async function loadEntriesFromManifests() {
+  const categories = Object.keys(entriesByCategory);
 
   for (const cat of categories) {
+    ensureCategoryExists(cat);
+
     try {
-      // Assuming files are named like: entries/<category>/<id>.json
-      // Example: entries/planets/tatooine.json
-      const response = await fetch(`entries/${cat}.json`);
-      if (!response.ok) {
-        console.warn(`No JSON found for category ${cat}`);
+      const manifestResp = await fetch(`entries/${cat}/manifest.json`);
+      if (!manifestResp.ok) {
+        console.warn(`No manifest.json for category ${cat}`);
         continue;
       }
-      const data = await response.json();
 
-      // Ensure category exists in state
-      if (!entriesByCategory[cat]) entriesByCategory[cat] = [];
+      const fileList = await manifestResp.json(); // e.g., ["luke_skywalker.json","mon_mothma.json"]
+      for (const fileName of fileList) {
+        // Only load if unlocked
+        if (unlockedEntries.length > 0 && !unlockedEntries.includes(fileName)) continue;
 
-      // Merge data from JSON into entriesByCategory
-      if (Array.isArray(data)) {
-        data.forEach(entry => {
-          // Avoid duplicate IDs
-          const exists = entriesByCategory[cat].find(e => e.id === entry.id);
-          if (!exists) entriesByCategory[cat].push(entry);
-        });
-      } else if (typeof data === 'object') {
-        // If JSON is an object with id keys
-        for (const id in data) {
-          const entry = data[id];
-          entry.id = id;
-          const exists = entriesByCategory[cat].find(e => e.id === id);
-          if (!exists) entriesByCategory[cat].push(entry);
+        try {
+          const entryResp = await fetch(`entries/${cat}/${fileName}`);
+          if (!entryResp.ok) continue;
+          const entryData = await entryResp.json();
+
+          // Ensure entry has an ID
+          if (!entryData.id) entryData.id = fileName.replace(/\.json$/, '');
+
+          // Avoid duplicates
+          if (!entriesByCategory[cat].some(e => e.id === entryData.id)) {
+            entriesByCategory[cat].push(entryData);
+          }
+        } catch (err) {
+          console.error(`Error loading entry ${fileName} from category ${cat}:`, err);
         }
       }
-    } catch (e) {
-      console.error(`Error loading entries for category ${cat}:`, e);
+    } catch (err) {
+      console.error(`Error fetching manifest for category ${cat}:`, err);
     }
   }
 
-  // After loading, save to local storage so your existing system can use it
-  saveEntriesToLocal();
+  // After all entries are loaded, you can trigger your existing code that populates UI
+  if (typeof populateSidebar === 'function') populateSidebar(); // Example: refresh your sidebar buttons
+  if (typeof renderEntries === 'function') renderEntries(); // Example: refresh main display
 }
 
-// Call this function after DOMContentLoaded, after your initial seedDefaultsIfEmpty
-loadEntriesFromJSON();
+// Main initializer
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadUnlockedEntries();
+  await loadEntriesFromManifests();
+});
 
-    });
 
     entryContent.innerHTML = '';
     const title = document.createElement('h1');
