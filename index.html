@@ -49,6 +49,7 @@ body {
   100% { box-shadow: inset 0 0 25px rgba(0,255,255,0.16); }
 }
 
+/* Effects layers — visual only, no interaction */
 #flicker,
 #distortion,
 #blueBase,
@@ -152,168 +153,696 @@ body {
   text-shadow: 0 0 4px rgba(0,0,0,0.6);
 }
 
-#cursor-dot { position:absolute; width:12px; height:12px; border-radius:50%; background:#0ff; transform:translate(-50%,-50%); z-index:12; pointer-events:none; }
+#cursor-dot { position:absolute; width:12px; height:12px; border-radius:50%; background: rgba(0,255,255,0.84); box-shadow:0 0 8px rgba(0,255,255,0.8), 0 0 15px rgba(0,255,255,0.35); pointer-events:none; transform:translate(-50%,-50%); z-index:7; }
+#dotFlicker { position:absolute; inset:0; z-index:6; }
+.dot { position:absolute; width:2px; height:2px; border-radius:50%; background: rgba(0,255,255,0.6); box-shadow:0 0 4px rgba(0,255,255,0.8); pointer-events:none; }
 
-/* Scrollbar style */
-#main::-webkit-scrollbar { width:10px; }
-#main::-webkit-scrollbar-thumb { background:#0a5266; border-radius:6px; }
-#main::-webkit-scrollbar-track { background:#02111a; border-radius:6px; }
+.controls-row { display:flex; gap:8px; align-items:center; margin-bottom:10px; }
+.gm-tools { margin-left:auto; display:flex; gap:6px; }
+.gm-button { background:#033; color:#8ff; border:none; padding:6px 8px; border-radius:6px; cursor:pointer; }
+.gm-button:active{ transform: translateY(1px); }
+.gm-button.remove { background:#700; color:#ffc; }
+
+#gmEditor {
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  width:680px; background:rgba(0,0,0,0.85); border:1px solid #0a3b45; padding:14px; border-radius:8px;
+  z-index:30; box-shadow:0 10px 60px rgba(0,0,0,0.8);
+}
+#gmEditor input[type="text"], #gmEditor textarea {
+  width:100%; padding:8px; background:#07131a; border:1px solid #113844; color:#dff6ff; border-radius:6px;
+}
+#gmEditor label { display:block; margin-top:8px; color:#66f0ff; font-size:13px; }
+#gmEditor .row { display:flex; gap:8px; margin-top:8px; }
+#gmEditor .row > div { flex:1; }
+
+/* small helpers */
+.kv { color:#9ff; font-size:12px; }
+@keyframes blink { from { opacity: 1; } to { opacity: 0.4; } }
+
+@media (max-width:960px) {
+  #datapad { transform: scale(0.92); }
+  #cursor-dot { display:none; }
+  #gmEditor { width:92%; }
+}
 </style>
 </head>
 <body>
 <div id="datapad">
-  <div id="blueBase"></div>
-  <div id="distortion"></div>
-  <div id="flicker"></div>
   <div id="screen">
+    <div id="flicker"></div>
+    <div id="distortion"></div>
+    <div id="blueBase"></div>
+
     <div id="content">
       <div id="sidebar">
-        <h2>Categories</h2>
+        <h2>Codex</h2>
+        <button id="homeBtn" class="category-btn">Home</button>
         <button class="category-btn" data-category="planets">Planets</button>
         <button class="category-btn" data-category="characters">Characters</button>
         <button class="category-btn" data-category="technology">Technology</button>
         <button class="category-btn" data-category="items">Items</button>
         <button class="category-btn" data-category="factions">Factions</button>
         <button class="category-btn" data-category="missions">Missions</button>
-        <input type="text" id="search" placeholder="Search..." />
+        <input type="text" id="search" placeholder="Search...">
       </div>
+
       <div id="main">
-        <div id="breadcrumbs"></div>
+        <div class="controls-row">
+          <div id="breadcrumbs"></div>
+          <div class="gm-tools" id="gmTools" style="display:none;">
+            <button class="gm-button" id="addEntryBtn" title="Add a new entry">+ Add Entry</button>
+            <button class="gm-button" id="exportBtn" title="Download unlocked.json">Export unlocked.json</button>
+            <button class="gm-button" id="copyBtn" title="Copy unlocked.json">Copy JSON</button>
+            <button class="gm-button remove" id="resetLocalBtn" title="Reset local unlocked state">Reset Local</button>
+          </div>
+        </div>
+
         <div id="entryContent">
-          <p>Select a category to begin.</p>
+          <h1>Rebel Alliance Field Codex</h1>
+          <p>Entries are not loaded until a category is selected. Click a category on the left to begin.</p>
         </div>
       </div>
     </div>
-    <div id="gmIndicator">GM MODE</div>
+
+    <div id="dotFlicker"></div>
+    <div id="cursor-dot"></div>
+
+    <div id="gmIndicator">GM</div>
     <div class="corner-lights">
       <div class="corner tl"></div>
-      <div class="corner tr"></div>
+      <div id="statusCorner" class="corner tr"></div>
       <div class="corner bl"></div>
       <div class="corner br"></div>
     </div>
-    <div id="syncInfo">Sync: local</div>
+    <div id="syncInfo">Local only</div>
+    <div class="debug-panel" id="debugPanel" style="display:none;">debug</div>
   </div>
-  <div id="cursor-dot"></div>
 </div>
 
 <script>
-// ===== GLOBAL VARIABLES =====
-let entries = {};
-let unlockedEntries = {};
-let currentCategory = null;
+document.addEventListener('DOMContentLoaded', () => {
+  const STORAGE_ENTRIES = 'codex_entries_v1';
+  const STORAGE_UNLOCKED = 'codex_unlocked_v1';
+  const categories = ['planets','characters','technology','items','factions','missions'];
 
-// ===== GM MODE =====
-let gmMode = false;
+  // DOM refs
+  const categoryBtns = Array.from(document.querySelectorAll('.category-btn'));
+  const searchInput = document.getElementById('search');
+  const homeBtn = document.getElementById('homeBtn');
+  const entryContent = document.getElementById('entryContent');
+  const breadcrumbs = document.getElementById('breadcrumbs');
+  const gmIndicator = document.getElementById('gmIndicator');
+  const statusCorner = document.getElementById('statusCorner');
+  const syncInfo = document.getElementById('syncInfo');
+  const cursorDot = document.getElementById('cursor-dot');
+  const dotFlicker = document.getElementById('dotFlicker');
+  const gmTools = document.getElementById('gmTools');
+  const exportBtn = document.getElementById('exportBtn');
+  const copyBtn = document.getElementById('copyBtn');
+  const resetLocalBtn = document.getElementById('resetLocalBtn');
+  const addEntryBtn = document.getElementById('addEntryBtn');
+  const debugPanel = document.getElementById('debugPanel');
+  const distortion = document.getElementById('distortion');
 
-// ===== CURSOR EFFECT =====
-document.addEventListener("mousemove", e => {
-  const dot = document.getElementById("cursor-dot");
-  dot.style.left = e.clientX + "px";
-  dot.style.top = e.clientY + "px";
-  document.getElementById("distortion").style.setProperty("--x", (e.clientX/window.innerWidth)*100 + "%");
-  document.getElementById("distortion").style.setProperty("--y", (e.clientY/window.innerHeight)*100 + "%");
-});
+  // app state
+  let activeCategory = null;
+  let activeEntryId = null;
+  let isGM = false;
+  let entriesByCategory = {};
+  let unlockedByCategory = {}; // internal: { category: { id: true } }
 
-// ===== CATEGORY BUTTONS =====
-const catBtns = document.querySelectorAll(".category-btn");
-catBtns.forEach(btn => {
-  btn.addEventListener("click", () => {
-    catBtns.forEach(b=>b.classList.remove("active"));
-    btn.classList.add("active");
-    currentCategory = btn.dataset.category;
-    renderEntries();
-  });
-});
+  // --- Utilities ---
+  function slugify(s) {
+    return (s||'').toString().toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+  }
 
-// ===== SEARCH FUNCTION =====
-document.getElementById("search").addEventListener("input", e => {
-  renderEntries(e.target.value);
-});
+  function nowIso() { return new Date().toISOString(); }
 
-// ===== RENDER ENTRIES =====
-function renderEntries(search="") {
-  const container = document.getElementById("entryContent");
-  container.innerHTML = "";
-  if(!currentCategory || !entries[currentCategory]) return;
-  const filtered = entries[currentCategory].filter(en=>{
-    const unlocked = unlockedEntries[en.id] || en.unlocked;
-    const matchSearch = en.name.toLowerCase().includes(search.toLowerCase());
-    return matchSearch && (gmMode || unlocked);
-  });
-  if(filtered.length===0){ container.innerHTML="<p>No entries found.</p>"; return; }
-  filtered.forEach(en=>{
-    const row = document.createElement("div");
-    row.className="entry-row";
-    const btn = document.createElement("button");
-    btn.className="entry-title "+(unlockedEntries[en.id]?"unlocked":"locked");
-    btn.textContent=en.name;
-    btn.addEventListener("click", ()=>displayEntry(en));
-    row.appendChild(btn);
+  function setStatus(color, blinking=false) {
+    statusCorner.style.backgroundColor = color;
+    statusCorner.style.boxShadow = `0 0 10px ${color}`;
+    statusCorner.style.animation = blinking ? 'blink 1s infinite alternate' : '';
+  }
 
-    if(gmMode){
-      const unlockBtn = document.createElement("button");
-      unlockBtn.className="unlock-btn";
-      unlockBtn.textContent = unlockedEntries[en.id]?"Remove":"Unlock";
-      unlockBtn.addEventListener("click", e=>{
-        e.stopPropagation();
-        if(unlockedEntries[en.id]){
-          delete unlockedEntries[en.id];
-        } else {
-          unlockedEntries[en.id]=true;
+  function setSyncInfo(text) { syncInfo.textContent = text; }
+
+  function saveEntriesToLocal() {
+    try {
+      localStorage.setItem(STORAGE_ENTRIES, JSON.stringify(entriesByCategory));
+      setSyncInfo('Local saved: ' + (new Date()).toLocaleString());
+    } catch (e) {
+      console.warn('saveEntriesToLocal', e);
+    }
+  }
+
+  function saveUnlockedToLocal() {
+    // store as { category: [ids...] } for easy export / consumption
+    const out = {};
+    for (const cat of Object.keys(unlockedByCategory)) {
+      out[cat] = Object.keys(unlockedByCategory[cat] || {}).filter(k => unlockedByCategory[cat][k]);
+    }
+    try {
+      localStorage.setItem(STORAGE_UNLOCKED, JSON.stringify(out));
+      setSyncInfo('Local saved: ' + (new Date()).toLocaleString());
+    } catch (e) { console.warn('saveUnlockedToLocal', e); }
+  }
+
+  function loadEntriesFromLocal() {
+    const raw = localStorage.getItem(STORAGE_ENTRIES);
+    if (!raw) return false;
+    try {
+      entriesByCategory = JSON.parse(raw) || {};
+      // ensure each category exists
+      for (const c of categories) if (!entriesByCategory[c]) entriesByCategory[c] = [];
+      return true;
+    } catch (e) { console.warn('loadEntriesFromLocal', e); return false; }
+  }
+
+  function normalizeUnlockedData(raw) {
+    unlockedByCategory = {};
+    if (!raw) return;
+    // raw might be {cat: [ids]} or {id:true,...} or an array of strings
+    if (Array.isArray(raw)) {
+      // list of ids, put them under 'global'
+      unlockedByCategory.global = {};
+      raw.forEach(s => unlockedByCategory.global[s] = true);
+      return;
+    }
+    if (typeof raw === 'object') {
+      // check if values are arrays (category -> array)
+      const valuesAreArrays = Object.values(raw).every(v => Array.isArray(v));
+      if (valuesAreArrays) {
+        for (const [cat,arr] of Object.entries(raw)) {
+          unlockedByCategory[cat] = {};
+          arr.forEach(id => unlockedByCategory[cat][id] = true);
         }
-        renderEntries(document.getElementById("search").value);
-      });
-      row.appendChild(unlockBtn);
+      } else {
+        // maybe a flat object of ids
+        unlockedByCategory.global = {};
+        for (const k of Object.keys(raw)) unlockedByCategory.global[k] = true;
+      }
+    }
+  }
+
+  function loadUnlockedFromLocal() {
+    const raw = localStorage.getItem(STORAGE_UNLOCKED);
+    if (!raw) return false;
+    try {
+      const parsed = JSON.parse(raw);
+      normalizeUnlockedData(parsed);
+      return true;
+    } catch (e) { console.warn('loadUnlockedFromLocal', e); return false; }
+  }
+
+  function getEntryById(cat, id) {
+    const arr = entriesByCategory[cat] || [];
+    return arr.find(it => it.id === id) || null;
+  }
+
+  function ensureCategoryExists(cat) {
+    if (!entriesByCategory[cat]) entriesByCategory[cat] = [];
+    if (!unlockedByCategory[cat]) unlockedByCategory[cat] = {};
+  }
+
+  // --- initial default content (fallback) ---
+  function seedDefaultsIfEmpty() {
+    if (Object.keys(entriesByCategory).length !== categories.length) {
+      entriesByCategory = {};
+      for (const c of categories) entriesByCategory[c] = [];
+    }
+    // provide a small sample set only if truly empty
+    if (!entriesByCategory.planets || entriesByCategory.planets.length === 0) {
+      entriesByCategory.planets.push({ id:'tatooine', title:'Tatooine', content:'A desert world of twin suns and harsh dunes.' });
+    }
+    if (!entriesByCategory.characters || entriesByCategory.characters.length === 0) {
+      entriesByCategory.characters.push({ id:'luke-skywalker', title:'Luke Skywalker', content:'A farmboy-turned-hero who became a symbol of the Rebellion.' });
+    }
+    for (const c of categories) ensureCategoryExists(c);
+    saveEntriesToLocal();
+  }
+
+  // --- Rendering ---
+  function renderBreadcrumbs(cat, entryId) {
+    breadcrumbs.innerHTML = '';
+    const home = document.createElement('span');
+    home.textContent = 'Home';
+    home.addEventListener('click', () => setActiveCategory(null));
+    breadcrumbs.appendChild(home);
+    if (cat) {
+      const sep = document.createElement('span'); sep.textContent = '›'; breadcrumbs.appendChild(sep);
+      const cspan = document.createElement('span');
+      cspan.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+      cspan.addEventListener('click', () => setActiveCategory(cat));
+      breadcrumbs.appendChild(cspan);
+    }
+    if (entryId) {
+      const sep2 = document.createElement('span'); sep2.textContent = '›'; breadcrumbs.appendChild(sep2);
+      const espan = document.createElement('span');
+      const entry = getEntryById(cat, entryId);
+      espan.textContent = entry ? entry.title : entryId;
+      breadcrumbs.appendChild(espan);
+    }
+  }
+
+  function renderCategoryList(cat) {
+    activeCategory = cat;
+    activeEntryId = null;
+    renderBreadcrumbs(cat, null);
+    // highlight active button
+    categoryBtns.forEach(b => (b.dataset.category || null) === cat ? b.classList.add('active') : b.classList.remove('active'));
+    homeBtn.classList.toggle('active', !cat);
+
+    if (!cat) {
+      entryContent.innerHTML = `<h1>Rebel Alliance Field Codex</h1><p>Entries are not loaded until a category is selected. Click a category on the left to begin.</p>`;
+      return;
     }
 
-    container.appendChild(row);
+    ensureCategoryExists(cat);
+    const arr = entriesByCategory[cat] || [];
+    // build list
+    const container = document.createElement('div');
+    if (arr.length === 0) {
+      const emptyMsg = document.createElement('p');
+      emptyMsg.textContent = 'No entries yet for this category.';
+      emptyMsg.style.color = '#dff6ff';
+      container.appendChild(emptyMsg);
+    }
+
+    arr.forEach(entry => {
+      const row = document.createElement('div');
+      row.className = 'entry-row';
+
+      const titleBtn = document.createElement('button');
+      titleBtn.className = 'entry-title';
+      titleBtn.dataset.id = entry.id;
+      titleBtn.textContent = entry.title || entry.id;
+
+      // style classes for locked/unlocked/gm-locked
+      const isUnlocked = unlockedByCategory[cat] && unlockedByCategory[cat][entry.id];
+      if (entry.gmLocked) titleBtn.classList.add('gm-locked');
+      else if (isUnlocked) titleBtn.classList.add('unlocked');
+      else titleBtn.classList.add('locked');
+
+      row.appendChild(titleBtn);
+
+      // GM controls inline (edit/delete/unlock)
+      if (isGM) {
+        const unlockBtn = document.createElement('button');
+        unlockBtn.className = 'unlock-btn';
+        unlockBtn.textContent = isUnlocked ? 'Lock' : 'Unlock';
+        unlockBtn.dataset.id = entry.id;
+        unlockBtn.dataset.cat = cat;
+        row.appendChild(unlockBtn);
+
+        const editBtn = document.createElement('button');
+        editBtn.className = 'gm-button';
+        editBtn.textContent = 'Edit';
+        editBtn.dataset.id = entry.id;
+        editBtn.dataset.cat = cat;
+        row.appendChild(editBtn);
+
+        const delBtn = document.createElement('button');
+        delBtn.className = 'gm-button remove';
+        delBtn.textContent = 'Delete';
+        delBtn.dataset.id = entry.id;
+        delBtn.dataset.cat = cat;
+        row.appendChild(delBtn);
+      }
+
+      container.appendChild(row);
+
+      // ====== LOAD ENTRIES FROM JSON FILES IN /entries DIRECTORY ======
+
+// Function to fetch JSON files from entries directory
+async function loadEntriesFromJSON() {
+  const categories = ['planets','characters','technology','items','factions','missions'];
+
+  for (const cat of categories) {
+    try {
+      // Assuming files are named like: entries/<category>/<id>.json
+      // Example: entries/planets/tatooine.json
+      const response = await fetch(`entries/${cat}.json`);
+      if (!response.ok) {
+        console.warn(`No JSON found for category ${cat}`);
+        continue;
+      }
+      const data = await response.json();
+
+      // Ensure category exists in state
+      if (!entriesByCategory[cat]) entriesByCategory[cat] = [];
+
+      // Merge data from JSON into entriesByCategory
+      if (Array.isArray(data)) {
+        data.forEach(entry => {
+          // Avoid duplicate IDs
+          const exists = entriesByCategory[cat].find(e => e.id === entry.id);
+          if (!exists) entriesByCategory[cat].push(entry);
+        });
+      } else if (typeof data === 'object') {
+        // If JSON is an object with id keys
+        for (const id in data) {
+          const entry = data[id];
+          entry.id = id;
+          const exists = entriesByCategory[cat].find(e => e.id === id);
+          if (!exists) entriesByCategory[cat].push(entry);
+        }
+      }
+    } catch (e) {
+      console.error(`Error loading entries for category ${cat}:`, e);
+    }
+  }
+
+  // After loading, save to local storage so your existing system can use it
+  saveEntriesToLocal();
+}
+
+// Call this function after DOMContentLoaded, after your initial seedDefaultsIfEmpty
+loadEntriesFromJSON();
+
+    });
+
+    entryContent.innerHTML = '';
+    const title = document.createElement('h1');
+    title.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+    entryContent.appendChild(title);
+    entryContent.appendChild(container);
+  }
+
+  function showEntryContent(cat, id) {
+    const entry = getEntryById(cat, id);
+    if (!entry) {
+      entryContent.innerHTML = `<h1>Missing Entry</h1><p>Entry "${id}" not found.</p>`;
+      return;
+    }
+    activeCategory = cat;
+    activeEntryId = id;
+    renderBreadcrumbs(cat, id);
+
+    const el = document.createElement('div');
+    const h = document.createElement('h1'); h.textContent = entry.title || id;
+    el.appendChild(h);
+    if (entry.image) {
+      const img = document.createElement('img'); img.src = entry.image; img.alt = entry.title || '';
+      el.appendChild(img);
+    }
+    const p = document.createElement('p'); p.textContent = entry.content || '';
+    el.appendChild(p);
+
+    // GM action buttons in content view
+    if (isGM) {
+      const row = document.createElement('div'); row.style.marginTop = '12px';
+      const editBtn = document.createElement('button'); editBtn.className = 'gm-button'; editBtn.textContent = 'Edit Entry';
+      editBtn.dataset.id = id; editBtn.dataset.cat = cat;
+      const delBtn = document.createElement('button'); delBtn.className = 'gm-button remove'; delBtn.textContent = 'Delete Entry';
+      delBtn.dataset.id = id; delBtn.dataset.cat = cat;
+      const toggleBtn = document.createElement('button'); toggleBtn.className = 'unlock-btn'; 
+      const isUnlocked = unlockedByCategory[cat] && unlockedByCategory[cat][id];
+      toggleBtn.textContent = isUnlocked ? 'Lock' : 'Unlock';
+      toggleBtn.dataset.id = id; toggleBtn.dataset.cat = cat;
+      row.appendChild(editBtn); row.appendChild(delBtn); row.appendChild(toggleBtn);
+      el.appendChild(row);
+    }
+
+    entryContent.innerHTML = '';
+    entryContent.appendChild(el);
+  }
+
+  // --- Editor (add / edit) ---
+  function showEditor(mode, cat, entry) {
+    // require category
+    if (!cat) { alert('Select a category first.'); return; }
+    ensureCategoryExists(cat);
+
+    // if already open, remove
+    const existing = document.getElementById('gmEditor');
+    if (existing) existing.remove();
+
+    const box = document.createElement('div');
+    box.id = 'gmEditor';
+    box.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div style="color:#66f0ff;font-weight:700">${mode === 'add' ? 'Add New Entry' : 'Edit Entry'}</div>
+        <div class="kv">Category: <strong>${cat}</strong></div>
+      </div>
+      <label>Title</label>
+      <input type="text" id="editorTitle" />
+      <div class="row">
+        <div>
+          <label>ID (optional — autogenerated if blank)</label>
+          <input type="text" id="editorId" />
+        </div>
+        <div>
+          <label>GM-Locked</label>
+          <div style="margin-top:6px;">
+            <input type="checkbox" id="editorGmLocked" /> <label for="editorGmLocked" style="display:inline;color:#bfeffb;"> Prevent normal players from seeing this entry</label>
+          </div>
+        </div>
+      </div>
+      <label>Image URL (optional)</label>
+      <input type="text" id="editorImage" />
+      <label>Content</label>
+      <textarea id="editorContent" rows="7"></textarea>
+      <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end;">
+        <button class="gm-button" id="editorSave">${mode === 'add' ? 'Create' : 'Save'}</button>
+        <button class="gm-button remove" id="editorCancel">Cancel</button>
+      </div>
+    `;
+    document.getElementById('main').appendChild(box);
+
+    // populate if edit
+    if (mode === 'edit' && entry) {
+      document.getElementById('editorTitle').value = entry.title || '';
+      document.getElementById('editorId').value = entry.id || '';
+      document.getElementById('editorImage').value = entry.image || '';
+      document.getElementById('editorContent').value = entry.content || '';
+      document.getElementById('editorGmLocked').checked = !!entry.gmLocked;
+    }
+
+    // handlers
+    document.getElementById('editorCancel').addEventListener('click', () => box.remove());
+    document.getElementById('editorSave').addEventListener('click', () => {
+      const title = document.getElementById('editorTitle').value.trim();
+      let id = document.getElementById('editorId').value.trim();
+      const image = document.getElementById('editorImage').value.trim();
+      const content = document.getElementById('editorContent').value;
+      const gmLocked = document.getElementById('editorGmLocked').checked;
+
+      if (!title) { alert('Title required'); return; }
+
+      if (!id) {
+        id = slugify(title);
+        // if collision, add timestamp
+        const exists = getEntryById(cat, id);
+        if (exists) id += '-' + Date.now().toString().slice(-4);
+      } else {
+        id = slugify(id);
+      }
+
+      if (mode === 'add') {
+        // ensure id unique
+        if (getEntryById(cat, id)) {
+          alert('ID already exists — choose a different ID.');
+          return;
+        }
+        entriesByCategory[cat].push({ id, title, image, content, gmLocked });
+      } else {
+        // edit: find and update
+        const it = getEntryById(cat, entry.id);
+        if (!it) {
+          alert('Original entry not found.');
+          box.remove();
+          return;
+        }
+        // if id changed and collides:
+        if (id !== entry.id && getEntryById(cat, id)) {
+          alert('New ID collides with existing entry.');
+          return;
+        }
+        it.id = id;
+        it.title = title;
+        it.image = image;
+        it.content = content;
+        it.gmLocked = gmLocked;
+      }
+
+      saveEntriesToLocal();
+      box.remove();
+      renderCategoryList(cat);
+      showEntryContent(cat, id);
+    });
+  }
+
+  // --- Actions: add / edit / delete / unlock ---
+  function toggleUnlock(cat, id) {
+    ensureCategoryExists(cat);
+    unlockedByCategory[cat] = unlockedByCategory[cat] || {};
+    const now = unlockedByCategory[cat][id];
+    if (now) delete unlockedByCategory[cat][id];
+    else unlockedByCategory[cat][id] = true;
+    saveUnlockedToLocal();
+    // refresh UI
+    if (activeCategory === cat) renderCategoryList(cat);
+    if (activeEntryId === id) showEntryContent(cat, id);
+  }
+
+  function deleteEntry(cat, id) {
+    if (!confirm('Delete entry "' + id + '"? This cannot be undone locally.')) return;
+    entriesByCategory[cat] = (entriesByCategory[cat] || []).filter(e => e.id !== id);
+    // also remove unlocked flag
+    if (unlockedByCategory[cat]) { delete unlockedByCategory[cat][id]; }
+    saveEntriesToLocal();
+    saveUnlockedToLocal();
+    renderCategoryList(cat);
+    entryContent.innerHTML = `<h1>Deleted</h1><p>Entry deleted.</p>`;
+  }
+
+  // --- export / copy / reset ---
+  function exportUnlocked() {
+    // convert to category -> array
+    const out = {};
+    for (const cat of Object.keys(unlockedByCategory)) {
+      out[cat] = Object.keys(unlockedByCategory[cat] || {}).filter(k => unlockedByCategory[cat][k]);
+    }
+    const blob = new Blob([JSON.stringify(out, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'unlocked.json'; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  async function copyUnlocked() {
+    const out = {};
+    for (const cat of Object.keys(unlockedByCategory)) {
+      out[cat] = Object.keys(unlockedByCategory[cat] || {}).filter(k => unlockedByCategory[cat][k]);
+    }
+    const txt = JSON.stringify(out, null, 2);
+    try {
+      await navigator.clipboard.writeText(txt);
+      alert('Unlocked JSON copied to clipboard.');
+    } catch (e) {
+      // fallback
+      const ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta);
+      ta.select(); document.execCommand('copy'); ta.remove();
+      alert('Copied to clipboard (fallback).');
+    }
+  }
+
+  function resetLocalUnlocked() {
+    if (!confirm('Reset local unlocked state? This will clear local unlocked.json state.')) return;
+    unlockedByCategory = {};
+    saveUnlockedToLocal();
+    renderCategoryList(activeCategory);
+    alert('Local unlocked state reset.');
+  }
+
+  // --- Event delegation for main content (entries list + content buttons) ---
+  document.getElementById('main').addEventListener('click', (e) => {
+    const t = e.target;
+    if (t.matches('.entry-title')) {
+      const id = t.dataset.id;
+      if (!activeCategory) return;
+      showEntryContent(activeCategory, id);
+    } else if (t.matches('.unlock-btn')) {
+      const id = t.dataset.id || t.getAttribute('data-id');
+      const cat = t.dataset.cat || activeCategory;
+      toggleUnlock(cat, id);
+    } else if (t.matches('.gm-button') && t.textContent.trim() === 'Edit') {
+      const id = t.dataset.id; const cat = t.dataset.cat;
+      const entry = getEntryById(cat, id);
+      showEditor('edit', cat, entry);
+    } else if (t.matches('.gm-button.remove') || (t.matches('.gm-button') && t.textContent.trim() === 'Delete') ) {
+      const id = t.dataset.id; const cat = t.dataset.cat;
+      deleteEntry(cat, id);
+    }
   });
-}
 
-// ===== DISPLAY ENTRY =====
-function displayEntry(en){
-  const container = document.getElementById("entryContent");
-  let html = `<h1>${en.name}</h1>`;
-  if(en.img) html += `<img src="${en.img}" />`;
-  if(en.desc) html += `<p>${en.desc}</p>`;
-  container.innerHTML = html;
+  // header category buttons
+  categoryBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const cat = btn.dataset.category || null;
+      setActiveCategory(cat);
+    });
+  });
 
-  updateBreadcrumbs(en);
-}
-
-// ===== BREADCRUMBS =====
-function updateBreadcrumbs(en){
-  const bc = document.getElementById("breadcrumbs");
-  bc.innerHTML="";
-  if(currentCategory){
-    const catSpan = document.createElement("span");
-    catSpan.textContent = currentCategory.charAt(0).toUpperCase()+currentCategory.slice(1);
-    catSpan.addEventListener("click", ()=>renderEntries());
-    bc.appendChild(catSpan);
-    bc.appendChild(document.createTextNode(" > "));
-  }
-  const enSpan = document.createElement("span");
-  enSpan.textContent = en.name;
-  bc.appendChild(enSpan);
-}
-
-// ===== LOAD ENTRIES FROM JSON =====
-async function loadAllEntries(){
-  const manifestResp = await fetch('manifest.json');
-  const manifest = await manifestResp.json();
-  for(const file of manifest){
-    const res = await fetch('entries/'+file);
-    const data = await res.json();
-    for(const cat in data){
-      if(!entries[cat]) entries[cat]=[];
-      entries[cat] = entries[cat].concat(data[cat]);
+  function setActiveCategory(cat) {
+    if (!cat) {
+      activeCategory = null;
+      renderCategoryList(null);
+      return;
     }
+    activeCategory = cat;
+    renderCategoryList(cat);
   }
-  renderEntries();
-}
 
-// ===== INITIALIZE =====
-loadAllEntries();
+  // GM toggle
+  document.addEventListener('keydown', e => {
+    if (e.key.toLowerCase() === 'g') {
+      isGM = !isGM;
+      gmTools.style.display = isGM ? 'flex' : 'none';
+      gmIndicator.classList.toggle('active', isGM);
+      // re-render current category so inline GM buttons appear/disappear
+      if (activeCategory) renderCategoryList(activeCategory);
+      else renderCategoryList(null);
+    }
+  });
+
+  // GM tool actions
+  addEntryBtn.addEventListener('click', () => {
+    if (!activeCategory) { alert('Select a category to add an entry into.'); return; }
+    showEditor('add', activeCategory, null);
+  });
+  exportBtn.addEventListener('click', exportUnlocked);
+  copyBtn.addEventListener('click', copyUnlocked);
+  resetLocalBtn.addEventListener('click', resetLocalUnlocked);
+
+  // cursor + distortion
+  function placeCursorAt(x,y) {
+    cursorDot.style.transform = `translate(${x}px,${y}px)`;
+    distortion.style.setProperty('--x', `${x}px`);
+    distortion.style.setProperty('--y', `${y}px`);
+  }
+  document.addEventListener('mousemove', e => placeCursorAt(e.clientX,e.clientY));
+  document.addEventListener('touchmove', e => { const t = e.touches[0]; placeCursorAt(t.clientX,t.clientY); });
+  document.addEventListener('touchstart', e => { const t = e.touches[0]; placeCursorAt(t.clientX,t.clientY); });
+
+  // search (simple title filter)
+  searchInput.addEventListener('input', (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!activeCategory) return;
+    if (!q) { renderCategoryList(activeCategory); return; }
+    const arr = (entriesByCategory[activeCategory] || []).filter(it => (it.title||'').toLowerCase().includes(q) || (it.id||'').toLowerCase().includes(q));
+    // render results quickly
+    entryContent.innerHTML = `<h1>Search results for "${q}"</h1>`;
+    const container = document.createElement('div');
+    if (arr.length === 0) {
+      const p = document.createElement('p'); p.textContent = 'No matches.'; entryContent.appendChild(p); return;
+    }
+    arr.forEach(entry => {
+      const row = document.createElement('div'); row.className = 'entry-row';
+      const titleBtn = document.createElement('button'); titleBtn.className = 'entry-title'; titleBtn.dataset.id = entry.id; titleBtn.textContent = entry.title;
+      row.appendChild(titleBtn);
+      if (isGM) {
+        const editBtn = document.createElement('button'); editBtn.className = 'gm-button'; editBtn.textContent = 'Edit'; editBtn.dataset.id = entry.id; editBtn.dataset.cat = activeCategory;
+        row.appendChild(editBtn);
+      }
+      container.appendChild(row);
+    });
+    entryContent.appendChild(container);
+  });
+
+  // initial load: try read local storage; if missing seed defaults
+  const hadEntries = loadEntriesFromLocal();
+  const hadUnlocked = loadUnlockedFromLocal();
+  if (!hadEntries) seedDefaultsIfEmpty();
+  if (!hadUnlocked) unlockedByCategory = {}; // start clean
+
+  // initial UI
+  setStatus('#ff4444', false);
+  setSyncInfo('Local only');
+  renderCategoryList(null);
+
+  // debug panel toggle (optional)
+  // debugPanel.style.display = 'block';
+});
 </script>
 </body>
 </html>
