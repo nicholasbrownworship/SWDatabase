@@ -54,21 +54,34 @@ body {
 }
 #screen * { cursor:none; }
 
-/* Scrollable inner content with persistent background */
+/* Add a solid black background so the metal doesn't show through */
+#screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #000;
+  z-index: 0;
+}
+
+/* Scrollable inner content with persistent blue overlay */
 #screen-inner {
   position: relative;
   height: 100%;
   overflow-y: auto;
   background: radial-gradient(circle at 50% 50%, rgba(10,20,25,0.95) 0%, rgba(5,10,12,0.9) 100%);
+  z-index: 2;
 }
 
-/* Blue overlay effects */
+/* Blue overlay effects (stays during scroll) */
 #blueBase {
-  position:absolute;
-  inset:0;
+  position: fixed;
+  top: 40px;
+  left: 40px;
+  width: 820px;
+  height: 520px;
   background-color: rgba(0,255,255,0.35);
   pointer-events:none;
-  z-index:1;
+  z-index: 1;
   mix-blend-mode: screen;
 }
 #blueBase::after {
@@ -90,7 +103,7 @@ body {
   z-index:6;
   opacity:0;
 }
-#screen::before {
+#screen::after {
   content:"";
   position:absolute;
   inset:0;
@@ -185,6 +198,7 @@ body {
 /* small responsive tweak */
 @media (max-width:960px){ #datapad{ transform: scale(0.92); } }
 </style>
+
 
 </head>
 <body>
