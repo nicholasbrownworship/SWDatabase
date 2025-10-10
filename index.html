@@ -18,32 +18,30 @@ body {
   padding: 0;
 }
 
-/* Centered datapad panel with metal texture */
+/* Centered datapad panel */
 #datapad {
   width:900px;
   height:600px;
-  background: url('images/metal_texture.jpg') center/cover no-repeat;
-  border:6px solid #333;
-  border-radius:25px;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 60px rgba(0,255,255,0.05), inset 0 0 20px #000;
+  border-radius:25px;
   overflow: hidden;
   z-index: 10;
 }
 
-#datapad::before {
-  content:"";
+/* Metal frame only */
+#frame {
   position:absolute; inset:0;
   border-radius:25px;
-  background: url('images/metal_noise.png') repeat;
-  opacity:0.2;
+  background: url('images/metal_texture.jpg') center/cover no-repeat;
+  box-shadow: 0 0 60px rgba(0,255,255,0.05), inset 0 0 20px #000;
+  pointer-events:none;
   z-index:0;
 }
 
-/* Screen container (blue overlay only) */
+/* Screen container (blue background only) */
 #screen {
   position:absolute;
   top:40px; left:40px;
@@ -55,7 +53,6 @@ body {
   animation: glowPulse 3s infinite alternate;
   cursor:none;
 }
-
 #screen * { cursor:none; }
 
 /* Inner scrollable content with persistent blue background */
@@ -188,6 +185,7 @@ body {
 /* small responsive tweak */
 @media (max-width:960px){ #datapad{ transform: scale(0.92); } }
 </style>
+
 
 
 </head>
