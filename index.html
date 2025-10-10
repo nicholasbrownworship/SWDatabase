@@ -8,12 +8,17 @@
 /* Base layout + aesthetic (keeps your previous styling) */
 * { box-sizing:border-box; margin:0; padding:0; font-family:'OCR A Std','Courier New', monospace; }
 body {
-  background: radial-gradient(ellipse at center, #050505 0%, #000 100%);
-  color:#a0d8ff;
-  height:100vh; display:flex; justify-content:center; align-items:center;
-  overflow:hidden;
-  cursor:none;
+  min-height: 100vh; /* allows scrolling if content exceeds viewport */
+  background: radial-gradient(ellipse at center, #1E3A8A 0%, #050505 100%);
+  color: #a0d8ff;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* top align content so it scrolls naturally */
+  padding: 20px;           /* optional padding so content isn’t glued to top */
+  cursor: none;
+  overflow-y: auto;        /* allow vertical scroll */
 }
+
 #datapad {
   width:900px; height:600px;
   background: url('images/metal_texture.jpg') center/cover no-repeat;
