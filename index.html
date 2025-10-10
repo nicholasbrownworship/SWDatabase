@@ -8,16 +8,14 @@
 /* Base layout + aesthetic (keeps your previous styling) */
 * { box-sizing:border-box; margin:0; padding:0; font-family:'OCR A Std','Courier New', monospace; }
 body {
-  min-height: 100vh; /* allows scrolling if content exceeds viewport */
+  min-height: 100vh;
   background: radial-gradient(ellipse at center, #1E3A8A 0%, #050505 100%);
   color: #a0d8ff;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start; /* top align content so it scrolls naturally */
-  padding: 20px;           /* optional padding so content isn’t glued to top */
+  padding: 20px;      /* optional spacing */
   cursor: none;
-  overflow-y: auto;        /* allow vertical scroll */
+  overflow-y: auto;
 }
+
 
 #datapad {
   width:900px; height:600px;
