@@ -1,7 +1,7 @@
 {
-  "id": "empire",
-  "name": "The Empire",
-  "image": "images/rebel.jpeg",
-  "description": "This is a test.",
-  "gmMode": true
+"id": "empire",
+"name": "Galactic Empire",
+"image": "images/empire.jpeg",
+"description": "The Galactic Empire is the dominant political and military force in the galaxy, established following the dissolution of the Galactic Republic. Centralized under Emperor Palpatine, the Empire maintains control through a combination of overwhelming military strength, bureaucratic authority, and fear. Its fleet of Star Destroyers, planetary garrisons, and stormtrooper legions enforces compliance across countless star systems, while Imperial governors administer occupied worlds with strict adherence to the Emperor’s directives. The Imperial bureaucracy ensures that even minor acts of dissent are identified and crushed swiftly, leaving little room for opposition to flourish.\n\nIn the aftermath of the Battle of Yavin, the Empire has suffered a significant strategic and symbolic setback. The destruction of the Death Star—the crown jewel of Imperial weaponry—has shaken confidence among officers and political overseers alike. Imperial High Command is currently assessing losses and accelerating fleet movements to hunt down the Rebellion, whose location and intentions remain largely unknown. Intelligence reports indicate heightened security measures and emergency deployments to key systems, as the Emperor seeks to both contain the insurgency and reassure Imperial governors of his continued dominance.\n\nDespite this loss, the Empire remains formidable. Its resources, manpower, and industrial capacity are unparalleled, allowing rapid replacement of ships, troops, and equipment. Propaganda campaigns portray the Rebellion as a fringe insurgency, while Imperial agents and informants work tirelessly to track and disrupt rebel operations. To its enemies, the Empire is ruthless and relentless, capable of exacting vengeance on entire worlds. To its citizens, it offers order, stability, and the promise of prosperity—albeit at the cost of freedom. The Empire’s long-term objective remains unchallenged: complete and unquestioned control of the galaxy, with rebellion crushed wherever it arises.",
+"gmMode": true
 }
