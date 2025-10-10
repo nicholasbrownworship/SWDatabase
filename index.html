@@ -13,12 +13,12 @@ body {
   background: radial-gradient(ellipse at center, #1E3A8A 0%, #050505 100%);
   color: #a0d8ff;
   cursor: none;
-  overflow: auto; /* scroll behind datapad */
+  overflow: auto; /* allow scrolling behind datapad */
   margin: 0;
   padding: 0;
 }
 
-/* Centered datapad panel */
+/* Centered datapad panel with metal texture */
 #datapad {
   width:900px;
   height:600px;
@@ -43,7 +43,7 @@ body {
   z-index:0;
 }
 
-/* Screen container */
+/* Screen container (blue overlay only) */
 #screen {
   position:absolute;
   top:40px; left:40px;
@@ -55,9 +55,10 @@ body {
   animation: glowPulse 3s infinite alternate;
   cursor:none;
 }
+
 #screen * { cursor:none; }
 
-/* Inner scrollable content with persistent background */
+/* Inner scrollable content with persistent blue background */
 #screen-inner {
   height:100%;
   overflow-y:auto;
@@ -65,7 +66,7 @@ body {
   position: relative;
 }
 
-/* Blue overlay covering entire scrollable content */
+/* Blue overlay effect */
 #blueBase {
   position:absolute;
   inset:0;
