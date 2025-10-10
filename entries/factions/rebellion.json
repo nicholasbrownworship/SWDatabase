@@ -1,7 +1,7 @@
 {
-  "id": "rebellion",
-  "name": "Rebellion",
-  "image": "images/rebel.jpeg",
-  "description": "This is a test.",
-  "gmMode": true
+"id": "rebellion",
+"name": "Rebel Alliance",
+"image": "images/rebel.jpeg",
+"description": "In the aftermath of the Battle of Yavin, the Alliance to Restore the Republic stands at a pivotal crossroads. The destruction of the Death Star has delivered an unprecedented victory for the Rebellion—one that has inspired countless systems to reconsider their allegiance to the Empire. Yet this triumph has also brought with it grave danger. The Empire’s reprisal will be swift and merciless, forcing Alliance leadership to abandon their Yavin base and scatter their forces across the Outer Rim. Despite the growing threat, morale within the ranks has never been higher; for the first time, the Rebellion has proven that the Empire’s might is not absolute.\n\nThe Alliance itself remains a fragile coalition of resistance cells, planetary militias, and sympathetic senators unified under a shared vision of liberty and self-determination. Coordination between these groups is difficult and often reliant on improvised supply chains, coded transmissions, and the courage of smugglers and spies who risk their lives to keep communication lines open. Mon Mothma, General Jan Dodonna, and other senior leaders continue to refine the Rebellion’s structure, transforming it from a patchwork of insurrections into a coordinated military and political movement. Resources are limited, and secrecy remains paramount; every new base, fleet movement, and recruitment effort must be carefully concealed from Imperial intelligence.\n\nTo the galaxy at large, the Rebellion represents both hope and uncertainty. For oppressed worlds, it is a beacon of defiance against tyranny. For those aligned with the Empire, it is a dangerous insurgency threatening the so-called stability of the Imperial order. Internally, the Alliance’s members are driven by conviction rather than profit—pilots, soldiers, engineers, and civilians united by belief in a free galaxy. Though its future remains uncertain, the Rebellion’s success at Yavin has proven that even the most overwhelming power can be challenged, and that courage and unity may yet restore the ideals of the Old Republic.",
+"gmMode": true
 }
