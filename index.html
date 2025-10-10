@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Rebel Datapad Codex — Test</title>
 <style>
-/* Full styling (datapad aesthetic + UI) */
+/* ====== CORE STYLING ====== */
 * { box-sizing:border-box; margin:0; padding:0; font-family:'OCR A Std','Courier New', monospace; }
 body {
   background: radial-gradient(ellipse at center, #050505 0%, #000 100%);
@@ -30,6 +30,8 @@ body {
   opacity:0.18;
   z-index:0;
 }
+
+/* ====== SCREEN & EFFECTS ====== */
 #screen {
   position:absolute;
   top:40px; left:40px;
@@ -41,31 +43,71 @@ body {
   z-index:1;
   animation: glowPulse 3s infinite alternate;
 }
-@keyframes glowPulse { 0% { box-shadow: inset 0 0 20px rgba(0,255,255,0.12); } 50% { box-shadow: inset 0 0 35px rgba(0,255,255,0.26); } 100% { box-shadow: inset 0 0 25px rgba(0,255,255,0.16); } }
+@keyframes glowPulse {
+  0% { box-shadow: inset 0 0 20px rgba(0,255,255,0.12); }
+  50% { box-shadow: inset 0 0 35px rgba(0,255,255,0.26); }
+  100% { box-shadow: inset 0 0 25px rgba(0,255,255,0.16); }
+}
 
-#flicker { position:absolute; inset:0; background: repeating-linear-gradient(0deg, rgba(0,255,255,0.12) 0px, rgba(0,255,255,0.12) 1px, transparent 2px, transparent 3px); pointer-events:none; z-index:6; opacity:0; }
+/* Effects layers — visual only, no interaction */
+#flicker,
+#distortion,
+#blueBase,
+#dotFlicker,
+#cursor-dot {
+  pointer-events: none !important;
+}
+
+#flicker { position:absolute; inset:0; background: repeating-linear-gradient(0deg, rgba(0,255,255,0.12) 0px, rgba(0,255,255,0.12) 1px, transparent 2px, transparent 3px); z-index:6; opacity:0; }
 #screen::before { content:""; position:absolute; inset:0; pointer-events:none; background: repeating-linear-gradient(to bottom, rgba(0,255,255,0.03) 0px, rgba(0,255,255,0.03) 1px, transparent 2px, transparent 3px); animation: scanlines 1s linear infinite; z-index:7; }
 @keyframes scanlines { 0% { background-position: 0 0; } 100% { background-position: 0 4px; } }
 
-#distortion { position:absolute; inset:0; background: radial-gradient(circle at var(--x,50%) var(--y,50%), rgba(0,255,255,0.18) 0%, transparent 40%); pointer-events:none; z-index:5; }
-#blueBase { position:absolute; inset:0; background-color: rgba(0,255,255,0.18); pointer-events:none; z-index:1; mix-blend-mode: screen; }
-#blueBase::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,255,255,0.04) 0px, rgba(0,255,255,0.04) 1px, transparent 2px, transparent 3px); opacity: 0.25; animation: staticNoise 0.2s steps(2) infinite; z-index:2; }
+#distortion { position:absolute; inset:0; background: radial-gradient(circle at var(--x,50%) var(--y,50%), rgba(0,255,255,0.18) 0%, transparent 40%); z-index:5; }
+#blueBase { position:absolute; inset:0; background-color: rgba(0,255,255,0.18); z-index:1; mix-blend-mode: screen; }
+#blueBase::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(0,255,255,0.04) 0px, rgba(0,255,255,0.04) 1px, transparent 2px, transparent 3px); opacity: 0.25; animation: staticNoise 0.2s steps(2) infinite; z-index:2; }
 @keyframes staticNoise { 0% { background-position: 0 0; } 100% { background-position: 0 100%; } }
 
-#content { display:flex; height:100%; position:relative; z-index:6; }
+/* ====== MAIN CONTENT ====== */
+#content {
+  display:flex;
+  height:100%;
+  position:relative;
+  z-index:10; /* ensures sidebar is clickable */
+}
+
 #sidebar {
-  width:200px; background:rgba(5,15,20,0.84); border-right:1px solid #033;
-  display:flex; flex-direction:column; padding:15px; gap:8px;
+  width:200px;
+  background:rgba(5,15,20,0.84);
+  border-right:1px solid #033;
+  display:flex;
+  flex-direction:column;
+  padding:15px;
+  gap:8px;
 }
 #sidebar h2 { color:#33cfff; text-align:center; margin-bottom:6px; }
+
 .category-btn {
-  background:#0a1f26; border:none; padding:8px; color:#33cfff; text-align:left;
-  border-left:4px solid #0a5266; cursor:pointer; border-radius:6px;
+  background:#0a1f26;
+  border:none;
+  padding:8px;
+  color:#33cfff;
+  text-align:left;
+  border-left:4px solid #0a5266;
+  cursor:pointer;
+  border-radius:6px;
 }
 .category-btn:hover { background:#0e2a34; border-left-color:#66f0ff; }
 .category-btn.active { border-left-color:#00ffff; background:#0e2a34; }
 
-#search { margin-top:auto; padding:8px; background:#07131a; border:1px solid #113844; color:#a0d8ff; border-radius:6px; outline:none; }
+#search {
+  margin-top:auto;
+  padding:8px;
+  background:#07131a;
+  border:1px solid #113844;
+  color:#a0d8ff;
+  border-radius:6px;
+  outline:none;
+}
 
 #main { flex:1; padding:18px; overflow-y:auto; position:relative; }
 #breadcrumbs { margin-bottom:12px; font-size:14px; color:#33cfff; display:flex; gap:8px; align-items:center; }
@@ -75,9 +117,11 @@ body {
 #entryContent img { display:block; margin:10px auto; max-width:100%; max-height:320px; border:2px solid #33cfff; border-radius:6px; box-shadow:0 0 18px rgba(0,255,255,0.2); }
 #entryContent p { font-size:15px; line-height:1.6em; white-space:pre-wrap; color:#dff6ff; }
 
+/* Entry buttons */
 .entry-row { display:flex; align-items:center; gap:8px; margin:8px 0; }
 .entry-title {
-  flex:1; background:#081a20; border:none; padding:8px; color:#a0d8ff; text-align:left; cursor:pointer;
+  flex:1; background:#081a20; border:none; padding:8px; color:#a0d8ff;
+  text-align:left; cursor:pointer;
   border-left:6px solid #0a5266; border-radius:6px; font-size:15px;
 }
 .entry-title.locked { border-left-color:#777; color:#777; }
@@ -87,8 +131,13 @@ body {
 .unlock-btn { padding:6px 10px; border:none; border-radius:6px; cursor:pointer; background:#003; color:#66ffff; }
 .unlock-btn.remove { background:#700; color:#ffc; }
 
+/* GM indicator + lights */
 #gmIndicator {
-  position:absolute; top:12px; left:20px; background: rgba(0,0,0,0.55); color:#66ffff; font-size:12px; font-weight:700; padding:6px 10px; border-radius:6px; z-index:8; pointer-events:none; opacity:0; transition:opacity .16s;
+  position:absolute; top:12px; left:20px;
+  background: rgba(0,0,0,0.55);
+  color:#66ffff; font-size:12px; font-weight:700;
+  padding:6px 10px; border-radius:6px; z-index:8;
+  pointer-events:none; opacity:0; transition:opacity .16s;
 }
 #gmIndicator.active { opacity:1; }
 
@@ -105,15 +154,12 @@ body {
 }
 
 #cursor-dot { position:absolute; width:12px; height:12px; border-radius:50%; background: rgba(0,255,255,0.84); box-shadow:0 0 8px rgba(0,255,255,0.8), 0 0 15px rgba(0,255,255,0.35); pointer-events:none; transform:translate(-50%,-50%); z-index:7; }
-#dotFlicker { position:absolute; inset:0; pointer-events:none; z-index:6; }
+#dotFlicker { position:absolute; inset:0; z-index:6; }
 .dot { position:absolute; width:2px; height:2px; border-radius:50%; background: rgba(0,255,255,0.6); box-shadow:0 0 4px rgba(0,255,255,0.8); pointer-events:none; }
 
 .controls-row { display:flex; gap:8px; align-items:center; margin-bottom:10px; }
 .gm-tools { margin-left:auto; display:flex; gap:6px; }
-
-.gm-button {
-  background:#033; color:#8ff; border:none; padding:6px 8px; border-radius:6px; cursor:pointer;
-}
+.gm-button { background:#033; color:#8ff; border:none; padding:6px 8px; border-radius:6px; cursor:pointer; }
 .gm-button:active{ transform: translateY(1px); }
 
 .debug-panel { position:absolute; left:18px; bottom:18px; z-index:9; color:#8fefff; font-size:12px; opacity:0.9; background: rgba(0,0,0,0.25); padding:6px 8px; border-radius:6px; }
@@ -199,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const copyBtn = document.getElementById('copyBtn');
   const resetLocalBtn = document.getElementById('resetLocalBtn');
   const debugPanel = document.getElementById('debugPanel');
-  const distortion = document.getElementById('distortion'); // ✅ added
+  const distortion = document.getElementById('distortion');
 
   let activeCategory = null;
   let activeEntry = null;
@@ -232,20 +278,57 @@ document.addEventListener('DOMContentLoaded', () => {
     unlockedByCategory = {};
     if (!raw) return;
     if (Array.isArray(raw)) {
-      raw.forEach(s => { if (typeof s === 'string') unlockedById[s.replace(/\.json$/i,'').split('/').pop()] = true; });
+      raw.forEach(s => {
+        if (typeof s === 'string')
+          unlockedById[s.replace(/\.json$/i,'').split('/').pop()] = true;
+      });
     } else if (typeof raw === 'object') {
       const valuesAreArrays = Object.values(raw).every(v => Array.isArray(v));
       if (valuesAreArrays) {
-        for (const [cat,arr] of Object.entries(raw)) { unlockedByCategory[cat]={}; arr.forEach(id=>unlockedByCategory[cat][id]=true); }
-      } else { for (const k of Object.keys(raw)) unlockedById[k]=true; }
+        for (const [cat,arr] of Object.entries(raw))
+          unlockedByCategory[cat]={}, arr.forEach(id=>unlockedByCategory[cat][id]=true);
+      } else {
+        for (const k of Object.keys(raw)) unlockedById[k]=true;
+      }
     }
   }
 
-  function placeCursorAt(x,y) { cursorDot.style.transform = `translate(${x}px,${y}px)`; }
+  function placeCursorAt(x,y) {
+    cursorDot.style.transform = `translate(${x}px,${y}px)`;
+    distortion.style.setProperty('--x', `${x}px`);
+    distortion.style.setProperty('--y', `${y}px`);
+  }
 
   document.addEventListener('mousemove', e => placeCursorAt(e.clientX,e.clientY));
   document.addEventListener('touchmove', e => { const t = e.touches[0]; placeCursorAt(t.clientX,t.clientY); });
   document.addEventListener('touchstart', e => { const t = e.touches[0]; placeCursorAt(t.clientX,t.clientY); });
+
+  /* ===== GM MODE TOGGLE ===== */
+  document.addEventListener('keydown', e => {
+    if (e.key.toLowerCase() === 'g') {
+      isGM = !isGM;
+      gmTools.style.display = isGM ? 'flex' : 'none';
+      gmIndicator.classList.toggle('active', isGM);
+    }
+  });
+
+  // Example home button interaction for testing
+  homeBtn.addEventListener('click', () => {
+    entryContent.innerHTML = `<h1>Rebel Alliance Field Codex</h1>
+    <p>Entries are not loaded until a category is selected. Click a category on the left to begin.</p>`;
+    categoryBtns.forEach(btn => btn.classList.remove('active'));
+    homeBtn.classList.add('active');
+  });
+
+  categoryBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      categoryBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeCategory = btn.dataset.category || null;
+      entryContent.innerHTML = `<h1>${activeCategory ? activeCategory.toUpperCase() : "Home"}</h1>
+        <p>Category loaded: ${activeCategory || "none"}</p>`;
+    });
+  });
 });
 </script>
 </body>
