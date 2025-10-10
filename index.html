@@ -463,7 +463,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // GM Mode toggle: Ctrl+Shift+G (hidden to players)
   document.addEventListener('keydown', (ev) => {
-    if (ev.ctrlKey && ev.shiftKey && ev.key.toLowerCase() === 'g') {
+    if (ev.key.toLowerCase() === 'g') {
       isGM = !isGM;
       gmIndicator.classList.toggle('active', isGM);
       // rerender current view so GM-only controls appear/disappear
