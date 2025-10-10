@@ -1,7 +1,7 @@
 {
-  "id": "tie_fighter",
-  "name": "Tie Fighter",
-  "image": "images/tie_fighter.jpeg",
-  "description": "This is a test.",
-  "gmMode": true
+"id": "tie_fighter",
+"name": "TIE Fighter",
+"image": "images/tie_fighter.jpeg",
+"description": "The TIE Fighter, officially designated the Twin Ion Engine fighter, is the primary short-range starfighter used by the Galactic Empire during the early stages of the Rebellion. Designed for speed, maneuverability, and mass production, TIE Fighters excel in large-scale fleet engagements and rapid response missions. They lack shields and hyperdrives, relying instead on numerical superiority, pilot coordination, and the protective presence of capital ships to maintain battlefield dominance. Each fighter is armed with a pair of laser cannons, capable of delivering devastating volleys against unshielded targets, though their lack of armor makes them vulnerable to even light return fire.\n\nTIE Fighters are flown by highly disciplined pilots trained to operate within the Empire’s rigid tactical doctrines. Their design emphasizes agility over survivability, allowing them to outmaneuver most Rebel starfighters in tight dogfights, but at the cost of pilot safety. Wing formations are tightly controlled, with coordinated attack patterns designed to overwhelm smaller numbers of enemy ships. Sensors and targeting systems are simplified, requiring pilots to rely heavily on training, reflexes, and visual identification during combat.\n\nDuring the period following the Battle of Yavin, TIE Fighters remain the frontline tool of Imperial response to Rebel activity. While their lack of shielding and hyperspace capability limits operational independence, they are invaluable for fleet defense, interception, and rapid pursuit of escaping targets. Despite their weaknesses, the TIE Fighter’s speed, agility, and sheer numbers make it a constant threat to the Rebellion, and its distinctive design has become synonymous with Imperial might across the galaxy.",
+"gmMode": true
 }
