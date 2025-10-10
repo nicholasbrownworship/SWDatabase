@@ -1,7 +1,7 @@
 {
-  "id": "x-wing",
-  "name": "X-Wing Starfighter",
-  "image": "images/x-wing.jpeg",
-  "description": "This is a test.",
-  "gmMode": true
+"id": "x-wing",
+"name": "X-Wing Starfighter",
+"image": "images/x-wing.jpeg",
+"description": "The T-65 X-Wing starfighter is the backbone of the Rebel Alliance’s fighter corps at the time of the Battle of Yavin. Designed for versatility, it combines the firepower and shielding of larger warships with the agility of a starfighter, making it ideal for hit-and-run strikes, escort missions, and fleet engagements. Its S-foils, which open into the distinctive 'X' formation in attack mode, enhance both maneuverability and weapons coverage, allowing the pilot to engage multiple targets simultaneously. Each fighter carries four laser cannons and proton torpedo launchers, giving it the ability to penetrate even heavily armored targets under the right conditions.\n\nThe X-Wing is equipped with a hyperdrive, astromech droid socket, and reinforced shields, enabling long-range independent operations—essential for the Rebellion’s scattered and mobile strategy. Pilots rely on the integrated R2 units for navigation, in-flight repairs, and tactical data, allowing a single craft to operate far from support while maintaining battlefield awareness. Its balance of offensive capability, defensive resilience, and reliability has made the X-Wing the preferred choice for both elite Red Squadron pilots and new recruits alike.\n\nAt this stage of the campaign, X-Wings are primarily used in coordinated strikes against Imperial installations, supply convoys, and capital ships, with special emphasis on engaging in precision attacks such as the assault on the Death Star. The starfighter’s reputation among both rebels and Imperial forces is growing; it has proven capable of matching Imperial TIE fighters in dogfights while offering survivability that the Empire’s lighter craft cannot. Within the Alliance, the X-Wing symbolizes the ingenuity, resourcefulness, and daring spirit of the fledgling Rebellion.",
+"gmMode": true
 }
