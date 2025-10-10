@@ -1,7 +1,7 @@
 {
-  "id": "hoth",
-  "name": "Hoth",
-  "image": "images/hoth.jpeg",
-  "description": "Test text.",
-  "gmMode": true
+"id": "hoth",
+"name": "Hoth",
+"image": "images/hoth.jpeg",
+"description": "Hoth is a remote, uninhabited ice world located in the far reaches of the Anoat sector. Known primarily to scouts, smugglers, and the occasional survey team, it has long been dismissed as inhospitable and strategically irrelevant. The planet’s surface is dominated by endless glaciers, blinding snowfields, and violent storms that can last for days. Native life is sparse, limited to hardy species such as tauntauns and wampas that have adapted to the brutal cold. Few recorded settlements or installations exist, and those that do are temporary outposts or abandoned research stations dating back to the Old Republic’s exploratory efforts. In official charts, Hoth’s coordinates are often omitted or listed as “restricted,” a remnant of long-forgotten bureaucratic oversight.\n\nIn recent cycles, however, scattered intelligence traffic and encrypted logistics records have hinted at unusual activity within the system. Long-range sensors have detected minor power fluctuations and short-duration hyperspace signatures consistent with small transport traffic, suggesting the world may be serving as a provisional staging ground or test site. The planet’s natural obscurity and severe climate make it ideal for covert operations, as few would willingly venture there without explicit cause. Its remoteness also complicates any sustained surveillance, allowing small groups to operate with relative anonymity.\n\nAlliance Intelligence has taken interest in the Hoth system as a potential fallback location, given its natural concealment and minimal Imperial presence. Preliminary assessments note that the environment, while hostile, offers significant advantages for a hidden base—ample subglacial caverns, negligible population, and limited sensor visibility due to atmospheric interference. Officially, the world remains unoccupied and of no declared importance, but classified recommendations have been circulated suggesting it may soon warrant a more thorough evaluation for future strategic use.",
+"gmMode": true
 }
