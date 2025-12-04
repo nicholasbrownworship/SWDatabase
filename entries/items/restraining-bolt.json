@@ -1,0 +1,12 @@
+{
+  "id": "restraining_bolt",
+  "name": "Restraining Bolt",
+  "description": "A restraining bolt is a small device affixed to a droid’s chassis that limits its movement and can forcibly override certain autonomy protocols. When paired with a compatible controller or remote, the operator can lock the droid in place, restrict its access to data ports, or confine it to designated areas. While legal under most Imperial regulations, restraining bolts are notorious among droids as symbols of control and servitude.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Droid Control",
+    "Security",
+    "Controversial"
+  ]
+}
