@@ -1,0 +1,12 @@
+{
+  "id": "t_65b_x_wing",
+  "name": "T-65B X-wing Starfighter",
+  "description": "The Incom T-65B X-wing starfighter is the workhorse of the Rebel Alliance fleet. Designed for versatility, it balances speed, maneuverability, durability, and firepower in a single spaceframe. S-foils that lock into attack position increase weapons coverage and cooling, while four wingtip laser cannons and a proton torpedo launcher give the starfighter teeth against both fighters and capital ship targets. An astromech socket behind the cockpit provides navigation, emergency repair support, and hyperspace calculations. To the Alliance, the X-wing is more than a fighter—it is a symbol of resistance against the Empire.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Starfighter",
+    "Rebel Alliance",
+    "X-wing"
+  ]
+}
