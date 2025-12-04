@@ -1,0 +1,12 @@
+{
+  "id": "lothal",
+  "name": "Lothal",
+  "description": "Lothal is an Outer Rim world of sweeping grasslands, low mesas, and scattered farming settlements. For generations, its people lived by simple trades—herding, moisture farming, and small-scale mining—until the Empire arrived with promises of prosperity. Massive factories, ore refineries, and TIE production lines now loom over once-quiet towns, drawing workers in with wages and trapping them with debt, curfews, and stormtrooper patrols. Farmland has been seized, homesteads leveled, and whole communities relocated in the name of 'efficiency.' Quiet resentment runs through the population, and rumors persist of saboteurs, missing shipments, and Rebels operating in the backcountry beyond the city lights.",
+  "image": "",
+  "gmMode": false,
+  "tags": [
+    "Outer Rim",
+    "Industrial World",
+    "Imperial Occupation"
+  ]
+}
