@@ -3,7 +3,7 @@
   "name": "Bespin",
   "description": "Bespin is a massive gas giant, but the only part most beings ever see is Cloud City—an elegant mining colony suspended high in its upper atmosphere. The city extracts valuable tibanna gas used to cool and enhance blaster and starship energy systems, making Bespin strategically important despite its remote location. Technically neutral and corporately controlled, Cloud City avoids Imperial attention by keeping its mining quotas stable and its politics quiet. Behind the polite smiles and fine dining, however, deals are forged in shadowed lounges, fortunes are made and lost overnight, and almost every inhabitant knows someone willing to buy or sell information to the highest bidder.",
   "image": "",
-  "gmMode": false,
+  "gmMode": true,
   "tags": [
     "Gas Giant",
     "Mining Colony",
