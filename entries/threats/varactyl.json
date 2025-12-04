@@ -1,0 +1,13 @@
+{
+  "id": "varactyl",
+  "name": "Varactyl",
+  "description": "Varactyls are swift reptavian mounts native to Utapau, known for their exceptional climbing ability and loyalty once bonded. Their sharp talons and powerful legs enable them to scale sheer walls or leap long distances across cavern voids. While typically peaceful, a territorial varactyl can lash out with blinding speed, turning a narrow ledge or cliffside into a lethal battlefield.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Mount",
+    "Reptavian",
+    "Climber",
+    "Utapau"
+  ]
+}
