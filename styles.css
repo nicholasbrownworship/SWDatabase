@@ -17,7 +17,7 @@ body {
   overflow-y: auto;
 }
 
-/* REBEL FIELD DATAPAD – older, more worn prop look */
+/* REBEL FIELD DATAPAD – older, worn prop look */
 #datapad {
   width: 900px;
   height: 600px;
@@ -27,8 +27,8 @@ body {
   transform: translate(-50%, -50%);
   overflow: hidden;
 
-  /* Rounded, chunky chassis */
-  border-radius: 26px;
+  /* Squarer, chunky chassis */
+  border-radius: 16px;
 
   /* Desaturated, slightly dirty panel color */
   background:
@@ -81,17 +81,17 @@ body {
     ),
     /* noise texture if you have it */
     url('images/metal_noise.png') repeat;
-  opacity: 0.6;
+  opacity: 0.7; /* your chosen grunge level */
   mix-blend-mode: multiply;
   pointer-events: none;
 }
 
-/* Inner bezel – mostly dark, very subtle cyan bleed, no flashy screws */
+/* Inner bezel – mostly dark, very subtle cyan bleed */
 #datapad::after {
   content: "";
   position: absolute;
   inset: 12px;
-  border-radius: 18px;
+  border-radius: 12px;
   pointer-events: none;
 
   /* mostly just a dark bezel with a faint cyan halo */
@@ -111,7 +111,7 @@ body {
   left: 40px;
   width: 820px;
   height: 520px;
-  border-radius: 14px;
+  border-radius: 10px; /* squarer to match prop */
   overflow: hidden;
   box-shadow: inset 0 0 22px rgba(0,255,255,0.26);
   z-index: 1;
@@ -411,26 +411,11 @@ body {
   opacity: 1;
 }
 
-/* Corner indicators – toned way down so they don't glow anymore */
-.indicator {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #262621;
-  box-shadow: none;           /* no glow */
-  opacity: 0.7;
-}
-
+/* Corner indicators – removed for now */
+.indicator,
 .indicator.red {
-  background: #2b1b1b;
-  box-shadow: none;
+  display: none;
 }
-
-.indicator:nth-child(1) { top: 10px; left: 10px; }
-.indicator:nth-child(2) { top: 10px; right: 10px; }
-.indicator:nth-child(3) { bottom: 10px; left: 10px; }
-.indicator:nth-child(4) { bottom: 10px; right: 10px; }
 
 #cursor-dot {
   position: absolute;
