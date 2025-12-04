@@ -1,0 +1,13 @@
+{
+  "id": "gundark",
+  "name": "Gundark",
+  "description": "Gundarks are muscular, four-eared creatures known for aggression and remarkable strength. Found in caves and canyon systems across multiple Outer Rim worlds, they react violently to intrusion and pursue targets relentlessly once provoked. Their thick hides resist melee weapons and improvised attacks, and local guides frequently warn travelers that it is better to avoid a gundark than survive angering one.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Predator",
+    "Cave Dweller",
+    "Outer Rim",
+    "Territorial"
+  ]
+}
