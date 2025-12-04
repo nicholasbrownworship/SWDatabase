@@ -1,0 +1,12 @@
+{
+  "id": "bacta_patch",
+  "name": "Bacta Patch",
+  "description": "A bacta patch is a disposable dressing infused with a thin layer of bacta gel. Pressed directly against a wound, it numbs pain and accelerates healing far beyond natural recovery. While not as powerful as full submersion in a bacta tank, patches are portable, relatively affordable, and a common sight in military field kits and smuggler hideouts alike.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Medical",
+    "Bacta",
+    "Consumable"
+  ]
+}
