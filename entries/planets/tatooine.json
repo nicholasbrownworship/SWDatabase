@@ -3,7 +3,7 @@
   "name": "Tatooine",
   "description": "Tatooine is a harsh desert planet orbiting twin suns, where moisture farmers, scavengers, and settlers eke out a living amid endless dunes and rock formations. Imperial presence is minimal, leaving local governance to Hutt cartels and crime syndicates who control trade, territory, and information. Spaceports like Mos Eisley thrive on illicit business and pilot-for-hire culture, drawing smugglers, bounty hunters, and wanderers from across the galaxy. Though unremarkable on star maps, Tatooine has a strange habit of intersecting with galactic history—its isolation makes it a hiding place, a last resort, and a cradle for those who later shape the fate of empires.",
   "image": "",
-  "gmMode": false,
+  "gmMode": true,
   "tags": [
     "Desert World",
     "Outer Rim",
