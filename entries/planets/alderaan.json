@@ -1,0 +1,12 @@
+{
+  "id": "alderaan",
+  "name": "Alderaan",
+  "description": "Alderaan was a serene Core World famed for its natural beauty, culture, and commitment to peaceful diplomacy. Snow-capped mountains, crystal-clear lakes, and carefully preserved wild spaces stood alongside elegant cities that blended architecture and landscape into a single, harmonious whole. Its royal family—House Organa—pushed for reform and relief efforts across the galaxy, quietly supporting those who suffered under Imperial rule. In the age of the Empire, Alderaan’s refusal to submit completely came at a terrible cost: the planet was annihilated as a demonstration of the Death Star’s power. For many across the galaxy, even those who never set foot on Alderaan, its destruction became a symbol of the Empire’s cruelty and a call to join the Rebellion.",
+  "image": "",
+  "gmMode": false,
+  "tags": [
+    "Core World",
+    "Pacifist Tradition",
+    "Destroyed World"
+  ]
+}
