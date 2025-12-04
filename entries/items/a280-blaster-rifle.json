@@ -1,0 +1,12 @@
+{
+  "id": "a280_blaster_rifle",
+  "name": "A280 Blaster Rifle",
+  "description": "The A280 is a robust, modular blaster rifle favored by Alliance commandos and marksmen. Designed for battlefield reliability, it sacrifices some of the E-11’s compactness for range, accuracy, and stopping power. Many Rebel units field customized A280s with improved optics, weatherproofing, and extended power cells scrounged or modified from local sources. It is not uncommon for a single A280 to stay in service for years, passed from one cell to another as squads are rotated or lost.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Blaster",
+    "Rebel Standard",
+    "Ranged Weapon"
+  ]
+}
