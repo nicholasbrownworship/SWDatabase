@@ -17,29 +17,74 @@ body {
   overflow-y: auto;
 }
 
-/* Datapad centered on screen */
+/* HOLO-CONSOLE DATAPAD BEZEL */
 #datapad {
   width: 900px;
   height: 600px;
-  background: url('images/metal_texture.jpg') center/cover no-repeat;
-  border: 6px solid #333;
-  border-radius: 25px;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 60px rgba(0,255,255,0.05), inset 0 0 20px #000;
+  border-radius: 32px;
   overflow: hidden;
+
+  /* Deep, clean metal base with subtle cyan hotspots */
+  background:
+    radial-gradient(circle at 15% 0%, rgba(120,220,255,0.18), transparent 55%),
+    radial-gradient(circle at 85% 100%, rgba(0,0,0,0.85), transparent 60%),
+    linear-gradient(135deg, #191d24 0%, #080a0f 45%, #040508 100%);
+
+  border: 2px solid #020308;
+
+  /* Stronger outer glow + physical drop shadow */
+  box-shadow:
+    0 24px 60px rgba(0,0,0,0.95),
+    0 0 90px rgba(0,255,255,0.10),
+    inset 0 0 25px rgba(0,0,0,0.95);
 }
 
+/* Texture + subtle panel lines / noise */
 #datapad::before {
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: 25px;
-  background: url('images/metal_noise.png') repeat;
-  opacity: 0.2;
+  border-radius: inherit;
   z-index: 0;
+  background:
+    /* horizontal panel banding */
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.06) 0px,
+      rgba(255,255,255,0.06) 1px,
+      transparent 3px,
+      transparent 9px
+    ),
+    /* faint diagonal circuitry / streaks */
+    repeating-linear-gradient(
+      135deg,
+      rgba(0,255,255,0.12) 0px,
+      rgba(0,255,255,0.12) 1px,
+      transparent 2px,
+      transparent 6px
+    ),
+    /* existing noise texture if present */
+    url('images/metal_noise.png') repeat;
+  opacity: 0.22;
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+/* Cyan energy rim around the screen area */
+#datapad::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border-radius: 26px;
+  pointer-events: none;
+  box-shadow:
+    0 0 30px rgba(0,255,255,0.35),
+    inset 0 0 20px rgba(0,255,255,0.18);
+  border: 1px solid rgba(0,255,255,0.18);
 }
 
 /* Screen inside datapad */
@@ -499,9 +544,9 @@ body {
   opacity: 0.9;
 }
 
-/* small responsive tweak */
+/* small responsive tweak – same as your original behavior */
 @media (max-width: 960px) {
   #datapad {
-    transform: scale(0.92) translate(-50%, -50%);
+    transform: scale(0.92);
   }
 }
