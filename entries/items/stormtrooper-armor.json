@@ -1,0 +1,12 @@
+{
+  "id": "stormtrooper_armor",
+  "name": "Stormtrooper Armor",
+  "description": "Standard white plastoid armor worn by Imperial stormtroopers provides limited protection against blaster fire, environmental hazards, and shrapnel. Integrated systems include a comlink, environmental seals suitable for brief vacuum exposure, and a built-in heads-up display with limited tactical data. While intimidating in formation, the armor’s visibility issues and rigid plating can hinder awareness and movement—weaknesses that experienced foes learn to exploit.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Armor",
+    "Imperial",
+    "Uniform"
+  ]
+}
