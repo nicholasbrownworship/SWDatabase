@@ -1,0 +1,13 @@
+{
+  "id": "anooba",
+  "name": "Anooba",
+  "description": "Anooba are leathery, canine pack hunters found across the Outer Rim. Highly intelligent and fiercely loyal to their pack structure, they use coordinated tactics to isolate and harass prey before going for the kill. Slavers and mercenaries sometimes train anooba as attack hounds, though the creatures have a habit of turning on those who mistreat them.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Pack Hunter",
+    "Outer Rim",
+    "Tamed Threat",
+    "Scavenger"
+  ]
+}
