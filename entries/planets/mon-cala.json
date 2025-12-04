@@ -3,7 +3,7 @@
   "name": "Mon Cala",
   "description": "Mon Cala is an oceanic world whose elegant coral-built cities rise from the depths like shimmering towers. Its people—the Mon Calamari and the Quarren—have a long history of artistic engineering and starship design, creating vessels renowned for durability and graceful lines. The Empire's occupation of Mon Cala forced its shipyards into producing military hardware, but the planet's rulers quietly resisted, eventually siding with the Rebel Alliance. Many of the capital ships that would form the backbone of the Rebel fleet were constructed here, each one a silent symbol of defiance forged beneath the waves. Even under Imperial pressure, Mon Cala remains a bastion of pride, ingenuity, and hope.",
   "image": "",
-  "gmMode": false,
+  "gmMode": true,
   "tags": [
     "Aquatic World",
     "Shipyards",
