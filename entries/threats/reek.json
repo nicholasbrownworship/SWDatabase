@@ -1,0 +1,13 @@
+{
+  "id": "reek",
+  "name": "Reek",
+  "description": "Reeks are horned, herbivorous beasts known for powerful charges and unpredictable aggression when frightened. Their massive bodies and thick skull plates allow them to smash through fences, vehicles, or armored opponents. Though often domesticated for labor or entertainment, a startled reek can turn an orderly crowd into a stampede in seconds.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Beast",
+    "Stampede Risk",
+    "Arena Creature",
+    "Unpredictable"
+  ]
+}
