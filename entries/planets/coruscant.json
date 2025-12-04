@@ -3,7 +3,7 @@
   "name": "Coruscant",
   "description": "Coruscant is a city-planet at the heart of the galaxy, its surface covered from pole to pole by layer upon layer of durasteel, transparisteel, and permacrete. Skyscrapers reach into crowded sky lanes where airspeeders and shuttles weave between landing platforms at all hours. Beneath the bright spires of government districts and Imperial plazas lies a near-endless descent into underlevels choked with smog, neon, and forgotten infrastructure. As the Imperial capital, Coruscant is thick with stormtroopers, security checkpoints, and surveillance, but it is also home to diplomats, corporate agents, spies, and millions of beings who simply try to survive under the Empire’s shadow. For the brave or the desperate, the planet offers unparalleled access to information, influence, and danger.",
   "image": "",
-  "gmMode": false,
+  "gmMode": true,
   "tags": [
     "City-Planet",
     "Imperial Capital",
