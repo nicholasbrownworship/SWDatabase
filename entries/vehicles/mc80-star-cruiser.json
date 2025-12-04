@@ -1,0 +1,13 @@
+{
+  "id": "mc80_star_cruiser",
+  "name": "MC80 Star Cruiser",
+  "description": "The MC80 Star Cruiser is a Mon Calamari-designed capital ship repurposed by the Rebel Alliance as a fleet flagship and heavy cruiser. Originally built as passenger liners and exploration vessels, many MC80s were refitted with heavy turbolasers, reinforced shielding, and starfighter bays once their homeworld joined the Rebellion. Each ship is unique internally, reflecting Mon Calamari artistic sensibilities and modular, organic design. In battle, an MC80 serves as both command center and rallying point for surrounding starfighters.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Capital Ship",
+    "Rebel Alliance",
+    "Mon Calamari",
+    "MC80"
+  ]
+}
