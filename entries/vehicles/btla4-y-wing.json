@@ -1,0 +1,13 @@
+{
+  "id": "btla4_y_wing",
+  "name": "BTL-A4 Y-wing Starfighter/Bomber",
+  "description": "The Koensayr BTL-A4 Y-wing is a rugged attack starfighter widely used by the Rebel Alliance as a bomber and assault craft. Much of its armor plating is often stripped away for ease of maintenance, exposing its framework and conduits and giving it a distinctive skeletal profile. Slow but tough, Y-wings carry heavy ordnance loads—ion cannons, proton bombs, and torpedoes—making them ideal for anti-capital ship strikes and trench runs. Veteran pilots respect the Y-wing’s ability to limp home on systems that would have killed other starfighters outright.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Starfighter",
+    "Bomber",
+    "Rebel Alliance",
+    "Y-wing"
+  ]
+}
