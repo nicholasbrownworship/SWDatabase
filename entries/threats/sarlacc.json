@@ -1,0 +1,13 @@
+{
+  "id": "sarlacc",
+  "name": "Sarlacc",
+  "description": "The sarlacc is an ancient, immobile apex predator buried beneath desert sands, leaving only a tooth-ringed maw visible at the surface. Its tentacles drag prey downward into a stomach that slowly digests victims over decades while keeping them alive. Many desert cultures consider sarlacc pits cursed or sacred, warning travelers never to cross dune basins without a long-range scanner or speeder bike.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Desert Hazard",
+    "Ancient Creature",
+    "Environmental Threat",
+    "Tatooine"
+  ]
+}
