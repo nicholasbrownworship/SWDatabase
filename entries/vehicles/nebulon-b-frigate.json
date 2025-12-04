@@ -1,0 +1,13 @@
+{
+  "id": "nebulon_b_frigate",
+  "name": "Nebulon-B Escort Frigate",
+  "description": "The Nebulon-B escort frigate is a spindly-looking warship originally developed by the Empire for convoy protection and anti-starfighter duty. Its distinctive forward section and narrow connecting spar make it immediately recognizable on any sensor display. Many Nebulon-Bs were captured or defected to the Rebel Alliance, where they were refitted as medical ships, command vessels, and fleet escorts. Despite structural weak points and uneven firing arcs, the class remains a critical backbone of Rebel fleet operations.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Frigate",
+    "Escort",
+    "Rebel Alliance",
+    "Capital Ship"
+  ]
+}
