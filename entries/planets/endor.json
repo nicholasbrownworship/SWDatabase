@@ -3,7 +3,7 @@
   "name": "Forest Moon of Endor",
   "description": "Commonly referred to simply as Endor, this forested moon orbits a gas giant in the Outer Rim. Towering trees, dense undergrowth, and scattered clearings create a patchwork of natural corridors and hidden valleys. Indigenous Ewok tribes live in village networks suspended high among the branches, using gliders, traps, and intimate knowledge of the terrain to survive. From orbit, Endor appears quiet and strategically insignificant—an impression the Empire once exploited by constructing a shield generator complex on its surface. To ground-level observers, however, the moon is anything but simple: it is a maze of vantage points, ambush sites, and unexpected allies.",
   "image": "",
-  "gmMode": false,
+  "gmMode": true,
   "tags": [
     "Forest Moon",
     "Outer Rim",
