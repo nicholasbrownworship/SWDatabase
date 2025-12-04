@@ -422,6 +422,7 @@ body {
         <button class="category-btn" data-category="vehicles">Ships</button>
         <button class="category-btn" data-category="items">Items</button>
         <button class="category-btn" data-category="factions">Factions</button>
+        <button class="category-btn" data-category="threats">Threats</button>
         <button class="category-btn" data-category="missions">Missions</button>
 
         <div class="gm-section-label">GM Tools</div>
@@ -454,7 +455,7 @@ body {
 */
 
 document.addEventListener('DOMContentLoaded', () => {
-  const categories = ['planets','characters','vehicles','items','factions','missions'];
+  const categories = ['planets','characters','vehicles','items','factions','missions','threats'];
   const entryContent = document.getElementById('entryContent');
   const breadcrumbs = document.getElementById('breadcrumbs');
   const categoryBtns = document.querySelectorAll('.category-btn');
