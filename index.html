@@ -11,7 +11,7 @@ body {
   min-height: 100vh;
   background: radial-gradient(ellipse at center, #1E3A8A 0%, #050505 100%);
   color: #a0d8ff;
-  padding: 20px;      
+  padding: 20px;
   justify-content: center;
   align-items: center;
   cursor: none;
@@ -123,47 +123,129 @@ body {
 }
 
 /* Glow pulse animation */
-@keyframes glowPulse { 0% { box-shadow: inset 0 0 20px rgba(0,255,255,0.15); } 50% { box-shadow: inset 0 0 35px rgba(0,255,255,0.3); } 100% { box-shadow: inset 0 0 25px rgba(0,255,255,0.2); } }
+@keyframes glowPulse {
+  0% { box-shadow: inset 0 0 20px rgba(0,255,255,0.15); }
+  50% { box-shadow: inset 0 0 35px rgba(0,255,255,0.3); }
+  100% { box-shadow: inset 0 0 25px rgba(0,255,255,0.2); }
+}
 @keyframes staticNoise { 0% { background-position: 0 0; } 100% { background-position: 0 100%; } }
 
 /* Layout: sidebar & main content */
 #content { display:flex; height:100%; position:relative; z-index:0; }
+
 #sidebar {
-  width:200px; background:rgba(5,15,20,0.8); border-right:1px solid #033;
-  display:flex; flex-direction:column; padding:15px; gap:6px;
+  width:200px;
+  background:rgba(5,15,20,0.8);
+  border-right:1px solid #033;
+  display:flex;
+  flex-direction:column;
+  padding:15px;
+  gap:6px;
   z-index:2;
 }
-#sidebar h2 { color:#33cfff; text-align:center; margin-bottom:6px; }
+#sidebar h2 {
+  color:#33cfff;
+  text-align:center;
+  margin-bottom:6px;
+}
+
+/* GM section label */
+.gm-section-label {
+  margin-top:10px;
+  margin-bottom:2px;
+  font-size:11px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:#66f0ff;
+  opacity:0.7;
+}
+
 .category-btn {
-  background:#0a1f26; border:none; padding:8px; color:#33cfff;
-  cursor:pointer; text-align:left; border-left:4px solid #0a5266;
+  background:#0a1f26;
+  border:none;
+  padding:8px;
+  color:#33cfff;
+  cursor:pointer;
+  text-align:left;
+  border-left:4px solid #0a5266;
   transition: all 0.14s;
 }
 .category-btn:hover { background:#0e2a34; border-left-color:#66f0ff; }
 .category-btn.active { border-left-color:#00ffff; background:#0e2a34; }
-#search { margin-top:auto; padding:6px; background:#0b1c23; border:1px solid #33cfff; color:#a0d8ff; }
+
+#search {
+  margin-top:auto;
+  padding:6px;
+  background:#0b1c23;
+  border:1px solid #33cfff;
+  color:#a0d8ff;
+}
 
 #main { flex:1; padding:20px; overflow-y:auto; position:relative; z-index:0; }
-#breadcrumbs { margin-bottom:10px; font-size:14px; color:#33cfff; display:flex; gap:6px; align-items:center; }
+#breadcrumbs {
+  margin-bottom:10px;
+  font-size:14px;
+  color:#33cfff;
+  display:flex;
+  gap:6px;
+  align-items:center;
+}
 #breadcrumbs span { cursor: pointer; }
-#entryContent h1 { font-size:22px; margin-bottom:10px; color:#66f0ff; position:relative; z-index:0; }
-#entryContent img { display:block; margin:10px auto; max-width:100%; max-height:300px; border:2px solid #33cfff; border-radius:4px; box-shadow:0 0 15px rgba(0,255,255,0.3); position:relative; z-index:0; }
-#entryContent p { font-size:15px; line-height:1.5em; position:relative; z-index:0; white-space:pre-wrap; }
+#entryContent h1 {
+  font-size:22px;
+  margin-bottom:10px;
+  color:#66f0ff;
+  position:relative;
+  z-index:0;
+}
+#entryContent img {
+  display:block;
+  margin:10px auto;
+  max-width:100%;
+  max-height:300px;
+  border:2px solid #33cfff;
+  border-radius:4px;
+  box-shadow:0 0 15px rgba(0,255,255,0.3);
+  position:relative;
+  z-index:0;
+}
+#entryContent p {
+  font-size:15px;
+  line-height:1.5em;
+  position:relative;
+  z-index:0;
+  white-space:pre-wrap;
+}
 
 /* Entry list button coloring indicators */
-.entry-row { display:flex; align-items:center; gap:8px; margin:6px 0; }
+.entry-row {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin:6px 0;
+}
 .entry-title {
   flex:1;
-  background:#0a1f26; border:none; padding:8px; color:#a0d8ff; text-align:left; cursor:pointer; border-left:6px solid #0a5266;
+  background:#0a1f26;
+  border:none;
+  padding:8px;
+  color:#a0d8ff;
+  text-align:left;
+  cursor:pointer;
+  border-left:6px solid #0a5266;
   border-radius:4px;
 }
-.entry-title.locked { border-left-color:#777; color:#777; }       
-.entry-title.gm-locked { border-left-color:#ffcc33; color:#ffffcc; } 
-.entry-title.unlocked { border-left-color:#0f0; color:#bfffdc; }
+.entry-title.locked   { border-left-color:#777;   color:#777; }
+.entry-title.gm-locked{ border-left-color:#ffcc33; color:#ffffcc; }
+.entry-title.unlocked { border-left-color:#0f0;  color:#bfffdc; }
 
 .unlock-btn {
-  padding:6px 8px; border:none; border-radius:4px; cursor:pointer;
-  background:#003; color:#66ffff;
+  padding:6px 8px;
+  border:none;
+  border-radius:4px;
+  cursor:pointer;
+  background:#003;
+  color:#66ffff;
 }
 .unlock-btn.remove { background:#700; color:#ffc; }
 
@@ -185,21 +267,140 @@ body {
 #gmIndicator.active { opacity:1; }
 
 /* cursor dot and indicators */
-.indicator { position:absolute; width:12px; height:12px; border-radius:50%; background:#0f0; box-shadow:0 0 8px #0f0; }
+.indicator {
+  position:absolute;
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  background:#0f0;
+  box-shadow:0 0 8px #0f0;
+}
 .indicator.red { background:#f00; box-shadow:0 0 8px #f00; }
 .indicator:nth-child(1){ top:10px; left:10px; }
 .indicator:nth-child(2){ top:10px; right:10px; }
 .indicator:nth-child(3){ bottom:10px; left:10px; }
 .indicator:nth-child(4){ bottom:10px; right:10px; }
-#cursor-dot { position:absolute; width:12px; height:12px; border-radius:50%; background: rgba(0,255,255,0.8); box-shadow:0 0 8px rgba(0,255,255,0.8), 0 0 15px rgba(0,255,255,0.5); pointer-events:none; transform: translate(-50%, -50%); z-index:3; }
-#dotFlicker { position:absolute; inset:0; pointer-events:none; z-index:4; }
-.dot { position:absolute; width:2px; height:2px; border-radius:50%; background: rgba(0,255,255,0.6); box-shadow:0 0 4px rgba(0,255,255,0.8); pointer-events:none; }
+
+#cursor-dot {
+  position:absolute;
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  background: rgba(0,255,255,0.8);
+  box-shadow:0 0 8px rgba(0,255,255,0.8), 0 0 15px rgba(0,255,255,0.5);
+  pointer-events:none;
+  transform: translate(-50%, -50%);
+  z-index:3;
+}
+#dotFlicker {
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:4;
+}
+.dot {
+  position:absolute;
+  width:2px;
+  height:2px;
+  border-radius:50%;
+  background: rgba(0,255,255,0.6);
+  box-shadow:0 0 4px rgba(0,255,255,0.8);
+  pointer-events:none;
+}
+
+/* Destiny Pool panel */
+.destiny-grid {
+  display:flex;
+  gap:20px;
+  margin-bottom:16px;
+  flex-wrap:wrap;
+}
+.destiny-column {
+  flex:1 1 200px;
+  padding:10px;
+  background:rgba(5,15,22,0.85);
+  border:1px solid #064a5b;
+  border-radius:8px;
+  box-shadow:0 0 12px rgba(0,255,255,0.12);
+}
+.destiny-column h2 {
+  font-size:16px;
+  margin-bottom:8px;
+  color:#66f0ff;
+}
+.destiny-token-row {
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  min-height:26px;
+  margin-bottom:8px;
+}
+.destiny-token {
+  width:18px; height:18px;
+  border-radius:50%;
+  border:1px solid #00ffff;
+  box-shadow:0 0 8px rgba(0,255,255,0.7);
+}
+.destiny-token.light {
+  background:radial-gradient(circle at 30% 30%, #ffffff 0%, #c9f9ff 40%, #0f3844 100%);
+}
+.destiny-token.dark {
+  background:radial-gradient(circle at 30% 30%, #111827 0%, #020617 50%, #000000 100%);
+  box-shadow:0 0 8px rgba(0,0,0,0.8);
+  border-color:#8899aa;
+}
+
+.destiny-controls {
+  display:flex;
+  gap:6px;
+}
+.destiny-controls button,
+.destiny-actions button {
+  background:#0a1f26;
+  border:1px solid #33cfff;
+  color:#a0d8ff;
+  padding:4px 8px;
+  font-size:12px;
+  cursor:pointer;
+  border-radius:4px;
+}
+.destiny-controls button:hover,
+.destiny-actions button:hover {
+  background:#0e2a34;
+}
+
+.destiny-actions {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:12px;
+}
+
+.destiny-log {
+  padding:10px;
+  background:rgba(5,15,22,0.85);
+  border:1px solid #064a5b;
+  border-radius:8px;
+  max-height:180px;
+  overflow-y:auto;
+}
+.destiny-log h3 {
+  font-size:14px;
+  margin-bottom:6px;
+  color:#66f0ff;
+}
+.destiny-log-entry {
+  font-size:12px;
+  margin-bottom:4px;
+  color:#a0d8ff;
+  opacity:0.9;
+}
 
 /* small responsive tweak */
-@media (max-width:960px){ #datapad{ transform: scale(0.92); } }
+@media (max-width:960px){
+  #datapad{ transform: scale(0.92); }
+}
 </style>
-
-
 </head>
 <body>
 <div id="datapad">
@@ -222,6 +423,10 @@ body {
         <button class="category-btn" data-category="items">Items</button>
         <button class="category-btn" data-category="factions">Factions</button>
         <button class="category-btn" data-category="missions">Missions</button>
+
+        <div class="gm-section-label">GM Tools</div>
+        <button class="category-btn gm-tool-btn" id="gmDestinyBtn">Destiny Pool</button>
+
         <input type="text" id="search" placeholder="Search...">
       </div>
 
@@ -243,10 +448,9 @@ body {
 
 <script>
 /* Full functionality:
-   - categories mapped to entries/<category>/manifest.json (manifest is an array of filenames)
-   - each entry: entries/<category>/<file>.json expected
-   - GM Mode toggled with Ctrl+Shift+G (hidden), unlocks persist via localStorage
-   - search + breadcrumbs + visuals preserved
+   - Codex categories mapped to entries/<category>/manifest.json
+   - GM Mode toggled with G (hidden), unlocks persist via localStorage
+   - Destiny Pool GM Tool stored in localStorage (sw_destiny_pool, sw_destiny_log)
 */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -254,6 +458,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const entryContent = document.getElementById('entryContent');
   const breadcrumbs = document.getElementById('breadcrumbs');
   const categoryBtns = document.querySelectorAll('.category-btn');
+  const gmDestinyBtn = document.getElementById('gmDestinyBtn');
   const searchInput = document.getElementById('search');
   const homeBtn = document.getElementById('homeBtn');
   const flicker = document.getElementById('flicker');
@@ -265,11 +470,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let activeCategory = null;
   let activeEntry = null;
+  let activeTool = null; // e.g. "destiny"
   let isGM = false;
+
   // cache loaded entries per category to avoid refetching unless user wants to refresh
   const cache = {};
 
-  // helper localStorage key
+  // Destiny pool storage keys
+  const DESTINY_STATE_KEY = 'sw_destiny_pool';
+  const DESTINY_LOG_KEY   = 'sw_destiny_log';
+
+  let destinyState = loadDestinyState();
+  let destinyLog = loadDestinyLog();
+
+  // helper localStorage key for codex unlocks
   const lsKey = id => `entry_unlocked__${id}`;
 
   // utility: safe fetch JSON or null
@@ -307,10 +521,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       // ensure id exists (use filename if not)
       if (!data.id) {
-        // strip extension from file
         data.id = file.replace(/\.[^/.]+$/, "");
       }
-      // attach category
       data.category = category;
       entries.push(data);
     }
@@ -318,9 +530,23 @@ document.addEventListener('DOMContentLoaded', () => {
     return entries;
   }
 
-  // helpers for breadcrumbs
+  /* ----------------- BREADCRUMBS ----------------- */
+
   function updateBreadcrumbs() {
     breadcrumbs.innerHTML = '';
+    if (activeTool === 'destiny') {
+      const gmSpan = document.createElement('span');
+      gmSpan.textContent = 'GM Tools';
+      const sep = document.createElement('span');
+      sep.textContent = ' > ';
+      const toolSpan = document.createElement('span');
+      toolSpan.textContent = 'Destiny Pool';
+      breadcrumbs.appendChild(gmSpan);
+      breadcrumbs.appendChild(sep);
+      breadcrumbs.appendChild(toolSpan);
+      return;
+    }
+
     if (!activeCategory) return;
     const catSpan = document.createElement('span');
     catSpan.textContent = activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1);
@@ -333,9 +559,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // render list for active category (with search and GM visibility)
+  /* ----------------- CODEX LIST / DETAIL ----------------- */
+
   async function renderListForActiveCategory() {
     entryContent.innerHTML = '';
+    activeTool = null; // ensure we are not in a GM tool when listing codex
     if (!activeCategory) {
       entryContent.innerHTML = `<h1>Rebel Alliance Field Codex</h1>
         <p>Entries are not loaded until a category is selected. Click a category on the left to begin.</p>`;
@@ -350,7 +578,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const list = document.createElement('div');
 
     for (const entry of entries) {
-      // determine unlocked state; for non-gmMode entries, unlocked by default
       const isGMOnly = Boolean(entry.gmMode);
       const unlocked = isGMOnly ? (localStorage.getItem(lsKey(entry.id)) === "true") : true;
 
@@ -358,9 +585,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!unlocked && !isGM) continue;
 
       // apply search filter
-      if (q && !entry.name.toLowerCase().includes(q) && !(entry.description || '').toLowerCase().includes(q)) continue;
+      const textMatch =
+        entry.name.toLowerCase().includes(q) ||
+        (entry.description || '').toLowerCase().includes(q);
+      if (q && !textMatch) continue;
 
-      // create row
       const row = document.createElement('div');
       row.className = 'entry-row';
 
@@ -368,7 +597,6 @@ document.addEventListener('DOMContentLoaded', () => {
       titleBtn.className = 'entry-title';
       titleBtn.textContent = entry.name;
 
-      // color / classes
       if (unlocked) titleBtn.classList.add('unlocked');
       else if (isGM) titleBtn.classList.add('gm-locked');
       else titleBtn.classList.add('locked');
@@ -380,20 +608,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
       row.appendChild(titleBtn);
 
-      // GM controls: Add/Remove only visible when GM Mode is ON and entry marked gmMode
+      // GM controls for gmMode entries
       if (isGM && isGMOnly) {
         const btn = document.createElement('button');
-        btn.className = 'unlock-btn ' + (unlocked ? 'remove' : 'add');
-        btn.textContent = unlocked ? 'Remove' : 'Add';
-        btn.title = unlocked ? 'Remove from player view' : 'Add to player view';
+        const currentlyUnlocked = localStorage.getItem(lsKey(entry.id)) === "true";
+        btn.className = 'unlock-btn ' + (currentlyUnlocked ? 'remove' : 'add');
+        btn.textContent = currentlyUnlocked ? 'Remove' : 'Add';
+        btn.title = currentlyUnlocked ? 'Remove from player view' : 'Add to player view';
         btn.addEventListener('click', (ev) => {
           ev.stopPropagation();
-          if (localStorage.getItem(lsKey(entry.id)) === "true") {
+          if (currentlyUnlocked) {
             localStorage.removeItem(lsKey(entry.id));
           } else {
             localStorage.setItem(lsKey(entry.id), "true");
           }
-          // re-render list to show updated state
           renderListForActiveCategory();
         });
         row.appendChild(btn);
@@ -402,7 +630,6 @@ document.addEventListener('DOMContentLoaded', () => {
       list.appendChild(row);
     }
 
-    // if nothing to show
     if (!list.childElementCount) {
       const msg = document.createElement('p');
       msg.textContent = isGM ? 'No entries match the current filter.' : 'No entries available (locked or none).';
@@ -413,9 +640,10 @@ document.addEventListener('DOMContentLoaded', () => {
     updateBreadcrumbs();
   }
 
-  // render a single entry detail
   function renderEntryDetail(entry) {
     entryContent.innerHTML = '';
+    activeTool = null;
+
     const title = document.createElement('h1');
     title.textContent = entry.name;
     entryContent.appendChild(title);
@@ -431,7 +659,6 @@ document.addEventListener('DOMContentLoaded', () => {
     p.textContent = entry.description || '';
     entryContent.appendChild(p);
 
-    // GM mode lock/unlock control inside detail
     if (isGM && entry.gmMode) {
       const unlocked = localStorage.getItem(lsKey(entry.id)) === "true";
       const gmBtn = document.createElement('button');
@@ -441,13 +668,11 @@ document.addEventListener('DOMContentLoaded', () => {
       gmBtn.addEventListener('click', () => {
         if (unlocked) localStorage.removeItem(lsKey(entry.id));
         else localStorage.setItem(lsKey(entry.id), "true");
-        // After changing unlock state, return to list so GM can see effect
         renderListForActiveCategory();
       });
       entryContent.appendChild(gmBtn);
     }
 
-    // Back button
     const back = document.createElement('button');
     back.className = 'category-btn';
     back.textContent = 'Back';
@@ -458,28 +683,246 @@ document.addEventListener('DOMContentLoaded', () => {
     updateBreadcrumbs();
   }
 
-  // Category button wiring
+  /* ----------------- DESTINY POOL STORAGE HELPERS ----------------- */
+
+  function loadDestinyState() {
+    try {
+      const raw = localStorage.getItem(DESTINY_STATE_KEY);
+      if (!raw) return { light: 0, dark: 0 };
+      const parsed = JSON.parse(raw);
+      return {
+        light: Number.isFinite(parsed.light) ? parsed.light : 0,
+        dark: Number.isFinite(parsed.dark) ? parsed.dark : 0
+      };
+    } catch {
+      return { light: 0, dark: 0 };
+    }
+  }
+
+  function loadDestinyLog() {
+    try {
+      const raw = localStorage.getItem(DESTINY_LOG_KEY);
+      if (!raw) return [];
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr) ? arr : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveDestinyState() {
+    try {
+      localStorage.setItem(DESTINY_STATE_KEY, JSON.stringify(destinyState));
+    } catch {}
+  }
+
+  function saveDestinyLog() {
+    try {
+      localStorage.setItem(DESTINY_LOG_KEY, JSON.stringify(destinyLog));
+    } catch {}
+  }
+
+  function addDestinyLogEntry(text) {
+    const stamp = new Date();
+    const time = stamp.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+    destinyLog.unshift(`[${time}] ${text}`);
+    if (destinyLog.length > 50) destinyLog.length = 50;
+    saveDestinyLog();
+  }
+
+  /* ----------------- DESTINY POOL PANEL RENDER ----------------- */
+
+  function renderDestinyPoolPanel() {
+    entryContent.innerHTML = '';
+
+    if (!isGM) {
+      entryContent.innerHTML = `
+        <h1>GM Tools – Destiny Pool</h1>
+        <p>GM Tools are restricted. Toggle GM Mode (press <strong>G</strong>) to manage the Destiny Pool.</p>
+      `;
+      updateBreadcrumbs();
+      return;
+    }
+
+    activeTool = 'destiny';
+    activeCategory = null;
+    activeEntry = null;
+
+    entryContent.innerHTML = `
+      <h1>GM Destiny Pool</h1>
+      <p style="font-size:13px; margin-bottom:10px; opacity:0.85;">
+        Track and adjust the session's Light and Dark Side Destiny tokens. Changes are saved on this device.
+      </p>
+
+      <div class="destiny-grid">
+        <div class="destiny-column">
+          <h2>Light Side</h2>
+          <div id="destinyLightRow" class="destiny-token-row"></div>
+          <div class="destiny-controls">
+            <button id="addLight">+ Token</button>
+            <button id="removeLight">- Token</button>
+          </div>
+        </div>
+        <div class="destiny-column">
+          <h2>Dark Side</h2>
+          <div id="destinyDarkRow" class="destiny-token-row"></div>
+          <div class="destiny-controls">
+            <button id="addDark">+ Token</button>
+            <button id="removeDark">- Token</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="destiny-actions">
+        <button id="flipLightToDark">Flip Light → Dark</button>
+        <button id="flipDarkToLight">Flip Dark → Light</button>
+        <button id="resetDestiny">Reset Pool</button>
+      </div>
+
+      <div class="destiny-log">
+        <h3>Destiny Log</h3>
+        <div id="destinyLogEntries"></div>
+      </div>
+    `;
+
+    const lightRow = document.getElementById('destinyLightRow');
+    const darkRow = document.getElementById('destinyDarkRow');
+    const logContainer = document.getElementById('destinyLogEntries');
+
+    function drawTokens() {
+      lightRow.innerHTML = '';
+      darkRow.innerHTML = '';
+
+      for (let i = 0; i < destinyState.light; i++) {
+        const t = document.createElement('div');
+        t.className = 'destiny-token light';
+        lightRow.appendChild(t);
+      }
+      for (let i = 0; i < destinyState.dark; i++) {
+        const t = document.createElement('div');
+        t.className = 'destiny-token dark';
+        darkRow.appendChild(t);
+      }
+    }
+
+    function drawLog() {
+      logContainer.innerHTML = '';
+      if (!destinyLog.length) {
+        const empty = document.createElement('div');
+        empty.className = 'destiny-log-entry';
+        empty.style.opacity = '0.7';
+        empty.textContent = 'No changes logged yet.';
+        logContainer.appendChild(empty);
+        return;
+      }
+      destinyLog.forEach(entry => {
+        const div = document.createElement('div');
+        div.className = 'destiny-log-entry';
+        div.textContent = entry;
+        logContainer.appendChild(div);
+      });
+    }
+
+    // Button handlers
+    document.getElementById('addLight').addEventListener('click', () => {
+      destinyState.light++;
+      saveDestinyState();
+      addDestinyLogEntry('Added one Light Side token.');
+      drawTokens(); drawLog();
+    });
+
+    document.getElementById('removeLight').addEventListener('click', () => {
+      if (destinyState.light > 0) {
+        destinyState.light--;
+        saveDestinyState();
+        addDestinyLogEntry('Removed one Light Side token.');
+        drawTokens(); drawLog();
+      }
+    });
+
+    document.getElementById('addDark').addEventListener('click', () => {
+      destinyState.dark++;
+      saveDestinyState();
+      addDestinyLogEntry('Added one Dark Side token.');
+      drawTokens(); drawLog();
+    });
+
+    document.getElementById('removeDark').addEventListener('click', () => {
+      if (destinyState.dark > 0) {
+        destinyState.dark--;
+        saveDestinyState();
+        addDestinyLogEntry('Removed one Dark Side token.');
+        drawTokens(); drawLog();
+      }
+    });
+
+    document.getElementById('flipLightToDark').addEventListener('click', () => {
+      if (destinyState.light > 0) {
+        destinyState.light--;
+        destinyState.dark++;
+        saveDestinyState();
+        addDestinyLogEntry('Flipped one Light Side token to Dark.');
+        drawTokens(); drawLog();
+      }
+    });
+
+    document.getElementById('flipDarkToLight').addEventListener('click', () => {
+      if (destinyState.dark > 0) {
+        destinyState.dark--;
+        destinyState.light++;
+        saveDestinyState();
+        addDestinyLogEntry('Flipped one Dark Side token to Light.');
+        drawTokens(); drawLog();
+      }
+    });
+
+    document.getElementById('resetDestiny').addEventListener('click', () => {
+      destinyState = { light: 0, dark: 0 };
+      saveDestinyState();
+      addDestinyLogEntry('Reset Destiny Pool.');
+      drawTokens(); drawLog();
+    });
+
+    drawTokens();
+    drawLog();
+    updateBreadcrumbs();
+  }
+
+  /* ----------------- SIDEBAR WIRING ----------------- */
+
+  // Category buttons (Codex)
   categoryBtns.forEach(btn => {
-    // skip Home special-case
     if (btn.id === 'homeBtn') return;
+    if (btn.classList.contains('gm-tool-btn')) return; // GM tools handled separately
+
     btn.addEventListener('click', async () => {
-      // find category
       const cat = btn.dataset.category;
       if (!categories.includes(cat)) {
         console.warn('unknown category', cat);
         return;
       }
-      // UI active state
       categoryBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 
+      activeTool = null;
       activeCategory = cat;
       activeEntry = null;
 
-      // load entries for category and render
       await loadCategoryEntries(cat);
       renderListForActiveCategory();
     });
+  });
+
+  // GM Destiny Pool button
+  gmDestinyBtn.addEventListener('click', () => {
+    categoryBtns.forEach(b => b.classList.remove('active'));
+    gmDestinyBtn.classList.add('active');
+
+    activeTool = 'destiny';
+    activeCategory = null;
+    activeEntry = null;
+
+    renderDestinyPoolPanel();
   });
 
   // Home button
@@ -487,6 +930,7 @@ document.addEventListener('DOMContentLoaded', () => {
     categoryBtns.forEach(b => b.classList.remove('active'));
     activeCategory = null;
     activeEntry = null;
+    activeTool = null;
     searchInput.value = '';
     entryContent.innerHTML = `<h1>Rebel Alliance Field Codex</h1>
       <p>Entries are not loaded until a category is selected. Click a category on the left to begin.</p>`;
@@ -495,27 +939,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Search handler (filters current category list)
   searchInput.addEventListener('input', () => {
-    // only re-render if a category is active
     if (activeCategory) renderListForActiveCategory();
   });
 
-  // GM Mode toggle: Ctrl+Shift+G (hidden to players)
+  /* ----------------- GM MODE TOGGLE ----------------- */
+
   document.addEventListener('keydown', (ev) => {
     if (ev.key.toLowerCase() === 'g') {
       isGM = !isGM;
       gmIndicator.classList.toggle('active', isGM);
-      // rerender current view so GM-only controls appear/disappear
-      if (activeCategory) renderListForActiveCategory();
-      else {
-        // update breadcrumbs / header state if necessary
+
+      if (activeTool === 'destiny') {
+        renderDestinyPoolPanel();
+      } else if (activeCategory) {
+        renderListForActiveCategory();
+      } else {
         renderListForActiveCategory();
       }
-      // small console feedback
+
       console.log('GM Mode', isGM ? 'ON' : 'OFF');
     }
   });
 
-  // Flicker
+  /* ----------------- VISUAL FX ----------------- */
+
   function randomFlicker() {
     if (Math.random() < 0.4) {
       flicker.style.opacity = (0.08 + Math.random() * 0.32).toFixed(2);
@@ -524,7 +971,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   setInterval(randomFlicker, 80);
 
-  // Distortion nudge
   function randomDistortion() {
     if (Math.random() < 0.06) {
       const x = (Math.random()*10 - 5).toFixed(1);
@@ -535,7 +981,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   setInterval(randomDistortion, 120);
 
-  // cursor dot
   screen.addEventListener('mousemove', (e) => {
     const r = screen.getBoundingClientRect();
     const x = e.clientX - r.left;
@@ -544,7 +989,6 @@ document.addEventListener('DOMContentLoaded', () => {
     cursorDot.style.top = y + 'px';
   });
 
-  // dot flicker overlay
   function createRandomDot() {
     const d = document.createElement('div');
     d.className = 'dot';
@@ -556,7 +1000,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setInterval(()=> { if (Math.random() < 0.28) createRandomDot(); }, 55);
 
   // initial clean state (no category loaded)
-  homeBtn.click(); // sets initial UI state
+  homeBtn.click();
 });
 </script>
 </body>
