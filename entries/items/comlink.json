@@ -1,0 +1,12 @@
+{
+  "id": "comlink_standard",
+  "name": "Standard Comlink",
+  "description": "A standard comlink is a handheld or wrist-mounted short-range communicator used by soldiers, pilots, and civilians alike. Most models support encrypted channels, basic frequency hopping, and a limited distress beacon function. In quiet sectors, comlinks blend into the background of daily life; under Imperial scrutiny, carrying one tuned to the wrong channel can be enough to invite questions—and trouble.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Communications",
+    "Common Gear",
+    "Utility"
+  ]
+}
