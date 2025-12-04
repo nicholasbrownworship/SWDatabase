@@ -1,0 +1,12 @@
+{
+  "id": "macrobinoculars",
+  "name": "Macrobinoculars",
+  "description": "Macrobinoculars are advanced optical devices that provide variable zoom, low-light enhancement, and basic rangefinding. Scouts, snipers, and smugglers use them to observe targets from a safe distance, mark landing zones, or track patrol patterns. Many models can record stills or short clips for later review, though users operating near Imperial lines often avoid logging anything that could be used as evidence against them.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Optics",
+    "Reconnaissance",
+    "Utility"
+  ]
+}
