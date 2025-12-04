@@ -1,0 +1,13 @@
+{
+  "id": "sullust",
+  "name": "Sullust",
+  "description": "Sullust is a volcanic world of molten rivers, jagged obsidian ridges, and vast subterranean tunnel networks carved by both nature and industry. While surface temperatures and sulfurous air make most of the planet inhospitable, the Sullustans have adapted by building sprawling cities and factories underground. The SoroSuub Corporation dominates life here, supplying starships, weapons, and equipment to the Empire under the guise of economic necessity. Beneath the surface, however, dissent simmers: many Sullustans secretly support the Rebel Alliance, funneling resources, intelligence, and starship components into its growing war machine. The planet itself stands at a crossroads—publicly loyal to the Empire, privately helping to forge the fleet that will one day challenge it.",
+  "image": "",
+  "gmMode": false,
+  "tags": [
+    "Volcanic World",
+    "Industrial",
+    "SoroSuub",
+    "Rebel Sympathizers"
+  ]
+}
