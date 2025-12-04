@@ -1,1 +1,18 @@
-["yavin-4.json","hoth.json"]
+[
+  "alderaan.json",
+  "bespin.json",
+  "corellia.json",
+  "coruscant.json",
+  "dantooine.json",
+  "endor.json",
+  "hoth.json",
+  "jedha.json",
+  "kessel.json",
+  "lothal.json",
+  "mon-cala.json",
+  "mustafar.json",
+  "scarif.json",
+  "sullust.json",
+  "tatooine.json",
+  "yavin-4.json"
+]
