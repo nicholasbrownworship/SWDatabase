@@ -1,0 +1,12 @@
+{
+  "id": "credit_chit",
+  "name": "Credit Chit",
+  "description": "A credit chit is a secure, encoded device used to store and transfer digital currency. In the Core Worlds, chits link cleanly to banks and trade networks; in the Outer Rim, their legitimacy is often a matter of who is holding the blaster. Rebel cells, smugglers, and crime lords alike favor unregistered or partially scrubbed chits to move funds quietly, paying premium rates for those that are difficult for the Empire to trace.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Currency",
+    "Common Gear",
+    "Underworld"
+  ]
+}
