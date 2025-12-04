@@ -1,0 +1,12 @@
+{
+  "id": "slicing_kit",
+  "name": "Portable Slicing Kit",
+  "description": "A portable slicing kit includes dataport connectors, signal injectors, code cylinders, and specialized software for bypassing electronic security. Slicers use these tools to penetrate door locks, surveillance systems, and local network nodes, often working under severe time pressure. Possession of a fully stocked kit without proper authorization is a crime in many Imperial jurisdictions, but that rarely stops those who make a living breaking into places they do not belong.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Hacking",
+    "Illegal",
+    "Utility"
+  ]
+}
