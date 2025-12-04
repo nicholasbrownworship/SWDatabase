@@ -1,0 +1,13 @@
+{
+  "id": "wampa",
+  "name": "Wampa",
+  "description": "Wampas are towering, fur-covered predators native to the icy wastes of Hoth. Nearly three meters tall and armed with immense claws, they move with terrifying silence despite their size. Wampas ambush prey, dragging victims back to frozen lairs where they are suspended and consumed over time. Their thick white fur makes them nearly invisible in blizzards, and their patience allows them to stalk intruders for hours before striking.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Predator",
+    "Cold World",
+    "Ambush Hunter",
+    "Hoth"
+  ]
+}
