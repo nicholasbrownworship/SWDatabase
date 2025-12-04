@@ -1,0 +1,13 @@
+{
+  "id": "gozanti_cruiser",
+  "name": "Gozanti-class Armed Transport",
+  "description": "The Gozanti-class armed transport is a versatile light cruiser used by the Empire, corporate fleets, and private security forces. Its dorsal clamps can ferry multiple starfighters or support craft, while its internal bays carry troops, cargo, or prisoners. Heavily armored for its size and equipped with modest weaponry, a Gozanti is often deployed as a patrol ship, escort, or mobile garrison in under-defended systems. For Rebel and criminal elements, capturing a Gozanti can provide both a useful transport and a disguise for slipping through Imperial-controlled space.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Light Cruiser",
+    "Transport",
+    "Imperial",
+    "Escort"
+  ]
+}
