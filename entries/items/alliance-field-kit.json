@@ -1,0 +1,12 @@
+{
+  "id": "alliance_field_kit",
+  "name": "Alliance Field Kit",
+  "description": "Standard issue for many Rebel operatives, the Alliance field kit is a rugged satchel containing survival rations, a compact water purifier, climbing line, glowrods, a basic medpac, and a fold-out encoded ident card. The exact contents vary from cell to cell depending on supply lines and local ingenuity. Veterans often add personal modifications: a hidden hold-out blaster, a secret compartment for intel, or a small keepsake from home.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Rebel Equipment",
+    "Survival",
+    "Utility"
+  ]
+}
