@@ -3,7 +3,7 @@
   "name": "Jedha",
   "description": "Jedha is a cold desert moon long regarded as a holy site by those who revere the Force. Ancient temples and weathered statues rise from windswept plateaus and canyon walls, their origins lost in myth and half-remembered records. Pilgrims from across the galaxy once traveled to the city of NiJedha to meditate, trade relics, and seek guidance from its guardians. Under the Empire, Jedha has become a battlefield: Imperial forces strip-mine kyber crystals from the moon’s crust while insurgents wage a desperate resistance in its streets and surrounding wastelands. The air carries dust, ash, and the echoes of old hymns—alongside the thunder of tanks and the howl of TIE engines overhead.",
   "image": "",
-  "gmMode": false,
+  "gmMode": true,
   "tags": [
     "Desert Moon",
     "Holy Site",
