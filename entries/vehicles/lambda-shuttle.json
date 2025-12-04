@@ -1,0 +1,12 @@
+{
+  "id": "lambda_shuttle",
+  "name": "Lambda-class T-4a Shuttle",
+  "description": "The Lambda-class shuttle is a tri-winged transport widely used by the Imperial Navy for moving officers, troops, and high-value cargo. Equipped with a hyperdrive, shields, and respectable armament for its size, it balances protection and prestige. Its folding wings and tall dorsal fin give it a distinctive, imposing profile when landing or departing. While primarily an Imperial asset, captured or stolen Lambda shuttles are prized by Rebel cells for their ability to slip past defenses when properly disguised.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Shuttle",
+    "Imperial",
+    "Transport"
+  ]
+}
