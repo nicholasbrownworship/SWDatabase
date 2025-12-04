@@ -1,0 +1,13 @@
+{
+  "id": "tie_interceptor",
+  "name": "TIE/IN Interceptor",
+  "description": "The TIE/IN interceptor is a high-performance variant of the standard TIE, featuring dagger-like solar arrays and upgraded engines. Designed to counter Rebel starfighters like the X-wing and A-wing, it boasts improved acceleration, maneuverability, and firepower, but still lacks shields and hyperdrive. Interceptors are typically assigned to elite pilots and important installations, where their speed can be leveraged to devastating effect against slower, less agile targets.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Starfighter",
+    "Interceptor",
+    "Imperial",
+    "TIE"
+  ]
+}
