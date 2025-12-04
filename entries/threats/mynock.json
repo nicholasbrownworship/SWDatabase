@@ -1,0 +1,13 @@
+{
+  "id": "mynock",
+  "name": "Mynock",
+  "description": "Mynocks are silicon-based, winged parasites that feed on power conduits, shield generators, and starship wiring. They attach themselves to hulls in asteroid fields, derelict stations, or docking bays, gnawing through systems until power failures or decompression warnings force a response. A cluster of mynocks can cripple a vessel before the crew realizes the source of the problem.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Parasitic",
+    "Spaceborne",
+    "Saboteur",
+    "Hull Threat"
+  ]
+}
