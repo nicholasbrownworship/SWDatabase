@@ -1,0 +1,12 @@
+{
+  "id": "dantooine",
+  "name": "Dantooine",
+  "description": "Dantooine is a quiet, agrarian world on the fringe of the Outer Rim. Wide plains, low hills, and scattered river valleys support small farming settlements and a handful of modest towns rather than sprawling cities. For most of the galaxy, Dantooine is an unremarkable backwater—its isolation and light Imperial oversight made it an ideal place for the Alliance to establish one of its earliest bases. By the time of the Death Star’s rise, however, the Rebels had already abandoned their outpost, leaving only ruined structures and empty tunnels behind. Old Clone Wars-era scars, forgotten Republic listening posts, and the remains of that Rebel base still dot the landscape, waiting for anyone persistent enough to dig into the planet’s history.",
+  "image": "",
+  "gmMode": false,
+  "tags": [
+    "Outer Rim",
+    "Agricultural World",
+    "Former Rebel Base"
+  ]
+}
