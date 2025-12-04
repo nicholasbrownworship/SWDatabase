@@ -17,7 +17,7 @@ body {
   overflow-y: auto;
 }
 
-/* HOLO-CONSOLE DATAPAD BEZEL */
+/* WEATHERED REBEL / HOLO-CONSOLE DATAPAD BEZEL */
 #datapad {
   width: 900px;
   height: 600px;
@@ -25,25 +25,36 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  border-radius: 32px;
+  border-radius: 30px;
   overflow: hidden;
 
-  /* Deep, clean metal base with subtle cyan hotspots */
+  /* Dark, slightly warm gunmetal with cyan hotspots and panel variation */
   background:
-    radial-gradient(circle at 15% 0%, rgba(120,220,255,0.18), transparent 55%),
-    radial-gradient(circle at 85% 100%, rgba(0,0,0,0.85), transparent 60%),
-    linear-gradient(135deg, #191d24 0%, #080a0f 45%, #040508 100%);
+    /* top-left light catch */
+    radial-gradient(circle at 16% 0%, rgba(205,225,255,0.18), transparent 55%),
+    /* bottom-right deep shadow */
+    radial-gradient(circle at 80% 100%, rgba(0,0,0,0.85), transparent 60%),
+    /* subtle horizontal banding like welded plates */
+    repeating-linear-gradient(
+      to bottom,
+      #2d3238 0px,
+      #2d3238 16px,
+      #1d2025 18px,
+      #1d2025 22px
+    ),
+    /* base metal tone */
+    linear-gradient(135deg, #3a3f45 0%, #1b1f25 45%, #0d0f13 100%);
 
-  border: 2px solid #020308;
+  border: 2px solid #050609;
 
-  /* Stronger outer glow + physical drop shadow */
+  /* Heavier physical presence */
   box-shadow:
     0 24px 60px rgba(0,0,0,0.95),
-    0 0 90px rgba(0,255,255,0.10),
-    inset 0 0 25px rgba(0,0,0,0.95);
+    0 0 80px rgba(0,255,255,0.10),
+    inset 0 0 22px rgba(0,0,0,0.95);
 }
 
-/* Texture + subtle panel lines / noise */
+/* Texture + scratches + grime */
 #datapad::before {
   content: "";
   position: absolute;
@@ -51,40 +62,35 @@ body {
   border-radius: inherit;
   z-index: 0;
   background:
-    /* horizontal panel banding */
-    repeating-linear-gradient(
-      to bottom,
-      rgba(255,255,255,0.06) 0px,
-      rgba(255,255,255,0.06) 1px,
-      transparent 3px,
-      transparent 9px
-    ),
-    /* faint diagonal circuitry / streaks */
+    /* diagonal scratches / brushed wear */
     repeating-linear-gradient(
       135deg,
-      rgba(0,255,255,0.12) 0px,
-      rgba(0,255,255,0.12) 1px,
+      rgba(255,255,255,0.16) 0px,
+      rgba(255,255,255,0.16) 1px,
       transparent 2px,
-      transparent 6px
+      transparent 5px
     ),
-    /* existing noise texture if present */
+    /* random grime / noise */
     url('images/metal_noise.png') repeat;
-  opacity: 0.22;
+  opacity: 0.25;
   mix-blend-mode: soft-light;
   pointer-events: none;
 }
 
-/* Cyan energy rim around the screen area */
+/* Inner lip + softer cyan rim around screen area */
 #datapad::after {
   content: "";
   position: absolute;
-  inset: 6px;
-  border-radius: 26px;
+  inset: 8px;
+  border-radius: 24px;
   pointer-events: none;
+
+  /* subtle inner bevel and glow like a powered bezel */
   box-shadow:
-    0 0 30px rgba(0,255,255,0.35),
-    inset 0 0 20px rgba(0,255,255,0.18);
-  border: 1px solid rgba(0,255,255,0.18);
+    inset 0 0 0 1px rgba(0,0,0,0.85),
+    inset 0 0 18px rgba(0,0,0,0.95),
+    0 0 24px rgba(0,255,255,0.18);
+  border: 1px solid rgba(0,255,255,0.14);
 }
 
 /* Screen inside datapad */
