@@ -1,0 +1,13 @@
+{
+  "id": "b_wing_assault",
+  "name": "A/SF-01 B-wing Assault Starfighter",
+  "description": "The A/SF-01 B-wing is a heavy assault starfighter designed to punch above its weight against capital ships. Its rotating cockpit and asymmetrical frame house a formidable array of laser cannons, ion cannons, and ordnance launchers. Complex systems and awkward handling make the B-wing difficult to fly, requiring extensive training and a steady hand. In the right pilot’s control, however, a flight of B-wings can cripple or destroy larger Imperial vessels that once seemed untouchable to small Rebel strike forces.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Starfighter",
+    "Heavy Assault",
+    "Rebel Alliance",
+    "B-wing"
+  ]
+}
