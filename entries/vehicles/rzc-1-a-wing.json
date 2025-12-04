@@ -1,0 +1,13 @@
+{
+  "id": "rzc_1_a_wing",
+  "name": "RZ-1 A-wing Interceptor",
+  "description": "The RZ-1 A-wing is a fast, lightly armored interceptor used by elite Rebel pilots. Sacrificing heavy armor and redundant systems for raw speed and maneuverability, A-wings excel at hit-and-run attacks, flanking maneuvers, and fast-response interception. Powerful engines and advanced thrust-vectoring systems make them difficult targets, but the lack of an astromech and limited sensor suite means only the most talented pilots can fully exploit their capabilities without burning out or blacking out.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Starfighter",
+    "Interceptor",
+    "Rebel Alliance",
+    "A-wing"
+  ]
+}
