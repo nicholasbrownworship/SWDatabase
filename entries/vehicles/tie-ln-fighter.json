@@ -1,0 +1,12 @@
+{
+  "id": "tie_ln_fighter",
+  "name": "TIE/ln Space Superiority Starfighter",
+  "description": "The TIE/ln is the ubiquitous Imperial starfighter, recognizable by its twin ion engines and hexagonal solar array wings. Fast, agile, and relatively cheap to produce, it lacks shields, hyperdrive, and life support, relying on superior numbers, carrier support, and pilot discipline to overwhelm opponents. To Imperial commanders, TIEs are expendable tools; to Rebel pilots, their screeching engine roar is a constant reminder of the Empire’s reach.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Starfighter",
+    "Imperial",
+    "TIE Fighter"
+  ]
+}
