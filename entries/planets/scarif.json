@@ -1,0 +1,12 @@
+{
+  "id": "scarif",
+  "name": "Scarif",
+  "description": "Scarif is a remote tropical world wrapped in a wall of Imperial security. Shallow turquoise seas and palm-covered islands hide a heavily fortified data complex: the Citadel, home to one of the Empire’s most secure research and archive facilities. A massive orbital shield gate controls all access to the planet, allowing only authorized traffic to break through the planetary deflector. Official records list Scarif as a restricted military world, citing hazardous testing and classified projects. In truth, it is where some of the Empire’s most sensitive secrets are stored and reviewed, making it both a high-value target for the Rebel Alliance and one of the most dangerous places to attempt an infiltration.",
+  "image": "",
+  "gmMode": false,
+  "tags": [
+    "Tropical World",
+    "Imperial Stronghold",
+    "Data Archive"
+  ]
+}
