@@ -1,0 +1,13 @@
+{
+  "id": "imperial_seeker_droid",
+  "name": "Imperial Seeker Droid",
+  "description": "Seeker droids are autonomous reconnaissance units equipped with audio sensors, optical scanners, and limited offensive capabilities. Floating silently through patrol zones, they identify unauthorized lifeforms and transmit coordinates to nearby Imperial units. Some variants include stun projectors or chemical canisters to immobilize targets until stormtroopers arrive.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Imperial Recon",
+    "Surveillance",
+    "Security Drone",
+    "Alarm Trigger"
+  ]
+}
