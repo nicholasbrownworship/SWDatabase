@@ -1,0 +1,13 @@
+{
+  "id": "cr90_corvette",
+  "name": "CR90 Corellian Corvette",
+  "description": "The CR90 Corellian corvette is a versatile multi-role starship frequently used as a blockade runner, patrol vessel, or command ship by smaller fleets. Fast for its size and heavily customizable, it can be configured for diplomatic missions, cargo hauling, or combat duty. The Rebel Alliance favors CR90s as couriers and flagships for local cells, relying on their speed to outrun larger Imperial warships while carrying vital personnel and intelligence.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Corvette",
+    "Corellian Engineering",
+    "Rebel Alliance",
+    "Blockade Runner"
+  ]
+}
