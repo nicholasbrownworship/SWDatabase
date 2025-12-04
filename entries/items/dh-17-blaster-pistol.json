@@ -1,0 +1,12 @@
+{
+  "id": "dh_17_blaster_pistol",
+  "name": "DH-17 Blaster Pistol",
+  "description": "The DH-17 is a reliable sidearm commonly issued to Rebel troops and starship crews. Larger and more rugged than a civilian hold-out pistol, it offers a solid balance between rate of fire and stopping power at close to medium range. Its design tolerates sand, moisture, and abuse, making it a favorite among those who do not have the luxury of regular armory maintenance.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Blaster",
+    "Rebel Sidearm",
+    "Ranged Weapon"
+  ]
+}
