@@ -1,0 +1,13 @@
+{
+  "id": "krykna",
+  "name": "Krykna",
+  "description": "Krykna are massive, six-eyed spiders with chitinous armor that resists blaster fire. Native to remote worlds, they communicate through tremor-sense and are drawn to vibration, making quiet movement essential to avoiding them. Colonies of krykna can cut off escape routes by webbing tunnels and caverns, trapping intruders for later consumption.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Arachnid",
+    "Hive Creature",
+    "Blaster Resistant",
+    "Tremor Sense"
+  ]
+}
