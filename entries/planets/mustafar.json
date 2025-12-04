@@ -3,7 +3,7 @@
   "name": "Mustafar",
   "description": "Mustafar is a volcanic world of lava rivers, ash storms, and jagged black rock. The planet’s unstable crust constantly shifts and fractures, creating a landscape that seems to burn and collapse in slow motion. Isolated facilities cling to rocky outcroppings above the molten flows—refineries, research stations, and secret strongholds far from common hyperspace lanes. Most of the galaxy knows little about Mustafar beyond hushed rumors: that the Empire uses worlds like this to hide dangerous projects and even more dangerous individuals. Few who travel here come by accident, and fewer still linger once their business is done.",
   "image": "",
-  "gmMode": false,
+  "gmMode": true,
   "tags": [
     "Volcanic World",
     "Remote",
