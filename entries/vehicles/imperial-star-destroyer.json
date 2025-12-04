@@ -1,0 +1,12 @@
+{
+  "id": "imperial_star_destroyer",
+  "name": "Imperial I-class Star Destroyer",
+  "description": "The Imperial I-class Star Destroyer is the towering symbol of Imperial naval power: a kilometer-long wedge of turbolasers, hangar bays, and stormtrooper garrisons. Designed to project fear as much as force, a single Star Destroyer can enforce blockades, conduct planetary bombardments, and deploy entire regiments of troops and vehicles. Its vast crew and logistical footprint make it expensive to operate, but in many Outer Rim systems, the arrival of a Star Destroyer is enough to end resistance before a single shot is fired.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Capital Ship",
+    "Imperial Navy",
+    "Star Destroyer"
+  ]
+}
