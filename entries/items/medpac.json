@@ -1,0 +1,12 @@
+{
+  "id": "medpac_standard",
+  "name": "Standard Medpac",
+  "description": "A standard medpac contains a compact assortment of bandages, coagulants, painkillers, and basic diagnostic tools. While it cannot replace a proper medical bay, it can stabilize wounded allies long enough to get them to safety. Soldiers quickly learn which vials dull pain without clouding judgment, and which ones are best saved for when there is no other choice.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Medical",
+    "Field Kit",
+    "Utility"
+  ]
+}
