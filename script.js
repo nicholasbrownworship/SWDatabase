@@ -2,29 +2,35 @@
    - Codex categories mapped to entries/<category>/manifest.json
    - GM Mode toggled with G (hidden), unlocks persist via localStorage
    - Destiny Pool GM Tool stored in localStorage (sw_destiny_pool, sw_destiny_log)
+   - Search:
+       * If a category is active → filters that category
+       * If no category is active → global search across all categories
 */
 
 document.addEventListener('DOMContentLoaded', () => {
-  const categories   = ['planets','characters','vehicles','items','factions','missions','threats'];
+  const categories = ['planets','characters','vehicles','items','factions','missions','threats'];
+
   const entryContent = document.getElementById('entryContent');
-  const breadcrumbs  = document.getElementById('breadcrumbs');
+  const breadcrumbs = document.getElementById('breadcrumbs');
   const categoryBtns = document.querySelectorAll('.category-btn');
   const gmDestinyBtn = document.getElementById('gmDestinyBtn');
-  const searchInput  = document.getElementById('search');
-  const homeBtn      = document.getElementById('homeBtn');
-  const flicker      = document.getElementById('flicker');
-  const distortion   = document.getElementById('distortion');
-  const screen       = document.getElementById('screen');
-  const cursorDot    = document.getElementById('cursor-dot');
-  const dotFlicker   = document.getElementById('dotFlicker');
-  const gmIndicator  = document.getElementById('gmIndicator');
+  const searchInput = document.getElementById('search');
+  const homeBtn = document.getElementById('homeBtn');
+
+  const flicker = document.getElementById('flicker');
+  const distortion = document.getElementById('distortion');
+  const screen = document.getElementById('screen');
+  const cursorDot = document.getElementById('cursor-dot');
+  const dotFlicker = document.getElementById('dotFlicker');
+  const gmIndicator = document.getElementById('gmIndicator');
 
   let activeCategory = null;
-  let activeEntry    = null;
-  let activeTool     = null; // e.g. "destiny"
-  let isGM           = false;
+  let activeEntry = null;
+  let activeTool = null; // e.g. "destiny"
+  let isGM = false;
+  let searchMode = false; // true when showing global search results
 
-  // cache loaded entries per category to avoid refetching unless user wants to refresh
+  // cache loaded entries per category to avoid refetching
   const cache = {};
 
   // Destiny pool storage keys
@@ -32,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const DESTINY_LOG_KEY   = 'sw_destiny_log';
 
   let destinyState = loadDestinyState();
-  let destinyLog   = loadDestinyLog();
+  let destinyLog = loadDestinyLog();
 
   // helper localStorage key for codex unlocks
   const lsKey = id => `entry_unlocked__${id}`;
@@ -51,7 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // load manifest (simple array) and then each entry JSON
   async function loadCategoryEntries(category) {
-    // return cached if present
     if (cache[category]) return cache[category];
 
     const manifestPath = `entries/${category}/manifest.json`;
@@ -70,7 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.warn('failed to load entry', filePath);
         continue;
       }
-      // ensure id exists (use filename if not)
       if (!data.id) {
         data.id = file.replace(/\.[^/.]+$/, "");
       }
@@ -81,14 +85,25 @@ document.addEventListener('DOMContentLoaded', () => {
     return entries;
   }
 
+  async function loadAllEntries() {
+    const all = [];
+    for (const cat of categories) {
+      const entries = await loadCategoryEntries(cat);
+      all.push(...entries);
+    }
+    return all;
+  }
+
   /* ----------------- BREADCRUMBS ----------------- */
 
   function updateBreadcrumbs() {
     breadcrumbs.innerHTML = '';
+
+    // GM tools breadcrumb
     if (activeTool === 'destiny') {
-      const gmSpan   = document.createElement('span');
+      const gmSpan = document.createElement('span');
       gmSpan.textContent = 'GM Tools';
-      const sep      = document.createElement('span');
+      const sep = document.createElement('span');
       sep.textContent = ' > ';
       const toolSpan = document.createElement('span');
       toolSpan.textContent = 'Destiny Pool';
@@ -98,6 +113,15 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    // Global search mode (no category)
+    if (searchMode && !activeCategory && !activeEntry) {
+      const s = document.createElement('span');
+      s.textContent = 'Search';
+      breadcrumbs.appendChild(s);
+      return;
+    }
+
+    // Category + entry mode
     if (!activeCategory) return;
     const catSpan = document.createElement('span');
     catSpan.textContent = activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1);
@@ -106,8 +130,9 @@ document.addEventListener('DOMContentLoaded', () => {
       renderListForActiveCategory();
     });
     breadcrumbs.appendChild(catSpan);
+
     if (activeEntry) {
-      const sep       = document.createElement('span');
+      const sep = document.createElement('span');
       sep.textContent = ' > ';
       const entrySpan = document.createElement('span');
       entrySpan.textContent = activeEntry.name;
@@ -120,12 +145,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function renderListForActiveCategory() {
     entryContent.innerHTML = '';
-    activeTool = null; // ensure we are not in a GM tool when listing codex
+    activeTool = null;
+    searchMode = false;
+
     if (!activeCategory) {
-      entryContent.innerHTML = `
-        <h1>Rebel Alliance Field Codex</h1>
-        <p>Entries are not loaded until a category is selected. Click a category on the left to begin.</p>
-      `;
+      entryContent.innerHTML = `<h1>Rebel Alliance Field Codex</h1>
+        <p>Entries are not loaded until a category is selected. Click a category on the left to begin.</p>`;
       updateBreadcrumbs();
       return;
     }
@@ -133,20 +158,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const entries = await loadCategoryEntries(activeCategory);
     const q = (searchInput.value || '').trim().toLowerCase();
 
-    // list container
     const list = document.createElement('div');
 
     for (const entry of entries) {
       const isGMOnly = Boolean(entry.gmMode);
       const unlocked = isGMOnly ? (localStorage.getItem(lsKey(entry.id)) === "true") : true;
 
-      // if not unlocked for player and not in GM Mode, hide
       if (!unlocked && !isGM) continue;
 
-      // apply search filter
       const textMatch =
         entry.name.toLowerCase().includes(q) ||
         (entry.description || '').toLowerCase().includes(q);
+
       if (q && !textMatch) continue;
 
       const row = document.createElement('div');
@@ -156,9 +179,9 @@ document.addEventListener('DOMContentLoaded', () => {
       titleBtn.className = 'entry-title';
       titleBtn.textContent = entry.name;
 
-      if (unlocked)         titleBtn.classList.add('unlocked');
-      else if (isGM)        titleBtn.classList.add('gm-locked');
-      else                  titleBtn.classList.add('locked');
+      if (unlocked) titleBtn.classList.add('unlocked');
+      else if (isGM) titleBtn.classList.add('gm-locked');
+      else titleBtn.classList.add('locked');
 
       titleBtn.addEventListener('click', () => {
         activeEntry = entry;
@@ -169,8 +192,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // GM controls for gmMode entries
       if (isGM && isGMOnly) {
-        const btn = document.createElement('button');
         const currentlyUnlocked = localStorage.getItem(lsKey(entry.id)) === "true";
+        const btn = document.createElement('button');
         btn.className = 'unlock-btn ' + (currentlyUnlocked ? 'remove' : 'add');
         btn.textContent = currentlyUnlocked ? 'Remove' : 'Add';
         btn.title = currentlyUnlocked ? 'Remove from player view' : 'Add to player view';
@@ -204,6 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderEntryDetail(entry) {
     entryContent.innerHTML = '';
     activeTool = null;
+    searchMode = false;
 
     const title = document.createElement('h1');
     title.textContent = entry.name;
@@ -228,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
       gmBtn.style.marginTop = '10px';
       gmBtn.addEventListener('click', () => {
         if (unlocked) localStorage.removeItem(lsKey(entry.id));
-        else          localStorage.setItem(lsKey(entry.id), "true");
+        else localStorage.setItem(lsKey(entry.id), "true");
         renderListForActiveCategory();
       });
       entryContent.appendChild(gmBtn);
@@ -247,6 +271,84 @@ document.addEventListener('DOMContentLoaded', () => {
     updateBreadcrumbs();
   }
 
+  /* ----------------- GLOBAL SEARCH ----------------- */
+
+  async function renderGlobalSearchResults() {
+    entryContent.innerHTML = '';
+    activeTool = null;
+    activeCategory = null;
+    activeEntry = null;
+    searchMode = true;
+
+    const q = (searchInput.value || '').trim().toLowerCase();
+
+    if (!q) {
+      entryContent.innerHTML = `<h1>Rebel Alliance Field Codex</h1>
+        <p>Type in the search box or choose a category on the left to begin.</p>`;
+      updateBreadcrumbs();
+      return;
+    }
+
+    const allEntries = await loadAllEntries();
+    const list = document.createElement('div');
+    let found = 0;
+
+    for (const entry of allEntries) {
+      const isGMOnly = Boolean(entry.gmMode);
+      const unlocked = isGMOnly ? (localStorage.getItem(lsKey(entry.id)) === "true") : true;
+      if (!unlocked && !isGM) continue;
+
+      const textMatch =
+        entry.name.toLowerCase().includes(q) ||
+        (entry.description || '').toLowerCase().includes(q) ||
+        (entry.category || '').toLowerCase().includes(q);
+
+      if (!textMatch) continue;
+
+      found++;
+
+      const row = document.createElement('div');
+      row.className = 'entry-row';
+
+      const titleBtn = document.createElement('button');
+      titleBtn.className = 'entry-title unlocked';
+      titleBtn.textContent = `[${entry.category}] ${entry.name}`;
+
+      titleBtn.addEventListener('click', () => {
+        activeCategory = entry.category;
+        activeEntry = entry;
+        searchMode = false;
+        renderEntryDetail(entry);
+      });
+
+      row.appendChild(titleBtn);
+      list.appendChild(row);
+    }
+
+    if (!found) {
+      const msg = document.createElement('p');
+      msg.textContent = isGM
+        ? 'No entries match this search.'
+        : 'No visible entries match this search.';
+      entryContent.appendChild(msg);
+    } else {
+      entryContent.appendChild(list);
+    }
+
+    updateBreadcrumbs();
+  }
+
+  async function handleSearchInput() {
+    // If GM tool is active, ignore search changes
+    if (activeTool === 'destiny') return;
+
+    if (activeCategory) {
+      await renderListForActiveCategory();
+    } else {
+      await renderGlobalSearchResults();
+    }
+  }
+
   /* ----------------- DESTINY POOL STORAGE HELPERS ----------------- */
 
   function loadDestinyState() {
@@ -256,7 +358,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const parsed = JSON.parse(raw);
       return {
         light: Number.isFinite(parsed.light) ? parsed.light : 0,
-        dark:  Number.isFinite(parsed.dark)  ? parsed.dark  : 0
+        dark: Number.isFinite(parsed.dark) ? parsed.dark : 0
       };
     } catch {
       return { light: 0, dark: 0 };
@@ -288,7 +390,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function addDestinyLogEntry(text) {
     const stamp = new Date();
-    const time  = stamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const time = stamp.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
     destinyLog.unshift(`[${time}] ${text}`);
     if (destinyLog.length > 50) destinyLog.length = 50;
     saveDestinyLog();
@@ -300,6 +402,11 @@ document.addEventListener('DOMContentLoaded', () => {
     entryContent.innerHTML = '';
 
     if (!isGM) {
+      activeTool = 'destiny';
+      activeCategory = null;
+      activeEntry = null;
+      searchMode = false;
+
       entryContent.innerHTML = `
         <h1>GM Tools – Destiny Pool</h1>
         <p>GM Tools are restricted. Toggle GM Mode (press <strong>G</strong>) to manage the Destiny Pool.</p>
@@ -308,9 +415,10 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    activeTool     = 'destiny';
+    activeTool = 'destiny';
     activeCategory = null;
-    activeEntry    = null;
+    activeEntry = null;
+    searchMode = false;
 
     entryContent.innerHTML = `
       <h1>GM Destiny Pool</h1>
@@ -349,13 +457,13 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     `;
 
-    const lightRow    = document.getElementById('destinyLightRow');
-    const darkRow     = document.getElementById('destinyDarkRow');
+    const lightRow = document.getElementById('destinyLightRow');
+    const darkRow = document.getElementById('destinyDarkRow');
     const logContainer = document.getElementById('destinyLogEntries');
 
     function drawTokens() {
       lightRow.innerHTML = '';
-      darkRow.innerHTML  = '';
+      darkRow.innerHTML = '';
 
       for (let i = 0; i < destinyState.light; i++) {
         const t = document.createElement('div');
@@ -392,8 +500,7 @@ document.addEventListener('DOMContentLoaded', () => {
       destinyState.light++;
       saveDestinyState();
       addDestinyLogEntry('Added one Light Side token.');
-      drawTokens();
-      drawLog();
+      drawTokens(); drawLog();
     });
 
     document.getElementById('removeLight').addEventListener('click', () => {
@@ -401,8 +508,7 @@ document.addEventListener('DOMContentLoaded', () => {
         destinyState.light--;
         saveDestinyState();
         addDestinyLogEntry('Removed one Light Side token.');
-        drawTokens();
-        drawLog();
+        drawTokens(); drawLog();
       }
     });
 
@@ -410,8 +516,7 @@ document.addEventListener('DOMContentLoaded', () => {
       destinyState.dark++;
       saveDestinyState();
       addDestinyLogEntry('Added one Dark Side token.');
-      drawTokens();
-      drawLog();
+      drawTokens(); drawLog();
     });
 
     document.getElementById('removeDark').addEventListener('click', () => {
@@ -419,8 +524,7 @@ document.addEventListener('DOMContentLoaded', () => {
         destinyState.dark--;
         saveDestinyState();
         addDestinyLogEntry('Removed one Dark Side token.');
-        drawTokens();
-        drawLog();
+        drawTokens(); drawLog();
       }
     });
 
@@ -430,8 +534,7 @@ document.addEventListener('DOMContentLoaded', () => {
         destinyState.dark++;
         saveDestinyState();
         addDestinyLogEntry('Flipped one Light Side token to Dark.');
-        drawTokens();
-        drawLog();
+        drawTokens(); drawLog();
       }
     });
 
@@ -441,8 +544,7 @@ document.addEventListener('DOMContentLoaded', () => {
         destinyState.light++;
         saveDestinyState();
         addDestinyLogEntry('Flipped one Dark Side token to Light.');
-        drawTokens();
-        drawLog();
+        drawTokens(); drawLog();
       }
     });
 
@@ -450,8 +552,7 @@ document.addEventListener('DOMContentLoaded', () => {
       destinyState = { light: 0, dark: 0 };
       saveDestinyState();
       addDestinyLogEntry('Reset Destiny Pool.');
-      drawTokens();
-      drawLog();
+      drawTokens(); drawLog();
     });
 
     drawTokens();
@@ -464,7 +565,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Category buttons (Codex)
   categoryBtns.forEach(btn => {
     if (btn.id === 'homeBtn') return;
-    if (btn.classList.contains('gm-tool-btn')) return; // GM tools handled separately
+    if (btn.classList.contains('gm-tool-btn')) return;
 
     btn.addEventListener('click', async () => {
       const cat = btn.dataset.category;
@@ -475,9 +576,10 @@ document.addEventListener('DOMContentLoaded', () => {
       categoryBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 
-      activeTool     = null;
+      activeTool = null;
+      searchMode = false;
       activeCategory = cat;
-      activeEntry    = null;
+      activeEntry = null;
 
       await loadCategoryEntries(cat);
       renderListForActiveCategory();
@@ -489,10 +591,6 @@ document.addEventListener('DOMContentLoaded', () => {
     categoryBtns.forEach(b => b.classList.remove('active'));
     gmDestinyBtn.classList.add('active');
 
-    activeTool     = 'destiny';
-    activeCategory = null;
-    activeEntry    = null;
-
     renderDestinyPoolPanel();
   });
 
@@ -500,19 +598,18 @@ document.addEventListener('DOMContentLoaded', () => {
   homeBtn.addEventListener('click', () => {
     categoryBtns.forEach(b => b.classList.remove('active'));
     activeCategory = null;
-    activeEntry    = null;
-    activeTool     = null;
+    activeEntry = null;
+    activeTool = null;
+    searchMode = false;
     searchInput.value = '';
-    entryContent.innerHTML = `
-      <h1>Rebel Alliance Field Codex</h1>
-      <p>Entries are not loaded until a category is selected. Click a category on the left to begin.</p>
-    `;
+    entryContent.innerHTML = `<h1>Rebel Alliance Field Codex</h1>
+      <p>Entries are not loaded until a category is selected. Click a category on the left to begin.</p>`;
     breadcrumbs.innerHTML = '';
   });
 
-  // Search handler (filters current category list)
+  // Search handler (filters current category, or global search if none)
   searchInput.addEventListener('input', () => {
-    if (activeCategory) renderListForActiveCategory();
+    handleSearchInput();
   });
 
   /* ----------------- GM MODE TOGGLE ----------------- */
@@ -526,6 +623,8 @@ document.addEventListener('DOMContentLoaded', () => {
         renderDestinyPoolPanel();
       } else if (activeCategory) {
         renderListForActiveCategory();
+      } else if (searchInput.value.trim()) {
+        renderGlobalSearchResults();
       } else {
         renderListForActiveCategory();
       }
@@ -539,21 +638,17 @@ document.addEventListener('DOMContentLoaded', () => {
   function randomFlicker() {
     if (Math.random() < 0.4) {
       flicker.style.opacity = (0.08 + Math.random() * 0.32).toFixed(2);
-      setTimeout(() => {
-        flicker.style.opacity = 0;
-      }, 50 + Math.random() * 180);
+      setTimeout(()=> { flicker.style.opacity = 0; }, 50 + Math.random()*180);
     }
   }
   setInterval(randomFlicker, 80);
 
   function randomDistortion() {
     if (Math.random() < 0.06) {
-      const x = (Math.random() * 10 - 5).toFixed(1);
-      const y = (Math.random() * 10 - 5).toFixed(1);
+      const x = (Math.random()*10 - 5).toFixed(1);
+      const y = (Math.random()*10 - 5).toFixed(1);
       distortion.style.transform = `translate(${x}px, ${y}px)`;
-      setTimeout(() => {
-        distortion.style.transform = 'translate(0,0)';
-      }, 60 + Math.random() * 140);
+      setTimeout(()=> distortion.style.transform = 'translate(0,0)', 60 + Math.random()*140);
     }
   }
   setInterval(randomDistortion, 120);
@@ -563,21 +658,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const x = e.clientX - r.left;
     const y = e.clientY - r.top;
     cursorDot.style.left = x + 'px';
-    cursorDot.style.top  = y + 'px';
+    cursorDot.style.top = y + 'px';
   });
 
   function createRandomDot() {
     const d = document.createElement('div');
     d.className = 'dot';
-    d.style.left = Math.random() * 100 + '%';
-    d.style.top  = Math.random() * 100 + '%';
+    d.style.left = Math.random()*100 + '%';
+    d.style.top = Math.random()*100 + '%';
     dotFlicker.appendChild(d);
-    setTimeout(() => d.remove(), 120 + Math.random() * 220);
+    setTimeout(()=> d.remove(), 120 + Math.random()*220);
   }
-  setInterval(() => {
-    if (Math.random() < 0.28) createRandomDot();
-  }, 55);
+  setInterval(()=> { if (Math.random() < 0.28) createRandomDot(); }, 55);
 
-  // initial clean state (no category loaded)
+  // initial state (no category, home screen)
   homeBtn.click();
 });
