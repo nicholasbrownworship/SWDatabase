@@ -1,0 +1,13 @@
+{
+  "id": "acklay",
+  "name": "Acklay",
+  "description": "Acklays are towering crustacean-like predators armed with three serrated forelimbs used for both hunting and defense. Amphibious and territorial, they stalk coastal shallows and dense reef structures. Their hardened exoskeleton resists small-arms fire, and their piercing screech causes panic in most humanoids. Acklays are often captured for gladiatorial arenas—few handlers survive the attempt.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Predator",
+    "Amphibious",
+    "Arena Beast",
+    "Coastal Threat"
+  ]
+}
