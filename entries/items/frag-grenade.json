@@ -1,0 +1,12 @@
+{
+  "id": "frag_grenade",
+  "name": "Fragmentation Grenade",
+  "description": "Fragmentation grenades are simple, brutal weapons: a timed charge wrapped in a shell designed to shatter into razor-sharp fragments. They are used by both Imperial troops and irregular forces when clearing trenches, corridors, and tight defensive positions. While far less destructive than a thermal detonator, frag grenades are easier to acquire in bulk and can be locally manufactured in a pinch, making them a staple of ground combat.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Explosive",
+    "Military Issue",
+    "Area Effect"
+  ]
+}
