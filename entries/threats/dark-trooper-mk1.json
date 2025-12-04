@@ -1,0 +1,13 @@
+{
+  "id": "dark_trooper_mk1",
+  "name": "Dark Trooper Mk I",
+  "description": "The Mk I Dark Trooper is an experimental Imperial combat droid designed as a replacement for standard stormtroopers. Encased in heavy plating and powered by advanced servomotors, Mk I units are slow but relentless, marching through small-arms fire and smashing obstacles with hydraulic limbs. Their intimidating presence and mechanical brutality often break enemy morale before the first blow lands.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Imperial Experiment",
+    "Combat Droid",
+    "Heavy Infantry",
+    "Prototype"
+  ]
+}
