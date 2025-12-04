@@ -1,0 +1,13 @@
+{
+  "id": "tibidee",
+  "name": "Tibidee Swarm",
+  "description": "Tibidees are flying reptilian creatures native to the cloud layers of Bespin. Individually harmless scavengers, they become dangerous when startled or agitated, swarming in flurries of talons and wings. Their nests near gas-mining platforms often go unnoticed until maintenance crews disturb them, leading to sudden attacks in narrow catwalk corridors.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Swarm",
+    "Aerial Threat",
+    "Bespin",
+    "Scavenger"
+  ]
+}
