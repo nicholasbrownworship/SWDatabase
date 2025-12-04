@@ -1,0 +1,13 @@
+{
+  "id": "rancor",
+  "name": "Rancor",
+  "description": "Rancors are massive, reptilian beasts prized by crime lords and warlords as execution tools and status symbols. Despite their brutish appearance, rancors are intelligent enough to be trained—though never truly tamed—and become fiercely loyal to whoever feeds and controls them. Their thick hides shrug off blaster fire, and a charging rancor can smash durasteel doors or crush armored vehicles with terrifying force.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Apex Predator",
+    "Desert World",
+    "Beast of Burden",
+    "Tatooine"
+  ]
+}
