@@ -1,0 +1,12 @@
+{
+  "id": "thermal_detonator",
+  "name": "Thermal Detonator",
+  "description": "A thermal detonator is a compact, palm-sized explosive device capable of vaporizing targets within its blast radius. Once armed, its containment field briefly compresses energy before releasing it in an intense sphere of heat and force. Military-grade models are carefully regulated, but black market versions circulate among mercenaries, insurgents, and syndicates. Even the sight of a live thermal detonator is often enough to end a negotiation—or start a firefight.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Explosive",
+    "Illegal",
+    "High Damage"
+  ]
+}
