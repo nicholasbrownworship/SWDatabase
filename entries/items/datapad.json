@@ -1,0 +1,12 @@
+{
+  "id": "standard_datapad",
+  "name": "Standard Datapad",
+  "description": "Datapads are ubiquitous in the galaxy, used for everything from starport paperwork and cargo manifests to personal journals and encrypted Rebel directives. A typical unit features a holo-capable display, onboard storage, and connection ports for slicing tools or security modules. In the right hands—and with the right access codes—a datapad is both a portable library and a key to sensitive systems.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Computing",
+    "Data Storage",
+    "Utility"
+  ]
+}
