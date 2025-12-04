@@ -1,0 +1,13 @@
+{
+  "id": "kessel",
+  "name": "Kessel",
+  "description": "Kessel is a barren world famous—and infamous—for its spice mines. Once a thriving trade node, it became a labor penal colony under Imperial control, worked by political prisoners, debtors, and the unfortunate souls captured by criminal syndicates. The mines stretch deep into the planet’s crust, where spice fumes can warp perception, corrode machinery, and break the minds of those exposed too long. Smugglers risk the treacherous approaches through the Akkadese Maelstrom to deliver or liberate cargo, while rumors persist of tunnels that lead to horrors predating the Empire itself. Whether visiting as prisoner, overseer, or outlaw, few forget their time on Kessel.",
+  "image": "",
+  "gmMode": false,
+  "tags": [
+    "Penal Colony",
+    "Spice Trade",
+    "Smuggling Routes",
+    "Imperial Control"
+  ]
+}
