@@ -1,0 +1,13 @@
+{
+  "id": "u_wing_transport",
+  "name": "UT-60D U-wing Starfighter/Support Craft",
+  "description": "The UT-60D U-wing serves the Rebel Alliance as a versatile troop transport and gunship. Folding wings and a reinforced hull allow it to insert squads into hot landing zones while providing covering fire through side-mounted doors. Equipped with hyperdrive and modest armament, U-wings are commonly used for covert insertions, extractions, and resupply missions where standard shuttles would draw too much attention. Many crews personalize their U-wings with improvised armor, sensor jammers, or hidden cargo compartments.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Gunship",
+    "Transport",
+    "Rebel Alliance",
+    "U-wing"
+  ]
+}
