@@ -81,7 +81,7 @@ body {
     ),
     /* noise texture if you have it */
     url('images/metal_noise.png') repeat;
-  opacity: 0.3;
+  opacity: 0.6;
   mix-blend-mode: multiply;
   pointer-events: none;
 }
