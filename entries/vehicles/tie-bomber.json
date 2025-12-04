@@ -1,0 +1,13 @@
+{
+  "id": "tie_bomber",
+  "name": "TIE/sa Bomber",
+  "description": "The TIE/sa bomber is a dual-hull variant of the TIE line built to carry heavy ordnance. One pod houses the pilot and controls; the other serves as a bomb bay for proton bombs, missiles, and other munitions. Slower and less agile than standard TIE fighters, bombers rely on escorts and coordinated strikes, excelling at destroying surface targets, space stations, and crippled ships. Their silhouette is often the last thing a Rebel outpost sees intact.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Bomber",
+    "Imperial",
+    "TIE",
+    "Ordnance"
+  ]
+}
