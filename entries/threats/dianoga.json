@@ -1,0 +1,13 @@
+{
+  "id": "dianoga",
+  "name": "Dianoga",
+  "description": "Dianoga are tentacled aquatic scavengers that thrive in sewers, industrial water systems, and waste reclamation pools. They remain submerged for long periods, revealing only a single eyestalk before lashing out at prey with surprising speed. While not naturally aggressive, dianoga consider anything organic in their domain to be potential food, making maintenance tunnels and trash compactors unexpectedly deadly.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Aquatic",
+    "Ambusher",
+    "Urban Hazard",
+    "Sewer Predator"
+  ]
+}
