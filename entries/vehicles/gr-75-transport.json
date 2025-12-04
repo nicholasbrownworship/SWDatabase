@@ -1,0 +1,13 @@
+{
+  "id": "gr_75_transport",
+  "name": "GR-75 Medium Transport",
+  "description": "The GR-75 medium transport is a boxy, unglamorous cargo hauler that has become a staple of Rebel logistics. Originally designed for civilian freight, these ships have been stripped down, refitted, and repurposed to move troops, supplies, and equipment between hidden bases. Their modular cargo pods can be loaded or jettisoned quickly, and some cells modify them with extra point-defense guns or armor plating. In major battles, GR-75s often serve as evacuation craft or mobile supply depots, their loss keenly felt but strategically accepted.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Transport",
+    "Rebel Alliance",
+    "Logistics",
+    "GR-75"
+  ]
+}
