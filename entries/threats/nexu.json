@@ -1,0 +1,13 @@
+{
+  "id": "nexu",
+  "name": "Nexu",
+  "description": "Nexu are agile, feline-like predators with razor-sharp fangs and a barbed tail. Their wide, sensitive eyes allow them to hunt in near-total darkness, and their stealth makes them nearly silent in dense foliage. Originally native to Cholganna, nexu are trafficked in the underworld as exotic guard beasts, though most handlers underestimate just how quickly a nexu loses interest in following orders.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Stealth Predator",
+    "Jungle World",
+    "Night Hunter",
+    "Underworld Trade"
+  ]
+}
