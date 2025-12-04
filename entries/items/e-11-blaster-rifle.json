@@ -1,0 +1,12 @@
+{
+  "id": "e_11_blaster_rifle",
+  "name": "E-11 Blaster Rifle",
+  "description": "The E-11 is the standard-issue blaster rifle of Imperial stormtroopers. Compact enough to be slung at the hip but powerful at medium range, it can be configured for stun or lethal fire with a simple selector switch. Its modular design allows for easy attachment of scopes, folding stocks, and auxiliary power packs. In the hands of disciplined troops it forms the backbone of Imperial infantry tactics—though in practice, its effectiveness depends more on training and visibility than on the weapon itself.",
+  "image": "",
+  "gmMode": true,
+  "tags": [
+    "Blaster",
+    "Imperial Standard",
+    "Ranged Weapon"
+  ]
+}
