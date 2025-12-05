@@ -1,0 +1,14 @@
+{
+  "id": "wedge_antilles",
+  "name": "Wedge Antilles",
+  "image": "images/wedge_antilles.png",
+  "description": "Wedge Antilles is one of the most skilled and decorated starfighter pilots in the Alliance Starfighter Corps, renowned for surviving—and succeeding in—engagements that have claimed the lives of seasoned aces. A native of Corellia, Antilles joined the Rebellion after witnessing firsthand the oppression and exploitation that accompanied Imperial rule in his home sector. His aptitude as a pilot was immediately apparent, and he quickly became a mainstay of the Alliance’s elite starfighter squadrons.\n\nAntilles flew as a member of Red Squadron during the Battle of Yavin, providing critical cover during Luke Skywalker’s trench run and becoming one of the few survivors of the operation. His continued service through the Battle of Hoth and his role in leading Rogue Squadron cemented his reputation as both a leader and a tactician capable of adapting to battlefield conditions in real time. By the time of the Battle of Endor, Antilles was entrusted with leading Red Squadron again, where he was instrumental in destroying the second Death Star’s power reactor from within.\n\nWedge’s leadership style is defined by a combination of technical proficiency, situational awareness, and an instinctive understanding of the strengths and limitations of both his own squadron and his opponents. Pilots under his command consistently report high morale, clear communication, and a sense of purpose. Though far less publicly recognized than Luke Skywalker, Antilles has survived more major engagements against the Empire than any other pilot on record.\n\nAlliance Intelligence classifies Wedge Antilles as a critical long-term asset whose experience provides the Rebellion with continuity, institutional memory, and a living blueprint for future squadrons.",
+  "gmMode": true,
+  "related": [
+    { "id": "rebellion",       "category": "factions"   },
+    { "id": "luke_skywalker",  "category": "characters" },
+    { "id": "admiral_ackbar",  "category": "characters" },
+    { "id": "t_65b_x_wing",    "category": "vehicles"   },
+    { "id": "corellia",        "category": "planets"    }
+  ]
+}
