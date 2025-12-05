@@ -1,0 +1,13 @@
+{
+  "id": "yoda",
+  "name": "Yoda",
+  "image": "images/yoda.png",
+  "description": "Yoda is one of the last surviving Masters of the Jedi Order, a being of unknown species and considerable age whose influence on galactic history spans centuries. Prior to the rise of the Empire, he served on the Jedi Council as a senior authority on both Jedi doctrine and training, guiding generations of Knights during the final days of the Republic. Small in stature but immense in presence, Yoda’s reputation combined wisdom, humility, and formidable power in the Force.\n\nFollowing the execution of Order 66 and the near-extermination of the Jedi, Yoda withdrew from the galaxy’s political and military stage. He went into self-imposed exile on the remote swamp world of Dagobah, choosing concealment over direct confrontation with the newly formed Empire. The planet’s dense life signatures and unusual Force presence rendered it an ideal location to hide from Imperial and Sith detection. For many years, his survival was unknown to any but a handful of trusted allies.\n\nYoda re-entered the Rebellion’s story when Luke Skywalker, guided by the teachings of Obi-Wan Kenobi, sought him out for training. Accounts from Skywalker describe a rigorous regimen that tested not only his physical abilities and Force sensitivity, but also his patience, discipline, and understanding of fear and attachment. Yoda repeatedly emphasized that victory over the Empire could not be achieved through power alone; it required inner clarity and the rejection of the same anger and ambition that had corrupted the old Jedi and given rise to the Sith.\n\nYoda’s direct involvement in Alliance operations remained limited by choice. Rather than commanding fleets or advising High Command, he focused on preparing Skywalker to confront Darth Vader and the Emperor. His death on Dagobah marked the end of the Jedi Order as it had once been known, but not the end of its legacy. In his final moments, Yoda confirmed critical truths about Vader’s identity and charged Luke with the responsibility of passing on what he had learned.\n\nFrom the perspective of Alliance Intelligence, Yoda is less an operational asset and more a foundational figure—an anchor for the spiritual and ideological dimension of the conflict. Though he never formally joined the Alliance, his instruction shaped the one Jedi whose actions would prove decisive in the struggle against the Empire.",
+  "gmMode": true,
+  "related": [
+    { "id": "luke_skywalker",  "category": "characters" },
+    { "id": "obi_wan_kenobi",  "category": "characters" },
+    { "id": "darth_vader",     "category": "characters" },
+    { "id": "dagobah",         "category": "planets"    }
+  ]
+}
