@@ -1,1 +1,5 @@
-["luke_skywalker.json", "mon_mothma.json"]
+[
+  "luke_skywalker.json", 
+  "mon_mothma.json",
+  "leia_organa.json"
+]
