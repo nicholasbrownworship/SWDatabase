@@ -1,0 +1,14 @@
+{
+  "id": "c_3po",
+  "name": "C-3PO",
+  "image": "images/c_3po.png",
+  "description": "C-3PO is a protocol droid of unknown original manufacturer configuration, extensively rebuilt over time and currently specializing in etiquette, customs, and translation. Fluency records list him as conversant in over six million forms of communication, a figure that continues to rise as he encounters new dialects and encrypted linguistic systems. Though initially dismissed by some Alliance personnel as overly anxious and talkative, C-3PO has proven to be an invaluable asset in negotiations, cultural liaison work, and the interpretation of obscure languages and data formats.\n\nHe first appears in Alliance-adjacent records alongside R2-D2 during the events surrounding the theft and delivery of the Death Star plans. Whereas R2-D2 often operates as a technical specialist and infiltrator, C-3PO functions as an interpreter and mediator, smoothing interactions between species, factions, and individuals who might otherwise misunderstand one another. This role is especially critical in the context of a multi-world rebellion where minor diplomatic missteps can escalate into major rifts. His thorough knowledge of protocol also proves useful when dealing with former Imperial bureaucrats and officials transitioning into Alliance service.\n\nDespite his self-professed aversion to danger, C-3PO frequently finds himself in high-risk situations, including active battle zones and covert missions. His survival in such circumstances is less a result of combat ability and more a testament to his resilience, luck, and the protective instincts of those around him—most notably R2-D2, Luke Skywalker, and Leia Organa. Field reports describe him as prone to pessimistic commentary, but also note that beneath the complaints lies genuine concern for the well-being of his companions.\n\nAlliance Intelligence recognizes C-3PO as a critical soft-power asset. While he is not suited for frontline combat, his contributions in diplomacy, intelligence interpretation, and interspecies relations significantly enhance the Alliance’s ability to maintain cohesion across its diverse membership. Underestimating his importance because of his demeanor would be a serious misjudgment.",
+  "gmMode": true,
+  "related": [
+    { "id": "rebellion",      "category": "factions"   },
+    { "id": "r2_d2",          "category": "characters" },
+    { "id": "luke_skywalker", "category": "characters" },
+    { "id": "leia_organa",    "category": "characters" },
+    { "id": "tatooine",       "category": "planets"    }
+  ]
+}
