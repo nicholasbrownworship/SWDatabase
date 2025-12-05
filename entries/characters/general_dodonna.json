@@ -1,0 +1,13 @@
+{
+  "id": "general_dodonna",
+  "name": "General Jan Dodonna",
+  "image": "images/general_dodonna.png",
+  "description": "General Jan Dodonna is one of the earliest and most respected commanders within the Rebellion’s strategic leadership. A former officer in the Republic Navy, Dodonna defected after refusing to support Imperial policies of planetary subjugation and military escalation. Bringing with him decades of operational knowledge, he became one of the architects of early Alliance doctrine, shaping the organization's transition from scattered insurgent cells into a coordinated fighting force.\n\nDodonna’s most enduring contribution lies in the formulation of tactics used during the Battle of Yavin, where his analysis of the Death Star’s technical schematics—acquired at great cost by Alliance operatives—identified the thermal exhaust port as a viable attack vector. His briefing of Red Squadron became one of the most iconic moments in Alliance history, demonstrating that even the Empire’s greatest war machine possessed exploitable weaknesses when met with precision, bravery, and well-crafted strategy.\n\nKnown for a quiet demeanor and a firm command presence, Dodonna values preparation, intelligence gathering, and clear execution over showmanship. His methods emphasize the importance of understanding an enemy’s assumptions and turning them into liabilities. Although later reassigned after the evacuation of Yavin, his influence remained embedded in the Alliance’s evolving playbook for asymmetric warfare.\n\nAlliance Intelligence assesses General Dodonna as foundational to the Rebellion’s institutional identity. His willingness to challenge Imperial inevitability—and prove it could be broken—set a precedent that continues to inspire both leaders and rank-and-file recruits.",
+  "gmMode": true,
+  "related": [
+    { "id": "rebellion",       "category": "factions"   },
+    { "id": "luke_skywalker",  "category": "characters" },
+    { "id": "wedge_antilles",  "category": "characters" },
+    { "id": "yavin_4",         "category": "planets"    }
+  ]
+}
