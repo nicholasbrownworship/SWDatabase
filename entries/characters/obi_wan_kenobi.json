@@ -1,0 +1,14 @@
+{
+  "id": "obi_wan_kenobi",
+  "name": "Obi-Wan Kenobi",
+  "image": "images/obi_wan_kenobi.png",
+  "description": "Obi-Wan Kenobi, once a respected Jedi Master and Republic military commander, became a figure of myth and rumor following the fall of the Jedi Order and the rise of the Galactic Empire. Historically documented as a key strategist and negotiator during the Clone Wars, Kenobi was known for his composure under pressure, tactical insight, and unwavering adherence to the Jedi Code. After the execution of Order 66 and the near-extinction of the Jedi, he vanished entirely from the public record.\n\nAlliance Intelligence was not aware of Kenobi’s survival until a chain of events surrounding the theft of the Death Star plans brought him into indirect contact with the Rebellion. Having adopted the alias \"Ben\" Kenobi, he lived in self-imposed exile on Tatooine, covertly safeguarding the young Luke Skywalker while avoiding detection by Imperial agents. Reports from Luke and other firsthand witnesses confirm that, despite years of isolation, Kenobi remained a formidable practitioner of the Force and a skilled combatant.\n\nKenobi’s final known mission involved transporting Luke Skywalker and the astromech unit R2-D2—bearing Leia Organa’s encrypted plea for aid—from Tatooine to Alderaan. Though the plan was disrupted by the destruction of the planet, Kenobi successfully guided Luke toward his initial connection with the Force and played a pivotal role in the group’s escape from the Death Star. His confrontation with Darth Vader aboard the station ended in his voluntary sacrifice, a calculated act intended to ensure the escape of his companions and to empower Luke with a deeper understanding of the Force.\n\nSubsequent testimony from Luke Skywalker suggests that Kenobi’s presence persisted beyond physical death, able to communicate guidance and instruction in moments of great need. While the mechanics of this phenomenon remain unexplained, the psychological and strategic impact on Skywalker—and through him, the Alliance—cannot be overstated.\n\nFrom the Alliance perspective, Obi-Wan Kenobi represents both a historical artifact and a catalytic figure. Though he never formally served within the Alliance’s hierarchy, his actions set in motion several events that became foundational to the Rebellion’s success. His legacy endures in the ideals carried forward by those he influenced—most notably Luke Skywalker.",
+  "gmMode": true,
+  "related": [
+    { "id": "luke_skywalker", "category": "characters" },
+    { "id": "leia_organa",    "category": "characters" },
+    { "id": "r2_d2",          "category": "characters" },
+    { "id": "darth_vader",    "category": "characters" },
+    { "id": "tatooine",       "category": "planets"    }
+  ]
+}
