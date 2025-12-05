@@ -1,0 +1,13 @@
+{
+  "id": "qira",
+  "name": "Qi'ra",
+  "image": "images/qira.png",
+  "description": "Qi'ra first appeared in Alliance intelligence intercepts as a peripheral figure associated with criminal syndicates operating along the Corellian Trade Spine. Early assessments dismissed her as an opportunistic street operative with no long-term significance; however, later investigations reveal a far more complex trajectory. Born and raised in the slums of Corellia, Qi'ra demonstrated early aptitude for deception, infiltration, and the navigation of hierarchical power structures. Her disappearance from local records coincided with her ascent into the ranks of Crimson Dawn, one of the most secretive and strategically minded criminal organizations in the galaxy.\n\nAnalysts remain uncertain as to how Qi'ra secured her rapid rise within Crimson Dawn’s command structure, but evidence indicates extensive training in negotiation, close-quarters combat, and cultural manipulation. Her interactions with high-level syndicate figures, including the elusive Maul, suggest a level of trust and responsibility rarely afforded to operatives of her age and background. Qi'ra exhibits a calm demeanor and a disarming presence, traits that have enabled her to operate effectively across Imperial and criminal spheres without revealing her true loyalties or objectives.\n\nQi'ra’s connection to Han Solo represents the first verifiable link between her and Alliance interests. Their shared past on Corellia and Solo’s continued emotional investment complicate operational analysis, as Qi'ra has repeatedly demonstrated the ability to leverage personal histories for strategic advantage. To date, no confirmed evidence suggests direct alignment with the Rebellion; however, multiple incidents imply a willingness to act against Imperial interests when such actions align with her own objectives or undermine rival syndicates.\n\nAlliance Intelligence currently designates Qi'ra as an unpredictable external actor. Her capabilities, influence within the criminal underworld, and unclear motivations place her in a category of potential asset, potential threat, or both. Should her goals ever align fully with those of the Alliance, her knowledge of syndicate structures and Imperial infiltration vectors would prove invaluable. Until that time, all encounters with Qi'ra are to be handled with caution, respect, and an awareness that she rarely commits to a course of action without several contingency plans already in place.",
+  "gmMode": true,
+  "related": [
+    { "id": "han_solo",    "category": "characters" },
+    { "id": "corellia",    "category": "planets"    },
+    { "id": "crimson_dawn","category": "factions"   },
+    { "id": "maul",        "category": "characters" }
+  ]
+}
