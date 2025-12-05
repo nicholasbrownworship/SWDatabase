@@ -7,7 +7,7 @@
   "related": [
     { "id": "rebellion",       "category": "factions"   },
     { "id": "leia_organa",     "category": "characters" },
-    { "id": "t-65b-x-wing",    "category": "vehicles"   },
+    { "id": "t_65b_x_wing",    "category": "vehicles"   },
     { "id": "tatooine",        "category": "planets"    }
   ]
 }
