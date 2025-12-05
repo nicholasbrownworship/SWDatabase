@@ -553,3 +553,39 @@ body {
     transform: scale(0.92);
   }
 }
+
+.related-section {
+  margin-top: 16px;
+  border-top: 1px solid #064a5b;
+  padding-top: 10px;
+}
+
+.related-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #66f0ff;
+  margin-bottom: 6px;
+  opacity: 0.85;
+}
+
+.related-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.related-chip {
+  background: #0a1f26;
+  border: 1px solid #064a5b;
+  color: #a0d8ff;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.related-chip:hover {
+  background: #0e2a34;
+  border-color: #33cfff;
+}
