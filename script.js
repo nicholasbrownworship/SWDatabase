@@ -8,6 +8,9 @@
    - Related entries:
        * Each entry may define `related: [{ id, category? }, ...]` in its JSON
        * Related list respects GM locks/unlocks
+   - Player Field Notes:
+       * Per-entry, local-only notes log stored in localStorage
+       * Holo-style UI with timestamps
 */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -42,6 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let destinyState = loadDestinyState();
   let destinyLog   = loadDestinyLog();
+
+  // Player notes storage
+  const NOTES_PREFIX = 'sw_notes__';
 
   // helper localStorage key for codex unlocks
   const lsKey = id => `entry_unlocked__${id}`;
@@ -95,6 +101,31 @@ document.addEventListener('DOMContentLoaded', () => {
       all.push(...entries);
     }
     return all;
+  }
+
+  /* ----------------- PLAYER NOTES HELPERS ----------------- */
+
+  function notesKeyFor(entryId) {
+    return `${NOTES_PREFIX}${entryId}`;
+  }
+
+  function loadNotes(entryId) {
+    try {
+      const raw = localStorage.getItem(notesKeyFor(entryId));
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveNotes(entryId, notes) {
+    try {
+      localStorage.setItem(notesKeyFor(entryId), JSON.stringify(notes));
+    } catch {
+      // ignore
+    }
   }
 
   /* ----------------- BREADCRUMBS ----------------- */
@@ -266,6 +297,9 @@ document.addEventListener('DOMContentLoaded', () => {
       entryContent.appendChild(gmBtn);
     }
 
+    // Player Field Notes panel
+    renderNotesPanel(entry);
+
     // Back button
     const back = document.createElement('button');
     back.className = 'category-btn';
@@ -281,6 +315,125 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Build related entries section asynchronously
     buildRelatedSection(entry);
+  }
+
+  /* ----------------- FIELD NOTES PANEL ----------------- */
+
+  function renderNotesPanel(entry) {
+    const notes = loadNotes(entry.id);
+
+    const section = document.createElement('div');
+    section.className = 'notes-section';
+
+    const header = document.createElement('div');
+    header.className = 'notes-header';
+    header.textContent = 'Field Notes (Local Device)';
+    section.appendChild(header);
+
+    const inputWrap = document.createElement('div');
+    inputWrap.className = 'notes-input-wrap';
+
+    const textarea = document.createElement('textarea');
+    textarea.className = 'notes-input';
+    textarea.rows = 3;
+    textarea.placeholder = 'Record observations, suspicions, or reminders about this entry...';
+    inputWrap.appendChild(textarea);
+
+    const controls = document.createElement('div');
+    controls.className = 'notes-controls';
+
+    const addBtn = document.createElement('button');
+    addBtn.className = 'notes-btn';
+    addBtn.textContent = 'Add Note';
+
+    const clearBtn = document.createElement('button');
+    clearBtn.className = 'notes-btn notes-btn-secondary';
+    clearBtn.textContent = 'Clear Log';
+
+    controls.appendChild(addBtn);
+    controls.appendChild(clearBtn);
+    inputWrap.appendChild(controls);
+
+    section.appendChild(inputWrap);
+
+    const listContainer = document.createElement('div');
+    listContainer.className = 'notes-log';
+    section.appendChild(listContainer);
+
+    entryContent.appendChild(section);
+
+    function renderLog() {
+      listContainer.innerHTML = '';
+
+      if (!notes.length) {
+        const empty = document.createElement('div');
+        empty.className = 'notes-empty';
+        empty.textContent = 'No notes recorded yet.';
+        listContainer.appendChild(empty);
+        return;
+      }
+
+      notes.forEach(note => {
+        const row = document.createElement('div');
+        row.className = 'note-entry';
+
+        const meta = document.createElement('div');
+        meta.className = 'note-meta';
+
+        let when = '';
+        try {
+          const d = new Date(note.ts);
+          when = d.toLocaleString([], {
+            year: 'numeric',
+            month: 'short',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+        } catch {
+          when = note.ts || '';
+        }
+
+        meta.textContent = when;
+
+        const body = document.createElement('div');
+        body.className = 'note-body';
+        body.textContent = note.text || '';
+
+        row.appendChild(meta);
+        row.appendChild(body);
+
+        listContainer.appendChild(row);
+      });
+    }
+
+    addBtn.addEventListener('click', () => {
+      const text = textarea.value.trim();
+      if (!text) return;
+
+      const now = new Date();
+      const note = {
+        ts: now.toISOString(),
+        text
+      };
+
+      // newest first
+      notes.unshift(note);
+      saveNotes(entry.id, notes);
+      textarea.value = '';
+      renderLog();
+    });
+
+    clearBtn.addEventListener('click', () => {
+      if (!notes.length) return;
+      const confirmClear = confirm('Clear all notes for this entry on this device?');
+      if (!confirmClear) return;
+      notes.length = 0;
+      saveNotes(entry.id, notes);
+      renderLog();
+    });
+
+    renderLog();
   }
 
   /* ----------------- RELATED ENTRIES ----------------- */
@@ -335,7 +488,7 @@ document.addEventListener('DOMContentLoaded', () => {
         : 'Entry';
       chip.textContent = `${target.name} (${catLabel})`;
 
-      chip.addEventListener('click', async () => {
+      chip.addEventListener('click', () => {
         activeCategory = target.category;
         activeEntry    = target;
         activeTool     = null;
