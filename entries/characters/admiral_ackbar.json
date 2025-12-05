@@ -1,0 +1,14 @@
+{
+  "id": "admiral_ackbar",
+  "name": "Admiral Ackbar",
+  "image": "images/admiral_ackbar.png",
+  "description": "Admiral Gial Ackbar is one of the foremost military tacticians of the Alliance to Restore the Republic and serves as the primary commander of its naval forces. A native of Mon Cala, Ackbar played an instrumental role in unifying his homeworld’s shipbuilding capacity and expertise with the Rebellion’s strategic needs. Surviving Imperial enslavement and subsequent escape, he emerged not only with firsthand knowledge of Imperial naval doctrine, but also with a galvanizing conviction that the Empire’s dominance could be challenged from the stars.\n\nAckbar’s command style emphasizes flexible fleet coordination, rapid repositioning, and the exploitation of gaps left by Imperial overconfidence. His analytical approach, combined with his willingness to delegate tactical autonomy to squadron leaders, has enabled the Alliance to achieve success against opponents with vastly superior numbers. Ackbar’s greatest strategic achievement to date remains his orchestration of the Battle of Endor, where he directed the Alliance Fleet in a desperate engagement against both the Imperial armada and a second operational Death Star.\n\nDespite his formidable reputation, those who have served with Ackbar often describe him as pragmatic, direct, and deeply committed to minimizing unnecessary loss of life. His affinity for Mon Cala starship engineering—particularly cruisers like the MC80 Home One—has shaped the aesthetic and tactical identity of the Alliance Fleet. His now-famous battlefield proclamation identifying Imperial traps has become emblematic of both his awareness and his leadership under pressure.\n\nAlliance Intelligence considers Ackbar irreplaceable in the domain of naval warfare. His strategic insight, experience with Imperial procedures, and ability to inspire confidence across species lines make him one of the most valuable commanders in the entire Rebellion.",
+  "gmMode": true,
+  "related": [
+    { "id": "rebellion",   "category": "factions"   },
+    { "id": "mon_mothma",  "category": "characters" },
+    { "id": "wedge_antilles", "category": "characters" },
+    { "id": "mon_cala",    "category": "planets"    },
+    { "id": "home_one",    "category": "vehicles"   }
+  ]
+}
