@@ -1,0 +1,13 @@
+{
+  "id": "general_rieekan",
+  "name": "General Carlist Rieekan",
+  "image": "images/general_rieekan.png",
+  "description": "General Carlist Rieekan is a senior Alliance commander best known for overseeing the defense and evacuation protocols of Echo Base on Hoth. Formerly a respected officer within the Republic and later the early Imperial military, Rieekan defected after witnessing the Empire’s aggressive centralization of power and disregard for civilian populations. His combination of pragmatic leadership and logistical insight made him an invaluable asset during the Rebellion’s most precarious years.\n\nRieekan specialized in defensive operations, contingency planning, and infrastructure resilience—areas critical to an organization perpetually on the run from a technologically superior adversary. His work on Hoth demonstrated a mastery of operating in hostile environments, integrating limited local resources with mobile command capabilities. Though Echo Base ultimately fell to Imperial assault, its prolonged resistance and organized evacuation prevented catastrophic Alliance losses and contributed directly to the continued viability of the Rebellion.\n\nField evaluations consistently note Rieekan’s calm under pressure and his willingness to adapt doctrine to reality rather than ideology. His trust in young officers—such as Leia Organa and Luke Skywalker—reflected his belief that the Rebellion would need more than seasoned veterans to survive; it would need leaders capable of thinking beyond the constraints of conventional warfare.\n\nAlliance Intelligence categorizes Rieekan not as a battlefield icon, but as a strategic pillar whose logistical foresight preserved the Alliance during moments where a single failure could have ended the cause entirely.",
+  "gmMode": true,
+  "related": [
+    { "id": "rebellion",      "category": "factions"   },
+    { "id": "leia_organa",    "category": "characters" },
+    { "id": "luke_skywalker", "category": "characters" },
+    { "id": "hoth",           "category": "planets"    }
+  ]
+}
