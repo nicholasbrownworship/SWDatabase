@@ -1,13 +1,14 @@
 {
   "id": "tatooine",
   "name": "Tatooine",
-  "description": "Tatooine is a harsh desert planet orbiting twin suns, where moisture farmers, scavengers, and settlers eke out a living amid endless dunes and rock formations. Imperial presence is minimal, leaving local governance to Hutt cartels and crime syndicates who control trade, territory, and information. Spaceports like Mos Eisley thrive on illicit business and pilot-for-hire culture, drawing smugglers, bounty hunters, and wanderers from across the galaxy. Though unremarkable on star maps, Tatooine has a strange habit of intersecting with galactic history—its isolation makes it a hiding place, a last resort, and a cradle for those who later shape the fate of empires.",
-  "image": "",
+  "image": "images/tatooine.png",
+  "description": "Tatooine is a remote desert world in the Outer Rim Territories, notable more for the number of people trying to leave it than for any formal strategic value. Orbiting twin suns and covered in vast stretches of arid wasteland, the planet supports scattered settlements clustered around moisture farms, trading posts, and spaceports of varying legality. Official Imperial presence on Tatooine is minimal, leaving effective control of local affairs in the hands of Hutt kajidics and other criminal interests. The result is a frontier environment where law is negotiable, credits speak louder than regulations, and survival often depends on knowing whom not to offend.\n\nDespite its obscurity, Tatooine has repeatedly intersected with events critical to the Alliance. It served as the childhood home of Luke Skywalker, whose upbringing on a remote moisture farm kept him largely invisible to Imperial scrutiny until the events surrounding the theft of the Death Star plans. It was also the place of long-term exile for Obi-Wan Kenobi, who adopted the alias \"Ben\" and remained in hiding for years while covertly watching over Skywalker. The droids R2-D2 and C-3PO passed through Tatooine during their escape from Imperial forces, ultimately making contact with both Kenobi and Luke and setting into motion a sequence of events that brought the stolen plans to the Rebellion.\n\nTatooine’s broader tactical significance lies less in its resources and more in its role as a hub for smugglers, bounty hunters, and independent pilots. The planet’s primary starport at Mos Eisley has functioned as a recruiting ground for freelance crews willing to take high-risk jobs, including some who later entered Alliance service or provided critical transport on a contract basis. At the same time, the heavy Hutt influence and dense underworld activity make any overt Alliance presence extremely dangerous; operations on Tatooine must be conducted quietly and with careful attention to local power structures.\n\nAlliance Intelligence classifies Tatooine as a low-profile but high-potential contact world. While the planet itself offers little in terms of conventional military assets, the individuals who pass through it—and the histories that began there—have already proven vital to the larger struggle against the Empire.",
   "gmMode": true,
-  "tags": [
-    "Desert World",
-    "Outer Rim",
-    "Hutt Influence",
-    "Criminal Activity"
+  "related": [
+    { "id": "luke_skywalker", "category": "characters" },
+    { "id": "obi_wan_kenobi", "category": "characters" },
+    { "id": "r2_d2",          "category": "characters" },
+    { "id": "c_3po",          "category": "characters" },
+    { "id": "rebellion",      "category": "factions"   }
   ]
 }
