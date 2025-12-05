@@ -3,5 +3,10 @@
 "name": "Leia Organa",
 "image": "",
 "description": "Leia Organa is a poised and fiercely determined leader whose upbringing in the royal court of Alderaan has refined both her diplomatic skill and her unshakeable moral compass. Despite her young age, she wields considerable political influence and uses her senatorial status to divert Imperial scrutiny while covertly aiding the Alliance. Known for her sharp intellect, calm under fire, and uncompromising dedication to freedom, Leia routinely undertakes high-risk missions to secure vital intelligence and coordinate resistance efforts across the galaxy. Her presence inspires loyalty, her decisions carry weight, and her resolve against Imperial oppression is absolute.",
-"gmMode": true
+"gmMode": true,
+"related": [
+  { "id": "luke_skywalker", "category": "characters"},
+  { "id": "rebellion", "category": "factions"},
+  { "id": "han_solo", "category": "characters"}
+]
 }
