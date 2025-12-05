@@ -1,0 +1,15 @@
+{
+  "id": "r2-d2",
+  "name": "R2-D2",
+  "image": "images/r2-d2.png",
+  "description": "R2-D2 is an R2-series astromech droid whose service history spans multiple eras of galactic conflict and whose actions have repeatedly altered the course of major events. Originally deployed in support of Republic and Jedi operations, R2-D2’s memory has never undergone a full wipe, granting him an unusually deep reservoir of experiential data and learned behavior. This continuity of memory has produced a personality profile that is highly independent, resourceful, and at times openly defiant of orders he deems counterproductive.\n\nR2-D2 first entered Alliance records as the astromech unit carrying the stolen plans to the Imperial battle station later designated the Death Star. After escaping Imperial custody with Leia Organa’s encoded message, he successfully navigated a crash landing on Tatooine, evaded recapture, and ultimately delivered both the data and the message to Obi-Wan Kenobi via Luke Skywalker. Subsequent operations place R2-D2 at the center of several critical missions, including the analysis and transmission of tactical intelligence, battlefield starfighter support, and direct sabotage of Imperial systems.\n\nIn the field, R2-D2 exhibits a remarkable capacity for improvisation. He has overridden security doors, disabled tractor beams, interfaced with hostile computer networks, and executed on-the-spot repairs to starships under fire—all while operating in environments that would be immediately lethal to organic personnel. His communication, limited to droidspeak and holo-interface, is nonetheless clearly understood by those who work closely with him, especially Luke Skywalker and other veteran pilots of the Alliance Starfighter Corps. Numerous anecdotal reports describe him as \"stubborn,\" \"brave to the point of recklessness,\" and \"far too aware of his own importance.\"\n\nAlliance Intelligence classifies R2-D2 as a high-priority mobile data and technical asset. Loss of the unit would mean not only the destruction of a proven operative, but also the disappearance of an irreplaceable repository of historical information, some of which may no longer exist in any other accessible form. Protection of this droid in the course of operations is strongly advised.",
+  "gmMode": true,
+  "related": [
+    { "id": "rebellion",      "category": "factions"   },
+    { "id": "luke_skywalker", "category": "characters" },
+    { "id": "leia_organa",    "category": "characters" },
+    { "id": "c-3po",          "category": "characters" },
+    { "id": "t_65b_x_wing",   "category": "vehicles"   },
+    { "id": "tatooine",       "category": "planets"    }
+  ]
+}
